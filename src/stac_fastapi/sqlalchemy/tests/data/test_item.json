@@ -1,0 +1,118 @@
+{
+  "type": "Feature",
+  "stac_version": "1.0.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/view/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/projection/v1.0.0/schema.json"
+  ],
+  "id": "2017_82_20_4_2031_00030536",
+  "collection": "skraafotos2017",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [8.91023817166338, 55.91173821232403],
+        [8.889373667657244, 55.91306900272112],
+        [8.889486828862083, 55.9182804475438],
+        [8.91042791107266, 55.91964521416398],
+        [8.91023817166338, 55.91173821232403]
+      ]
+    ]
+  },
+  "bbox": [
+    8.889373667657244, 55.91173821232403, 8.91042791107266, 55.91964521416398
+  ],
+  "properties": {
+    "datetime": "2017-05-27T09:04:49Z",
+    "gsd": 0.096,
+    "license": "various",
+    "platform": "UCO-M3p-423S01968X612100-f120",
+    "instruments": ["503"],
+    "providers": [
+      {
+        "name": "Aerodata",
+        "roles": ["producer", "processor"]
+      },
+      {
+        "url": "https://sdfe.dk/",
+        "name": "SDFE",
+        "roles": ["licensor", "host"]
+      }
+    ],
+    "proj:epsg": null,
+    "proj:shape": [53.56, 40.04],
+    "view:azimuth": 90,
+    "view:off_nadir": 45,
+    "direction": "east",
+    "estimated_accuracy": null,
+    "pers:omega": 0.63227,
+    "pers:phi": -44.9837,
+    "pers:kappa": 270.368,
+    "pers:perspective_center": [492210.26663, 6196700.824, 1586.9],
+    "pers:crs": 25832,
+    "pers:vertical_crs": 5799,
+    "pers:rotation_matrix": [
+      0.004542874289627755, -0.9999685899080671, -0.006494727897346008,
+      0.7072933273726776, -0.001378144142532429, 0.7069188424230949,
+      -0.7069055887084743, -0.007805121138991303, 0.7072648504886488
+    ],
+    "pers:interior_orientation": {
+      "camera_id": "UCO-M3p-423S01968X612100-f120-503",
+      "focal_length": 123,
+      "pixel_spacing": [0.0000052, 0.0000052],
+      "calibration_date": null,
+      "principal_point_offset": [6.75, 0],
+      "sensor_array_dimensions": [53.56, 40.04]
+    },
+    "asset:data": "https://api.dataforsyningen.dk/skraafoto_server_test/2017_cog/2017_82_20_4_2031_00030536.jpg.cog.tif?token=9e90ecd2082cbf6fd906b6fafa215b52",
+    "asset:thumbnail": "https://skraafotodistribution-tile-api.k8s-test-121.septima.dk/images/skraafotos2017/2017_82_20_4_2031_00030536/thumbnail.jpg"
+  },
+  "links": [
+    {
+      "rel": "self",
+      "type": "application/geo+json",
+      "href": "http://localhost:8081/collections/skraafotos2017/items/2017_82_20_4_2031_00030536"
+    },
+    {
+      "rel": "parent",
+      "type": "application/json",
+      "href": "http://localhost:8081/collections/skraafotos2017"
+    },
+    {
+      "rel": "collection",
+      "type": "application/json",
+      "href": "http://localhost:8081/collections/skraafotos2017"
+    },
+    {
+      "rel": "root",
+      "type": "application/json",
+      "href": "http://localhost:8081/"
+    },
+    {
+      "rel": "license",
+      "href": "https://sdfe.dk/om-os/vilkaar-og-priser",
+      "type": "text/html; charset=UTF-8",
+      "title": "SDFE license terms"
+    },
+    {
+      "rel": "alternate",
+      "href": "https://skraafotodistribution-tile-api.k8s-test-121.septima.dk/images/skraafotos2017/2017_82_20_4_2031_00030536/viewer.html",
+      "type": "text/html; charset=UTF-8",
+      "title": "Interactive image viewer"
+    }
+  ],
+  "assets": {
+    "data": {
+      "href": "https://api.dataforsyningen.dk/skraafoto_server_test/2017_cog/2017_82_20_4_2031_00030536.jpg.cog.tif?token=9e90ecd2082cbf6fd906b6fafa215b52",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "roles": ["data"],
+      "title": "Raw tiff file"
+    },
+    "thumbnail": {
+      "href": "https://skraafotodistribution-tile-api.k8s-test-121.septima.dk/images/skraafotos2017/2017_82_20_4_2031_00030536/thumbnail.jpg",
+      "type": "image/jpeg",
+      "roles": ["thumbnail"],
+      "title": "Thumbnail"
+    }
+  }
+}

@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  app-sqlalchemy:
+    container_name: stac-fastapi-sqlalchemy
+    image: stac-utils/stac-fastapi
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+
+    platform: linux/amd64
+    environment:
+      - APP_HOST=0.0.0.0
+      - DB_MIN_CONN_SIZE=1
+      - DB_MAX_CONN_SIZE=1
+      - APP_PORT=8081
+      - WEB_CONCURRENCY=${WEB_CONCURRENCY:-10}
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - DEBUG=${DEBUG:-FALSE}
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASS=$POSTGRES_PASS
+      - POSTGRES_DBNAME=$POSTGRES_DBNAME
+      - POSTGRES_HOST=$POSTGRES_HOST
+      - POSTGRES_PORT=${POSTGRES_PORT:-5432}
+      - POSTGRES_APPLICATION_NAME=${POSTGRES_APPLICATION_NAME:-stac_fastapi_dockercompose}
+      - COG_FILE_SERVER_BASEPATH=$COG_FILE_SERVER_BASEPATH
+      - COGTILER_BASEPATH=$COGTILER_BASEPATH
+    ports:
+      - "8081:8081"
+    command: python -m uvicorn stac_fastapi.sqlalchemy.app:app --host
+      0.0.0.0  --port 8081
