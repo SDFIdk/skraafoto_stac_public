@@ -17,18 +17,6 @@ Copyright (c) 2020 Arturo AI
 
 ---
 
-## Build status
-
-[![CircleCI](https://circleci.com/gh/Septima/skraafotodistribution-stac-api/tree/main.svg?style=svg&circle-token=b4880ad7f022099e3dfb983b03ca2579fa6d432f)](https://circleci.com/gh/Septima/skraafotodistribution-stac-api/tree/main)
-
-Api:
-
-https://skraafotodistribution-stac-api.k8s-test-121.septima.dk/
-
-Browser:
-
-https://radiantearth.github.io/stac-browser/#/external/skraafotodistribution-stac-api.k8s-test-121.septima.dk/
-
 ## Configuration
 The application is configured using environment variables. These may be put in a file `/.env` like
 ```.env
