@@ -86,10 +86,9 @@ and `.vscode/tasks.json` (note that app configuration cannot be read from the `.
 			"label": "docker-build",
 			"platform": "python",
 			"dockerBuild": {
-				"tag": "stac-fastapi:latest",
-				"dockerfile": "${workspaceFolder}/Dockerfile",
+				"tag": "skraafoto_stac_public:latest",
+				"dockerfile": "${workspaceFolder}/Dockerfile_dev",
 				"context": "${workspaceFolder}",
-				"target": "debug",
 				"pull": true
 			}
 		},
