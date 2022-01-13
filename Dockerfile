@@ -6,8 +6,6 @@ RUN apt-get update \
     && apt-get install -y build-essential \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
-ENV CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
-
 ARG install_dev_dependencies=true
 
 WORKDIR /app
@@ -22,3 +20,5 @@ RUN mkdir -p /install && \
     pip install -e ./stac_fastapi/api && \
     pip install -e ./stac_fastapi/extensions && \
     pip install -e ./stac_fastapi/sqlalchemy[server]
+
+CMD ["python","-m","uvicorn","stac_fastapi.sqlalchemy.app:app","--host","0.0.0.0","--port 8081"]
