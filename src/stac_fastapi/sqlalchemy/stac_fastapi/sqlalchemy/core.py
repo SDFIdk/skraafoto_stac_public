@@ -363,8 +363,16 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                 query_params = dict(kwargs["request"].query_params)
                 if link["body"]:
                     query_params.update(link["body"])
+
+                link["href"] = (
+                    f"{link['href']}&"
+                    if "token" in query_params
+                    else f"{link['href']}?"
+                )
+
+                query_params.pop("token", None)
                 link["method"] = "GET"
-                link["href"] = f"{link['href']}?{urlencode(query_params)}"
+                link["href"] = f"{link['href']}{urlencode(query_params)}"
                 link["body"] = None
                 page_links.append(link)
             else:
@@ -568,6 +576,7 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                 query_params.update(
                     {"limit": search_request.limit}
                 )  # always include limit
+            # query_params.pop("token", None)
 
             if page.next:
                 links.append(
