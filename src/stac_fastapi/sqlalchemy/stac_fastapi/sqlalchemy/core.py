@@ -120,7 +120,7 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
         )
 
     def href_builder(self, **kwargs) -> BaseHrefBuilder:
-        """Override with HrefBuilder which adds API token to all hrefs"""
+        """Override with HrefBuilder which adds API token to all hrefs if present"""
         request = kwargs["request"]
         base_url = str(request.base_url)
         token = request.query_params.get("token")

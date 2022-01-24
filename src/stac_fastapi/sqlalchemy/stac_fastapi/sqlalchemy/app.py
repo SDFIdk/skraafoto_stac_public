@@ -17,10 +17,10 @@ from stac_fastapi.sqlalchemy.session import Session
 from stac_fastapi.sqlalchemy.types.search import SQLAlchemySTACSearch
 
 
-def must_have_token_query_param(
+def token_query_param(
     token: str = Depends(security.api_key.APIKeyQuery(name="token", auto_error=False)),
 ):
-    """This defines a required api-key query param named 'token'"""
+    """This defines an api-key query param named 'token'"""
     # Set auto_error to `True` to make `token `required.
     pass
 
@@ -60,9 +60,7 @@ api = StacApi(
         landing_page_id="dataforsyningen-flyfotoapi",
     ),
     search_request_model=SQLAlchemySTACSearch,
-    route_dependencies=[
-        (ROUTES_REQUIRING_TOKEN, [Depends(must_have_token_query_param)])
-    ],
+    route_dependencies=[(ROUTES_REQUIRING_TOKEN, [Depends(token_query_param)])],
 )
 app = api.app
 

@@ -25,6 +25,16 @@ UTC_TIMEZONE = timezone(timedelta(0))
 settings = SqlalchemySettings()
 
 
+def _add_query_params(url, params):
+    if not params:
+        return url
+    url_parts = list(urllib.parse.urlparse(url))
+    query = dict(urllib.parse.parse_qsl(url_parts[4]))
+    query.update(params)
+    url_parts[4] = urllib.parse.urlencode(query)
+    return urllib.parse.urlunparse(url_parts)
+
+
 @attr.s  # type:ignore
 class Serializer(abc.ABC):
     """Defines serialization methods between the API and the data model."""
@@ -87,11 +97,13 @@ class ItemSerializer(Serializer):
             collection_id=collection_id, item_id=item_id, href_builder=hrefbuilder
         ).create_links()
 
-        cog_url = f"{settings.cog_file_server_basepath}/{db_model.data_path}"
-        encoded_cog_url = urllib.parse.quote(cog_url, safe="")
-        token = (
-            "9e90ecd2082cbf6fd906b6fafa215b52"  # Hard code. TODO: Use hrefbuilder.token
+        token_param = {"token": hrefbuilder.token} if hrefbuilder.token else {}
+        cog_url = _add_query_params(
+            f"{settings.cog_file_server_basepath}/{db_model.data_path}", token_param
         )
+        encoded_cog_url = urllib.parse.quote(cog_url, safe="")
+        tiler_params = {"url": encoded_cog_url, **token_param}
+
         add_links = [
             {
                 "rel": "license",
@@ -101,7 +113,9 @@ class ItemSerializer(Serializer):
             },
             {
                 "rel": "alternate",
-                "href": f"{settings.cogtiler_basepath}/viewer.html?token={token}&url={encoded_cog_url}",
+                "href": _add_query_params(
+                    f"{settings.cogtiler_basepath}/viewer.html", tiler_params
+                ),
                 "type": "text/html; charset=UTF-8",
                 "title": "Interactive image viewer",
             },
@@ -113,16 +127,18 @@ class ItemSerializer(Serializer):
             "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
             "https://raw.githubusercontent.com/stac-extensions/perspective-imagery/main/json-schema/schema.json",  # TODO: Change when published...
         ]
-        # TODO: Add user supplied token here
+
         assets = {
             "data": {
-                "href": f"{cog_url}?token={token}",
+                "href": cog_url,
                 "type": "image/tiff; application=geotiff; profile=cloud-optimized",
                 "roles": ["data"],
                 "title": "Raw tiff file",
             },
             "thumbnail": {
-                "href": f"{settings.cogtiler_basepath}/thumbnail.jpg?token={token}&url={encoded_cog_url}",
+                "href": _add_query_params(
+                    f"{settings.cogtiler_basepath}/thumbnail.jpg", tiler_params
+                ),
                 "type": "image/jpeg",
                 "roles": ["thumbnail"],
                 "title": "Thumbnail",
