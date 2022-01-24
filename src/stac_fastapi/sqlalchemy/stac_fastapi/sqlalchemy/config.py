@@ -18,7 +18,6 @@ class SqlalchemySettings(ApiSettings):
     postgres_dbname: str
     postgres_application_name: str = "stac-fastapi"
 
-    cog_file_server_basepath: str
     cogtiler_basepath: str
 
     # Fields which are defined by STAC but not included in the database model

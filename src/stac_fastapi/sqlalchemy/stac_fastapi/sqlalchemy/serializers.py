@@ -98,11 +98,8 @@ class ItemSerializer(Serializer):
         ).create_links()
 
         token_param = {"token": hrefbuilder.token} if hrefbuilder.token else {}
-        cog_url = _add_query_params(
-            f"{settings.cog_file_server_basepath}/{db_model.data_path}", token_param
-        )
-        encoded_cog_url = urllib.parse.quote(cog_url, safe="")
-        tiler_params = {"url": encoded_cog_url, **token_param}
+        cog_url = _add_query_params(db_model.data_path, token_param)
+        tiler_params = {"url": cog_url, **token_param}
 
         add_links = [
             {

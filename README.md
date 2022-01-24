@@ -28,8 +28,6 @@ POSTGRES_DBNAME=database_name
 POSTGRES_HOST=database_host
 POSTGRES_PORT=5432
 POSTGRES_APPLICATION_NAME=my_debug_application
-# Base path of http server serving the COG assets
-COG_FILE_SERVER_BASEPATH=https://api.dataforsyningen.dk/skraafoto_server_test
 # Base path of the proxying tile server
 COGTILER_BASEPATH=https://skraafotodistribution-tile-api.k8s-test-121.septima.dk/cogtiler
 ```
@@ -116,7 +114,6 @@ and `.vscode/tasks.json` (note that app configuration cannot be read from the `.
 					"POSTGRES_PORT": "db_port",
 					"POSTGRES_APPLICATION_NAME": "stac_fastapi_vscode_debugging",
 					"WEB_CONCURRENCY": "1",
-					"COG_FILE_SERVER_BASEPATH": "https://api.dataforsyningen.dk/skraafoto_server_test",
 					"COGTILER_BASEPATH": "https://skraafotodistribution-tile-api.k8s-test-121.septima.dk/cogtiler"
 				}
 			},
