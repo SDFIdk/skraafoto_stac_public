@@ -7,8 +7,9 @@ import logging
 from typing import Any, Dict, List, Optional, Set, Union, Tuple
 from pydantic import Field, ValidationError, conint, root_validator, validator
 from pydantic.error_wrappers import ErrorWrapper
+from pydantic import BaseModel
 from stac_pydantic.api import Search
-from stac_pydantic.api.extensions.fields import FieldsExtension as FieldsBase
+#from stac_pydantic.api.extensions.fields import FieldsExtension as FieldsBase
 from stac_pydantic.shared import BBox
 from stac_fastapi.types.config import Settings
 from stac_fastapi.sqlalchemy.config import (
@@ -19,6 +20,7 @@ from stac_fastapi.sqlalchemy.config import (
 from pygeofilter.parsers.cql_json import parse as parse_json
 import pygeofilter.parsers.cql_json as pgf_cql_json
 from pygeofilter import ast
+
 
 # TODO: This is probably the wrong way to check for supported CRS, maybe a stac_pydantic thing needs to be made
 from stac_fastapi.extensions.core.crs import CrsExtension
@@ -78,7 +80,7 @@ class Queryables:
         return list(set(all_queryables))
 
 
-class FieldsExtension(FieldsBase):
+class FieldsExtension(BaseModel):
     """FieldsExtension.
 
     Attributes:
