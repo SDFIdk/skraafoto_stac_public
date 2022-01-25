@@ -415,6 +415,25 @@ def test_item_search_temporal_window_get(app_client, load_test_data):
     resp_json = resp.json()
     assert resp_json["features"][0]["id"] == test_item["id"]
 
+def test_item_search_temporal_tailed_get(app_client,load_test_data):
+    test_item = load_test_data("test_item.json")
+    resp = app_client.post(
+        f"/collections/{test_item['collection']}/items", json=test_item
+    )
+    assert resp.status_code == 200
+
+    dates = ["/1985-04-12T23:20:50.52Z","1985-04-12T23:20:50.52Z/","1985-04-12t23:20:50.000z", datetime.strptime(test_item["properties"]["datetime"], DATETIME_RFC339)]
+    for d in dates:
+        
+        params = {
+            "collections": test_item["collection"],
+            "datetime": d,
+        }
+        resp = app_client.get("/search", params=params)
+        assert resp.status_code == 200
+        resp_json = resp.json()
+        assert resp_json["features"][0]["id"] == test_item["id"]
+
 
 def test_item_search_sort_get(app_client, load_test_data):
     """Test GET search with sorting (sort extension)"""
