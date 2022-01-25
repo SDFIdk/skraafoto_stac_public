@@ -576,7 +576,7 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                 query_params.update(
                     {"limit": search_request.limit}
                 )  # always include limit
-            # query_params.pop("token", None)
+
 
             if page.next:
                 links.append(
