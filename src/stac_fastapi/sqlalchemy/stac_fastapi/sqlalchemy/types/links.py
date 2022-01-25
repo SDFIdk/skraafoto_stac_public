@@ -12,5 +12,6 @@ class ApiTokenHrefBuilder(BaseHrefBuilder):
 
     def build(self, path: str = None, query: Dict[str, str] = None):
         q = query or {}
-        q["token"] = self.token
+        if self.token:
+            q["token"] = self.token
         return super().build(path=path, query=q)

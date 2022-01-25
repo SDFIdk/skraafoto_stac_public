@@ -316,24 +316,7 @@ def test_filter_queryables_single_collection(app_client, load_test_data):
 #    assert len(resp_json["properties"]) == len(shared_queryables)
 
 
-def test_app_path_requiring_token_fails_if_no_token(
-    load_test_data, token_app_client, postgres_transactions
-):
-    item = load_test_data("test_item.json")
-    postgres_transactions.create_item(item, request=MockStarletteRequest)
-
-    for route in STAC_ROUTES_REQUIRING_TOKEN:
-        path = route["path"]
-        if route["method"] == "GET":
-            resp = token_app_client.get(path)
-        else:
-            resp = token_app_client.post(path, json={})
-        assert (
-            resp.status_code == 403
-        ), f"{route['method']} {path} should fail when missing token"
-
-
-def test_app_path_requiring_token_should_return_links_with_token(
+def test_app_path_allowing_token_should_return_links_with_token(
     load_test_data, token_app_client, postgres_transactions
 ):
     item = load_test_data("test_item.json")

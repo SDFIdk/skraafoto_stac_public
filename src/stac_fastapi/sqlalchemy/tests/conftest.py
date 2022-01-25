@@ -28,7 +28,7 @@ from stac_fastapi.sqlalchemy.core import CoreCrudClient, CoreFiltersClient
 from stac_fastapi.sqlalchemy.models import database
 from stac_fastapi.sqlalchemy.session import Session
 from stac_fastapi.sqlalchemy.app import (
-    must_have_token_query_param,
+    token_query_param,
     ROUTES_REQUIRING_TOKEN,
 )
 
@@ -317,7 +317,7 @@ def token_app_client(api_client):
     """Gets a TestClient with an app that requires `token` for some paths"""
     api_client.add_route_dependencies(
         scopes=ROUTES_REQUIRING_TOKEN,
-        dependencies=[Depends(must_have_token_query_param)],
+        dependencies=[Depends(token_query_param)],
     )
     with TestClient(api_client.app) as test_app:
         yield test_app
