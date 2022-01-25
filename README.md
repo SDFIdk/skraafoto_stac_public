@@ -136,7 +136,7 @@ and `.vscode/tasks.json` (note that app configuration cannot be read from the `.
 }
 ```
 
-Now you should be able to hit "Start debugging" `Docker: Python - Fastapi` which will launch the APU in a docker cointainer supporting breakpoints in your code.
+Now you should be able to hit "Start debugging" `Docker: Python - Fastapi` which will launch the API in a docker container supporting breakpoints in your code.
 
 ### Testing
 
