@@ -2,14 +2,33 @@
 
 # TODO: replace with stac-pydantic
 """
+from datetime import datetime
+from geojson_pydantic.geometries import (
+    GeometryCollection,
+    LineString,
+    MultiLineString,
+    MultiPoint,
+    MultiPolygon,
+    Point,
+    Polygon,
+    _GeometryBase,
+)
+from pydantic.datetime_parse import parse_datetime
+from stac_pydantic.api.extensions.sort import SortExtension
 
 import logging
 from typing import Any, Dict, List, Optional, Set, Union, Tuple
-from pydantic import Field, ValidationError, conint, root_validator, validator
+from pydantic import (
+    BaseModel,
+    Field,
+    ValidationError,
+    conint,
+    root_validator,
+    validator,
+)
 from pydantic.error_wrappers import ErrorWrapper
-from pydantic import BaseModel
-from stac_pydantic.api import Search
-#from stac_pydantic.api.extensions.fields import FieldsExtension as FieldsBase
+
+# from stac_pydantic.api.extensions.fields import FieldsExtension as FieldsBase
 from stac_pydantic.shared import BBox
 from stac_fastapi.types.config import Settings
 from stac_fastapi.sqlalchemy.config import (
@@ -129,13 +148,29 @@ class FieldsExtension(BaseModel):
         }
 
 
-class SQLAlchemySTACSearch(Search):
+class SQLAlchemySTACSearch(BaseModel):
     """Search model."""
+
+    ids: Optional[List[str]]
+    bbox: Optional[BBox]
+    intersects: Optional[
+        Union[
+            Point,
+            MultiPoint,
+            LineString,
+            MultiLineString,
+            Polygon,
+            MultiPolygon,
+            GeometryCollection,
+        ]
+    ]
+    datetime: Optional[str]
+    sortby: Optional[List[SortExtension]]
 
     # Make collections optional, default to searching all collections if none are provided
     collections: Optional[List[str]] = None
     # Override default field extension to include default fields and pydantic includes/excludes factory
-    field: Optional[FieldsExtension] = Field(None, alias="fields")
+    # field: Optional[FieldsExtension] = Field(None, alias="fields")
 
     # Override query extension with supported operators
     # query: Optional[Dict[Queryables, Dict[Operator, Any]]]
@@ -423,3 +458,74 @@ class SQLAlchemySTACSearch(Search):
             values["filter"] = ast
 
         return values
+
+    @property
+    def start_date(self) -> Optional[datetime]:
+        values = self.datetime.split("/")
+        if len(values) == 1:
+            return None
+        if values[0] == ".." or values[0] == "":
+            return None
+        return parse_datetime(values[0])
+
+    @property
+    def end_date(self) -> Optional[datetime]:
+        values = self.datetime.split("/")
+        if len(values) == 1:
+            return parse_datetime(values[0])
+        if values[1] == ".." or values[1] == "":
+            return None
+        return parse_datetime(values[1])
+
+    @validator("intersects")
+    def validate_spatial(cls, v, values):
+        if v and values["bbox"]:
+            raise ValueError("intersects and bbox parameters are mutually exclusive")
+        return v
+
+    @validator("datetime")
+    def validate_datetime(cls, v):
+        if "/" in v:
+            values = v.split("/")
+        else:
+            # Single date is interpreted as end date
+            values = ["..", v]
+
+        dates = []
+        for value in values:
+            if value == ".." or value == "":
+                dates.append("..")
+                continue
+
+            parse_datetime(value)
+            dates.append(value)
+
+        if ".." not in dates:
+            if parse_datetime(dates[0]) > parse_datetime(dates[1]):
+                raise ValueError(
+                    "Invalid datetime range, must match format (begin_date, end_date)"
+                )
+
+        return v
+
+    @property
+    def spatial_filter(self) -> Optional[_GeometryBase]:
+        """Return a geojson-pydantic object representing the spatial filter for the search request.
+
+        Check for both because the ``bbox`` and ``intersects`` parameters are mutually exclusive.
+        """
+        if self.bbox:
+            return Polygon(
+                coordinates=[
+                    [
+                        [self.bbox[0], self.bbox[3]],
+                        [self.bbox[2], self.bbox[3]],
+                        [self.bbox[2], self.bbox[1]],
+                        [self.bbox[0], self.bbox[1]],
+                        [self.bbox[0], self.bbox[3]],
+                    ]
+                ]
+            )
+        if self.intersects:
+            return self.intersects
+        return

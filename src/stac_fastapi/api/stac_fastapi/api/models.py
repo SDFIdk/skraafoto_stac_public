@@ -131,7 +131,7 @@ class SearchGetRequest(APIRequest, FilterableRequest):
     """GET search request."""
 
     collections: Optional[str] = attr.ib(default=None)
-    fields: Optional[str] = attr.ib(default=None)
+    # fields: Optional[str] = attr.ib(default=None)
     sortby: Optional[str] = attr.ib(default=None)
 
     def kwargs(self) -> Dict:
@@ -140,10 +140,10 @@ class SearchGetRequest(APIRequest, FilterableRequest):
         # there is an important semantic difference between request with and empty fields param and not specifying fields at all ("url?fields=" versus "url").
         # In the first case the Fields extension specifies that only a minimal subset of properties should be returned3
         # and in the latter case (no "fields" param specified) all properties should be returned.
-        if self.fields is not None:
-            fields = self.fields.split(",") if len(self.fields) > 0 else []
-        else:
-            fields = self.fields
+        # if self.fields is not None:
+        #     fields = self.fields.split(",") if len(self.fields) > 0 else []
+        # else:
+        #     fields = self.fields
         return {
             "collections": self.collections.split(",")
             if self.collections
@@ -158,6 +158,6 @@ class SearchGetRequest(APIRequest, FilterableRequest):
             "filter_crs": self.filter_crs,
             # "query": self.query,
             "pt": self.pt,
-            "fields": fields,
+            # "fields": fields,
             "sortby": self.sortby.split(",") if self.sortby else self.sortby,
         }
