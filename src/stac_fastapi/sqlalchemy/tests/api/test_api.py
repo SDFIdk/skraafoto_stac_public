@@ -1,6 +1,11 @@
 from datetime import datetime, timedelta
 import json
 from ..conftest import TEST_COLLECTION_ID, MockStarletteRequest
+from stac_fastapi.sqlalchemy.config import (
+    SkraafotosProperties,
+    BaseQueryables,
+    QueryableInfo,
+)
 
 STAC_CORE_ROUTES = [
     "GET /",
@@ -87,17 +92,6 @@ def test_app_filter_extension_gt(load_test_data, app_client, postgres_transactio
     assert len(resp_json["features"]) > 0
 
 
-# def test_app_query_extension_gt(load_test_data, app_client, postgres_transactions):
-#     test_item = load_test_data("test_item.json")
-#     postgres_transactions.create_item(test_item, request=MockStarletteRequest)
-#     params = {"filter-lang":"cql-json","filter": {"gt": [{"property":"proj:epsg"}, test_item["properties"]["proj:epsg"]]}}
-#     params = {"query": {"proj:epsg": {"gt": test_item["properties"]["proj:epsg"]}}}
-#     resp = app_client.post("/search", json=fparams)
-#     assert resp.status_code == 200
-#     resp_json = resp.json()
-#     assert len(resp_json["features"]) == 0
-
-
 def test_app_filter_extension_gte(load_test_data, app_client, postgres_transactions):
     test_item = load_test_data("test_item.json")
     postgres_transactions.create_item(test_item, request=MockStarletteRequest)
@@ -113,18 +107,7 @@ def test_app_filter_extension_gte(load_test_data, app_client, postgres_transacti
     assert len(resp_json["features"]) > 0
 
 
-# def test_app_query_extension_gte(load_test_data, app_client, postgres_transactions):
-#     test_item = load_test_data("test_item.json")
-#     postgres_transactions.create_item(test_item, request=MockStarletteRequest)
-
-#     params = {"query": {"proj:epsg": {"gte": test_item["properties"]["proj:epsg"]}}}
-#     resp = app_client.post("/search", json=params)
-#     assert resp.status_code == 200
-#     resp_json = resp.json()
-#     assert len(resp_json["features"]) == 1
-
-
-def test_app_query_extension_limit_lt0(
+def test_app_filter_extension_limit_lt0(
     load_test_data, app_client, postgres_transactions
 ):
     item = load_test_data("test_item.json")
@@ -135,7 +118,7 @@ def test_app_query_extension_limit_lt0(
     assert resp.status_code == 400
 
 
-def test_app_query_extension_limit_gt10000(
+def test_app_filter_extension_limit_gt10000(
     load_test_data, app_client, postgres_transactions
 ):
     item = load_test_data("test_item.json")
@@ -146,7 +129,7 @@ def test_app_query_extension_limit_gt10000(
     assert resp.status_code == 400
 
 
-def test_app_query_extension_limit_10000(
+def test_app_filter_extension_limit_10000(
     load_test_data, app_client, postgres_transactions
 ):
     item = load_test_data("test_item.json")
@@ -282,38 +265,50 @@ def test_search_line_string_intersects(
     assert len(resp_json["features"]) == 10
 
 
-def test_filter_queryables_single_collection(app_client, load_test_data):
+# Check that the hardcoded queryable names matches an equivalent in QueryableInfo, and in result property names
+def test_filter_queryables_config(app_client, load_test_data):
+    queryable_enums = list(BaseQueryables._member_names_) + list(
+        SkraafotosProperties._member_names_
+    )
+    queryable_info = list([i for i in QueryableInfo.__dict__.keys() if i[:1] != "_"])
+
+    assert len(queryable_enums) == len(queryable_info)
+    for x, y in zip(queryable_enums, queryable_info):
+        assert x == y
+
     test_item = load_test_data("test_item.json")
+    queryable_enum_vals = list(BaseQueryables._value2member_map_) + list(
+        SkraafotosProperties._value2member_map_
+    )
+    response_props = list(test_item.keys()) + list(test_item["properties"].keys())
+
+    for q in queryable_enum_vals:
+        q = q.split(".")[0]
+        assert q in response_props
+
+
+def test_filter_queryables_single_collection(app_client, load_test_data):
     resp = app_client.get(f"/collections/{test_item['collection']}/queryables")
     assert resp.status_code == 200
 
-    # Jeg tror ikke den her test giver meget mening:
-    # resp_json = resp.json()
-    # assert len(resp_json["properties"]) == len(test_item["properties"])
 
+def test_filter_queryables_all_collections(app_client, load_test_data):
+    """Test GET queryables without collection parameter returns intersection of queryables of all registered collections"""
+    resp = app_client.get(f"/collections")
+    resp_json = resp.json()
 
-# TODO: Kig den her igennem
-# def test_filter_queryables_all_collections(app_client, load_test_data):
-#    """Test GET queryables without collection parameter returns intersection of queryables of all registered collections"""
-#    test_item = load_test_data("test_item.json")
-#    resp = app_client.get(f"/collections")
-#    resp_json = resp.json()
-#    test_item_queryables = list(test_item.keys()) + list(test_item["properties"])
-#    test_item_queryables.append(
-#        "collection_id"
-#    )  # cheat: collection == collection_id so add it manually
-#
-#    all_queryables = [test_item_queryables]
-#    for coll in resp_json["collections"]:
-#        q = app_client.get(f"/collections/{coll['id']}/queryables")
-#        q_json = q.json()
-#        all_queryables.append(list(q_json["properties"].keys()))
-#    shared_queryables = set.intersection(*[set(x) for x in all_queryables])
-#
-#    resp = app_client.get(f"/queryables")
-#    assert resp.status_code == 200
-#    resp_json = resp.json()
-#    assert len(resp_json["properties"]) == len(shared_queryables)
+    all_queryables = []
+    for coll in resp_json["collections"]:
+        q = app_client.get(f"/collections/{coll['id']}/queryables")
+        assert q.status_code == 200
+        q_json = q.json()
+        all_queryables.append(list(q_json["properties"].keys()))
+    shared_queryables = set.intersection(*[set(x) for x in all_queryables])
+
+    resp = app_client.get(f"/queryables")
+    assert resp.status_code == 200
+    resp_json = resp.json()
+    assert len(resp_json["properties"]) == len(shared_queryables)
 
 
 def test_app_path_allowing_token_should_return_links_with_token(

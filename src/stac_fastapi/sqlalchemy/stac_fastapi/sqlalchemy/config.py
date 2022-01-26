@@ -53,10 +53,10 @@ class BaseQueryables(str, AutoValueEnum):
 
 
 class SkraafotosProperties(str, AutoValueEnum):
-    end_datetime = auto()
-    easting = auto()
-    northing = auto()
-    height = auto()
+    # end_datetime = auto()
+    easting = "pers:perspective_center.x"
+    northing = "pers:perspective_center.y"
+    height = "pers:perspective_center.z"
     vertical_crs = "pers:vertical_crs"
     horisontal_crs = "pers:crs"
     omega = "pers:omega"
@@ -67,7 +67,7 @@ class SkraafotosProperties(str, AutoValueEnum):
     azimuth = "view:azimuth"
     offnadir = "view:off_nadir"
     estacc = "estimated_accuracy"
-    producer = auto()
+    producer = "providers.producer"
     gsd = auto()
     # license = auto()
     camera_id = "instruments"
@@ -123,12 +123,12 @@ class QueryableInfo:
     # )
 
     # properties types: Pygeofilter currently don't support array operations in their sqlalchemy backend, so Array queryables are not exposed
-    end_datetime = (
-        None,
-        "string",
-        "End datetime",
-        None,
-    )
+    # end_datetime = (
+    #     None,
+    #     "string",
+    #     "End datetime",
+    #     None,
+    # )
     easting = (
         None,
         "number",
@@ -170,7 +170,7 @@ class QueryableInfo:
     producer = (
         None,
         "string",
-        "Producer name",
+        "(Providers) Producer name",
         None,
     )
     gsd = (
