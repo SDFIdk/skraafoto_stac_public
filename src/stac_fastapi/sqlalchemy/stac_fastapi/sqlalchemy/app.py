@@ -15,7 +15,7 @@ from stac_fastapi.sqlalchemy.models import database
 from stac_fastapi.sqlalchemy.core import CoreCrudClient, CoreFiltersClient
 from stac_fastapi.sqlalchemy.session import Session
 from stac_fastapi.sqlalchemy.types.search import SQLAlchemySTACSearch
-
+from stac_fastapi.sqlalchemy.middlewares.proxy_header_hostname import ProxyHeadersMiddleware
 def token_query_param(
     token: str = Depends(security.api_key.APIKeyQuery(name="token", auto_error=False)),
 ):
@@ -74,7 +74,8 @@ if settings.debug:
         response = await call_next(request)
         return response
 
-
+app.add_middleware(ProxyHeadersMiddleware,trusted_hosts="*")
+        
 def run():
     """Run app from command line using uvicorn if available."""
     try:
