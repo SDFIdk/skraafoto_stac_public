@@ -20,6 +20,8 @@ class SqlalchemySettings(ApiSettings):
 
     cogtiler_basepath: str
 
+    trusted_hosts: str = "127.0.0.1"
+
     # Fields which are defined by STAC but not included in the database model
     forbidden_fields: Set[str] = {"type"}
 

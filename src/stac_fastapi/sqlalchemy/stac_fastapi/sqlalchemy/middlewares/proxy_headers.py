@@ -1,10 +1,9 @@
 """
 This middleware can be used when a known proxy is fronting the application,
-and is trusted to be properly setting the `X-Forwarded-Proto` and
-`X-Forwarded-For` headers with the connecting client information.
+and is trusted to be properly setting the `X-Forwarded-Proto`,
+`X-Forwarded-Host` and `x-forwarded-prefix` headers with.
 
-Modifies the `client` and `scheme` information so that they reference
-the connecting client, rather that the connecting proxy.
+Modifies the `host`, 'root_path' and `scheme` information.
 
 https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#Proxies
 
@@ -12,8 +11,7 @@ Original source: https://github.com/encode/uvicorn/blob/master/uvicorn/middlewar
 Altered to accomodate x-forwarded-host instead of x-forwarded-for
 Altered: 27-01-2022
 """
-from typing import List, Optional, Tuple, Union, cast
-import logging
+from typing import List, Optional, Tuple, Union
 
 from starlette.types import ASGIApp, Receive, Scope, Send
 
@@ -28,18 +26,6 @@ class ProxyHeadersMiddleware:
         else:
             self.trusted_hosts = set(trusted_hosts)
         self.always_trust = "*" in self.trusted_hosts
-
-    def get_trusted_client_host(
-        self, x_forwarded_for_hosts: List[str]
-    ) -> Optional[str]:
-        if self.always_trust:
-            return x_forwarded_for_hosts[0]
-
-        for host in reversed(x_forwarded_for_hosts):
-            if host not in self.trusted_hosts:
-                return host
-
-        return None
 
     def remap_headers(self, src: Headers, before: bytes, after: bytes) -> Headers:
         remapped = []
@@ -75,16 +61,7 @@ class ProxyHeadersMiddleware:
                     scope["scheme"] = x_forwarded_proto.strip()  # type: ignore[index]
 
                 if b"x-forwarded-host" in headers:
-                    # Determine the client hostname from the last trusted IP in the
-                    # X-Forwarded-For header. We've lost the connecting client's port
-                    # information by now, so only include the host.
-                    x_forwarded_host = headers[b"x-forwarded-host"].decode("latin1")
-                    x_forwarded_hosts = [
-                        item.strip() for item in x_forwarded_host.split(",")
-                    ]
-                    host = self.get_trusted_client_host(x_forwarded_hosts)
-                    port = 0
-                    scope["client"] = (host, port)  # type: ignore[index]
+                    # Setting scope["server"] is not enough because of https://github.com/encode/starlette/issues/604#issuecomment-543945716
                     scope["headers"] = self.remap_headers(
                         scope["headers"], b"host", b"x-forwarded-host"
                     )
