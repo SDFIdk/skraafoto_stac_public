@@ -20,7 +20,7 @@ class FilterConformanceClasses(str, Enum):
     """
 
     # Conformance classes from https://github.com/radiantearth/stac-api-spec/tree/master/fragments/filter
-    # Text, Functions, and Arrays are not supported
+    # CQLL2-Text, Functions, and Arrays are not supported
     FILTER = "http://www.opengis.net/spec/ogcapi-features-3/1.0/conf/filter"
     ITEM_SEARCH_FILTER = (
         "https://api.stacspec.org/v1.0.0-beta.5/item-search#filter:item-search-filter"
