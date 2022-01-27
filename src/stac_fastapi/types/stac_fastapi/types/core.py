@@ -3,6 +3,7 @@ import abc
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Union
 from urllib.parse import urljoin, urlencode
+from collections import OrderedDict
 
 import attr
 from fastapi import Request
@@ -325,7 +326,8 @@ class BaseCoreClient(LandingPageMixin, abc.ABC):
             extension_classes = getattr(extension, "conformance_classes", [])
             base_conformance_classes.extend(extension_classes)
 
-        return list(set(base_conformance_classes))
+        # Remove dupilcates while preserving order
+        return list(OrderedDict.fromkeys(base_conformance_classes))
 
     def extension_is_enabled(self, extension: str) -> bool:
         """Check if an api extension is enabled."""

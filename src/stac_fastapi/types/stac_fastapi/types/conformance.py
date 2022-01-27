@@ -5,9 +5,10 @@ from enum import Enum
 class STACConformanceClasses(str, Enum):
     """Conformance classes for the STAC API spec."""
 
-    CORE = "https://api.stacspec.org/v1.0.0-beta.3/core"
-    OGC_API_FEAT = "https://api.stacspec.org/v1.0.0-beta.3/ogcapi-features"
-    ITEM_SEARCH = "https://api.stacspec.org/v1.0.0-beta.3/item-search"
+    CORE = "https://api.stacspec.org/v1.0.0-beta.5/core"
+    OGC_API_FEAT = "https://api.stacspec.org/v1.0.0-beta.5/ogcapi-features"
+    ITEM_SEARCH = "https://api.stacspec.org/v1.0.0-beta.5/item-search"
+    COLLECTIONS = "https://api.stacspec.org/v1.0.0-beta.5/collections"
 
 
 class OAFConformanceClasses(str, Enum):
@@ -22,6 +23,7 @@ BASE_CONFORMANCE_CLASSES = [
     STACConformanceClasses.CORE,
     STACConformanceClasses.OGC_API_FEAT,
     STACConformanceClasses.ITEM_SEARCH,
+    STACConformanceClasses.COLLECTIONS,
     OAFConformanceClasses.CORE,
     OAFConformanceClasses.OPEN_API,
     OAFConformanceClasses.GEOJSON,

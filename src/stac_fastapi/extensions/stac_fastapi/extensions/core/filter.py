@@ -19,36 +19,8 @@ class FilterConformanceClasses(str, Enum):
     See https://github.com/radiantearth/stac-api-spec/tree/v1.0.0-beta.3/fragments/filter
     """
 
-    # FILTER = "https://api.stacspec.org/v1.0.0-beta.3/item-search#filter:filter"
-    # ITEM_SEARCH_FILTER = (
-    #     "https://api.stacspec.org/v1.0.0-beta.3/item-search#filter:item-search-filter"
-    # )
-    # # CQL_TEXT = "https://api.stacspec.org/v1.0.0-beta.3/item-search#filter:cql-text"
-    # CQL_JSON = "https://api.stacspec.org/v1.0.0-beta.3/item-search#filter:cql-json"
-    # BASIC_CQL = "https://api.stacspec.org/v1.0.0-beta.3/item-search#filter:basic-cql"
-    # BASIC_SPATIAL_OPERATORS = "https://api.stacspec.org/v1.0.0-beta.3/item-search#filter:basic-spatial-operators"
-    # # BASIC_TEMPORAL_OPERATORS = "https://api.stacspec.org/v1.0.0-beta.3/item-search#filter:basic-temporal-operators"
-    # ENHANCED_COMPARISON_OPERATORS = "https://api.stacspec.org/v1.0.0-beta.3/item-search#filter:enhanced-comparison-operators"
-    # ENHANCED_SPATIAL_OPERATORS = "https://api.stacspec.org/v1.0.0-beta.3/item-search#filter:enhanced-spatial-operators"
-    # ENHANCED_TEMPORAL_OPERATORS = "https://api.stacspec.org/v1.0.0-beta.3/item-search#filter:enhanced-temporal-operators"
-    # # FUNCTIONS = "https://api.stacspec.org/v1.0.0-beta.3/item-search#filter:functions"
-    # ARITHMETIC = "https://api.stacspec.org/v1.0.0-beta.3/item-search#filter:arithmetic"
-    # # ARRAYS = "https://api.stacspec.org/v1.0.0-beta.3/item-search#filter:arrays"
-    # QUERYABLE_SECOND_OPERAND = "https://api.stacspec.org/v1.0.0-beta.3/item-search#filter:queryable-second-operand"
-
-    # OAF_FILTER = "http://www.opengis.net/spec/ogcapi-features-3/0.0/conf/filter"
-    # OAF_FEATURES_FILTER = (
-    #     "http://www.opengis.net/spec/ogcapi-features-3/0.0/conf/features-filter"
-    # )
-    # OAF_SIMPLE_CQL = "http://www.opengis.net/spec/ogcapi-features-3/0.0/conf/simple-cql"
-    # OAF_ENCHANCED_SPATIAL_OPERATORS = "http://www.opengis.net/spec/ogcapi-features-3/0.0/conf/enhanced-spatial-operators"
-    # OAF_ENHANCED_TEMPORAL_OPERATORS = "http://www.opengis.net/spec/ogcapi-features-3/0.0/conf/enhanced-temporal-operators"
-    # # OAF_FUNCTIONS = "http://www.opengis.net/spec/ogcapi-features-3/0.0/conf/functions"
-    # OAF_ARITHMETIC = "http://www.opengis.net/spec/ogcapi-features-3/0.0/conf/arithmetic"
-    # # OAF_ARRAYS = "http://www.opengis.net/spec/ogcapi-features-3/0.0/conf/arrays"
-    # OAF_CQL_JSON = "http://www.opengis.net/spec/ogcapi-features-3/0.0/conf/cql-json"
-    # # OAF_CQL_TEXT = "http://www.opengis.net/spec/ogcapi-features-3/0.0/conf/cql-text"
-
+    # Conformance classes from https://github.com/radiantearth/stac-api-spec/tree/master/fragments/filter
+    # Text, Functions, and Arrays are not supported
     FILTER = "http://www.opengis.net/spec/ogcapi-features-3/1.0/conf/filter"
     ITEM_SEARCH_FILTER = (
         "https://api.stacspec.org/v1.0.0-beta.5/item-search#filter:item-search-filter"
