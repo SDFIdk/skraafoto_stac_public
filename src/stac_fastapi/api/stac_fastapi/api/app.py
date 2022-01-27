@@ -20,6 +20,7 @@ from stac_pydantic.api.collections import Collections
 from stac_pydantic.version import STAC_VERSION
 from starlette.requests import Request
 from starlette.responses import HTMLResponse, JSONResponse, Response
+from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 
 from stac_fastapi.api.errors import DEFAULT_STATUS_CODES, add_exception_handlers
 from stac_fastapi.api.models import (
@@ -344,7 +345,7 @@ class StacApi:
 
     def __attrs_pre_init__(self):
         def setup(self) -> None:
-
+           
             self.add_route(
                 "/ogc/openapi.json",
                 get_openapi_handler(self),
@@ -456,6 +457,8 @@ class StacApi:
         # add middlewares
         for middleware in self.middlewares:
             self.app.add_middleware(middleware)
+        
+        self.app.add_middleware(ProxyHeadersMiddleware,trusted_hosts="*")
 
         # customize route dependencies
         for scopes, dependencies in self.route_dependencies:
