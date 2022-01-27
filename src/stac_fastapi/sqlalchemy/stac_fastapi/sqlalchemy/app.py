@@ -15,7 +15,7 @@ from stac_fastapi.sqlalchemy.models import database
 from stac_fastapi.sqlalchemy.core import CoreCrudClient, CoreFiltersClient
 from stac_fastapi.sqlalchemy.session import Session
 from stac_fastapi.sqlalchemy.types.search import SQLAlchemySTACSearch
-
+from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 
 def token_query_param(
     token: str = Depends(security.api_key.APIKeyQuery(name="token", auto_error=False)),
@@ -63,6 +63,7 @@ api = StacApi(
     route_dependencies=[(ROUTES_REQUIRING_TOKEN, [Depends(token_query_param)])],
 )
 app = api.app
+app.add_middleware(ProxyHeadersMiddleware(trusted_hosts="*"))
 
 if settings.debug:
     from fastapi import Request
