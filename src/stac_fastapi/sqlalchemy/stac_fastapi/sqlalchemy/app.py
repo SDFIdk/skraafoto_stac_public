@@ -15,6 +15,7 @@ from stac_fastapi.sqlalchemy.models import database
 from stac_fastapi.sqlalchemy.core import CoreCrudClient, CoreFiltersClient
 from stac_fastapi.sqlalchemy.session import Session
 from stac_fastapi.sqlalchemy.types.search import SQLAlchemySTACSearch
+from stac_fastapi.sqlalchemy.middlewares.proxy_headers import ProxyHeadersMiddleware
 
 
 def token_query_param(
@@ -39,7 +40,7 @@ ROUTES_REQUIRING_TOKEN = [
 settings = SqlalchemySettings()
 
 if settings.debug:
-    logging.basicConfig()
+    logging.basicConfig(level="DEBUG")
     logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
 
 session = Session.create_from_settings(settings)
@@ -63,6 +64,20 @@ api = StacApi(
     route_dependencies=[(ROUTES_REQUIRING_TOKEN, [Depends(token_query_param)])],
 )
 app = api.app
+
+# Set 'host', 'root_path' and 'protocol' from x-forwarded-xxx headers
+app.add_middleware(ProxyHeadersMiddleware, trusted_hosts=settings.trusted_hosts)
+
+
+if settings.debug:
+    from fastapi import Request
+
+    # Log request headers to be able to debug proxying issue #8
+    @app.middleware("http")
+    async def log_request_headers(request: Request, call_next):
+        logging.debug(request.headers)
+        response = await call_next(request)
+        return response
 
 
 def run():

@@ -144,17 +144,17 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                 {
                     "rel": Relations.root.value,
                     "type": MimeTypes.json,
-                    "href": hrefbuilder.build("/"),
+                    "href": hrefbuilder.build("./"),
                 },
                 {
                     "rel": Relations.parent.value,
                     "type": MimeTypes.json,
-                    "href": hrefbuilder.build("/"),
+                    "href": hrefbuilder.build("./"),
                 },
                 {
                     "rel": Relations.self.value,
                     "type": MimeTypes.json,
-                    "href": hrefbuilder.build("collections"),
+                    "href": hrefbuilder.build("./collections"),
                 },
             ]
             collection_list = Collections(
@@ -575,7 +575,7 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                     {
                         "rel": Relations.next.value,
                         "type": "application/geo+json",
-                        "href": hrefbuilder.build("search"),
+                        "href": hrefbuilder.build("./search"),
                         "method": "POST",
                         "body": {
                             **query_params,
@@ -589,7 +589,7 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                     {
                         "rel": Relations.previous.value,
                         "type": "application/geo+json",
-                        "href": hrefbuilder.build("search"),
+                        "href": hrefbuilder.build("./search"),
                         "method": "POST",
                         "body": {
                             **query_params,
