@@ -94,9 +94,9 @@ class STACSearch(Search):
 
     # Make collections optional, default to searching all collections if none are provided
     collections: Optional[List[str]] = None
-    # Override default field extension to include default fields and pydantic includes/excludes factory
-    field: FieldsExtension = Field(FieldsExtension(), alias="fields")
-    # Override query extension with supported operators
+
+    # field and query parameters are omitted since query is no longer used, and FieldExtension is disabled for now
+    # field: FieldsExtension = Field(FieldsExtension(), alias="fields")
     # query: Optional[Dict[str, Dict[Operator, Any]]]
     pt: Optional[str] = None
     filter: Optional[Any]

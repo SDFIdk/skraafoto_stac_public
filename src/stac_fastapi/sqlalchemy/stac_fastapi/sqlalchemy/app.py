@@ -48,7 +48,7 @@ api = StacApi(
     description="API til udstilling af metadata for ikke-oprettede flyfotos.",
     settings=settings,
     extensions=[
-        FieldsExtension(),
+        # FieldsExtension(),
         FilterExtension(client=CoreFiltersClient(session=session)),
         SortExtension(),
         ContextExtension(),
