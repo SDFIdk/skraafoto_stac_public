@@ -52,7 +52,7 @@ class BaseLinks:
         return dict(
             rel=Relations.root,
             type=MimeTypes.json,
-            href=self.href_builder.build("/"),
+            href=self.href_builder.build("./"),
         )
 
 
@@ -71,7 +71,9 @@ class CollectionLinks(BaseLinks):
     def parent(self) -> Dict[str, Any]:
         """Create the `parent` link."""
         return dict(
-            rel=Relations.parent, type=MimeTypes.json, href=self.href_builder.build("/")
+            rel=Relations.parent,
+            type=MimeTypes.json,
+            href=self.href_builder.build("./"),
         )
 
     def items(self) -> Dict[str, Any]:

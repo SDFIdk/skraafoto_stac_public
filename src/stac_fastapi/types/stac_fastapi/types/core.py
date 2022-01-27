@@ -261,42 +261,42 @@ class LandingPageMixin(abc.ABC):
                 {
                     "rel": Relations.self.value,
                     "type": MimeTypes.json,
-                    "href": href_builder.build("/"),
+                    "href": href_builder.build("./"),
                 },
                 {
                     "rel": Relations.root.value,
                     "type": MimeTypes.json,
-                    "href": href_builder.build("/"),
+                    "href": href_builder.build("./"),
                 },
                 {
                     "rel": "data",
                     "type": MimeTypes.json,
-                    "href": href_builder.build("collections"),
+                    "href": href_builder.build("./collections"),
                 },
                 {
                     "rel": "service-doc",
                     "type": MimeTypes.html,
                     "title": "OpenAPI docs",
-                    "href": href_builder.build("docs"),
+                    "href": href_builder.build("./docs"),
                 },
                 {
                     "rel": Relations.conformance.value,
                     "type": MimeTypes.json,
                     "title": "STAC/WFS3 conformance classes implemented by this server",
-                    "href": href_builder.build("conformance"),
+                    "href": href_builder.build("./conformance"),
                 },
                 {
                     "rel": Relations.search.value,
                     "type": MimeTypes.geojson,
                     "title": "STAC search",
-                    "href": href_builder.build("search"),
+                    "href": href_builder.build("./search"),
                     "method": "GET",
                 },
                 {
                     "rel": Relations.search.value,
                     "type": MimeTypes.json,
                     "title": "STAC search",
-                    "href": href_builder.build("search"),
+                    "href": href_builder.build("./search"),
                     "method": "POST",
                 },
             ],
@@ -386,7 +386,7 @@ class BaseCoreClient(LandingPageMixin, abc.ABC):
                 "rel": "service-desc",
                 "type": "application/vnd.oai.openapi+json;version=3.0",
                 "title": "OpenAPI service description",
-                "href": hrefbuilder.build("/ogc/openapi.json"),
+                "href": hrefbuilder.build("./ogc/openapi.json"),
             }
         )
         return landing_page
