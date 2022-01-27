@@ -19,10 +19,9 @@ from starlette.types import ASGIApp, Receive, Scope, Send
 
 Headers = List[Tuple[bytes, bytes]]
 
+
 class ProxyHeadersMiddleware:
-    def __init__(
-        self, app, trusted_hosts: Union[List[str], str] = "127.0.0.1"
-    ) -> None:
+    def __init__(self, app, trusted_hosts: Union[List[str], str] = "127.0.0.1") -> None:
         self.app = app
         if isinstance(trusted_hosts, str):
             self.trusted_hosts = {item.strip() for item in trusted_hosts.split(",")}
@@ -41,6 +40,7 @@ class ProxyHeadersMiddleware:
                 return host
 
         return None
+
     def remap_headers(self, src: Headers, before: bytes, after: bytes) -> Headers:
         remapped = []
         before_value = None
@@ -60,9 +60,7 @@ class ProxyHeadersMiddleware:
             remapped.append((before, before_value))
         return remapped
 
-    async def __call__(
-        self, scope, receive, send
-    ) -> None:
+    async def __call__(self, scope, receive, send) -> None:
         if scope["type"] in ("http", "websocket"):
 
             client_addr: Optional[Tuple[str, int]] = scope.get("client")
@@ -90,5 +88,8 @@ class ProxyHeadersMiddleware:
                     scope["headers"] = self.remap_headers(
                         scope["headers"], b"host", b"x-forwarded-host"
                     )
-        
+                if b"x-forwarded-prefix" in headers:
+                    x_forwarded_prefix = headers[b"x-forwarded-prefix"].decode("latin1")
+                    scope["root_path"] = x_forwarded_prefix
+
         return await self.app(scope, receive, send)
