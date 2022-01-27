@@ -1,0 +1,133 @@
+#@host=http://localhost:8091
+@host=http://localhost:8081
+
+@collection=skraafotos2019
+
+###
+# Returns ultra simple json metadata
+GET {{host}}/collections/{{collection}}/items HTTP/1.1
+
+### 
+# Returns API
+GET {{host}}/api HTTP/1.1
+Accept: application/vnd.oai.openapi;version=3.0
+
+###
+#
+GET {{host}}/collections/{{collection}}/items?bbox=11.249865714048164,55.178867663282006,13.095568839048164,56.26776108757582&crs=http://www.opengis.net/def/crs/EPSG/0/25832&limit=10 HTTP/1.1
+
+
+###
+POST {{host}}/search
+Content-Type: application/json
+
+{
+  "filter": {
+    "and": [
+      { "eq": [ { "property": "id" }, "2019_81_01_1_0002_00000010" ] },
+      { "eq": [ { "property": "collection" }, "skraafotos2019"] }
+    ]
+  }
+}
+
+###
+POST {{host}}/search
+Content-Type: application/json
+
+{
+  "filter": {
+    "in": {
+       "value": { "property": "id" },
+       "list": [ "2019_81_01_1_0002_00000010", "2019_84_40_5_0013_00006873", "2019_84_40_5_0013_00006874" ],
+       "nocase": false
+    }
+  }
+}
+
+###
+POST {{host}}/search
+Content-Type: application/json
+
+{
+  "filter": { 
+      "and": [ 
+        {"eq": [ { "property": "pers:interior_orientation.focal_length" }, 122.981 ] }, 
+        {"eq": [ { "property": "gsd" }, 0.101 ] } 
+   ]
+  }
+}
+
+###
+POST {{host}}/search
+Content-Type: application/json
+
+{
+  "filter": 
+      { "gt": [ { "property": "gsd" }, "0.1" ] }
+
+}
+
+###
+POST {{host}}/search
+Content-Type: application/json
+
+{
+    "filter": { 
+        "intersects": [
+            { "property": "geometry" },
+            {
+                "type": "Polygon",
+                "coordinates": [[
+                [721250.0000012278, 6190390.000002561], [721244.0000012267, 6191220.000002562],
+                [722491.0000012581, 6191080.000002566], [722493.0000012588, 6190540.000002567],
+                [721250.0000012278, 6190390.000002561]
+                ]]
+            }
+        ]
+    },
+  "filter-crs": "25832",
+  "crs": "http://www.opengis.net/def/crs/EPSG/0/25832"     
+}
+
+###
+POST {{host}}/search
+Content-Type: application/json
+
+{
+  "filter": {
+    "or": [
+      { "gte": [ { "property": "gsd" }, 0.5] },
+      { "gte": [ { "property": "view:azimuth"}, 50] },
+      {
+        "and": [
+          { "isNull": { "property": "gsd"} },
+          { "isNull": { "property": "view:azimuth"} }
+        ]
+      }
+    ]
+  }
+}
+
+###
+POST {{host}}/search
+Content-Type: application/json
+
+{
+  "limit" : "50",
+  "filter_lang": "cql-json",
+  "filter": {
+    "after": [{ "property": "datetime" }, "2019-06-24T07:41:13Z"] 
+  }
+}
+
+###
+POST {{host}}/search
+Content-Type: application/json
+
+{
+  "limit" : "50",
+  "filter_lang": "cql-json",
+  "filter": {
+    "meets": [{ "property": "datetime" }, ["2019-06-24T07:41:13Z", "2019-06-24T07:41:15Z"]]
+  }
+}
