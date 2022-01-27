@@ -151,6 +151,7 @@ class FieldsExtension(BaseModel):
 class SQLAlchemySTACSearch(BaseModel):
     """Search model."""
 
+    # Parameter from stac_pydantic.api.Search are written into this class so we can control which parameters to expose
     ids: Optional[List[str]]
     bbox: Optional[BBox]
     intersects: Optional[
@@ -169,10 +170,9 @@ class SQLAlchemySTACSearch(BaseModel):
 
     # Make collections optional, default to searching all collections if none are provided
     collections: Optional[List[str]] = None
-    # Override default field extension to include default fields and pydantic includes/excludes factory
-    # field: Optional[FieldsExtension] = Field(None, alias="fields")
 
-    # Override query extension with supported operators
+    # field and query parameters are omitted since query is no longer used, and FieldExtension is disabled for now
+    # field: Optional[FieldsExtension] = Field(None, alias="fields")
     # query: Optional[Dict[Queryables, Dict[Operator, Any]]]
 
     # Override crs extension with supported crs
@@ -459,6 +459,7 @@ class SQLAlchemySTACSearch(BaseModel):
 
         return values
 
+    # from stac_pydantic.api.Search
     @property
     def start_date(self) -> Optional[datetime]:
         values = self.datetime.split("/")
@@ -468,6 +469,7 @@ class SQLAlchemySTACSearch(BaseModel):
             return None
         return parse_datetime(values[0])
 
+    # from stac_pydantic.api.Search
     @property
     def end_date(self) -> Optional[datetime]:
         values = self.datetime.split("/")
@@ -477,12 +479,14 @@ class SQLAlchemySTACSearch(BaseModel):
             return None
         return parse_datetime(values[1])
 
+    # from stac_pydantic.api.Search
     @validator("intersects")
     def validate_spatial(cls, v, values):
         if v and values["bbox"]:
             raise ValueError("intersects and bbox parameters are mutually exclusive")
         return v
 
+    # from stac_pydantic.api.Search
     @validator("datetime")
     def validate_datetime(cls, v):
         if "/" in v:
@@ -508,6 +512,7 @@ class SQLAlchemySTACSearch(BaseModel):
 
         return v
 
+    # from stac_pydantic.api.Search
     @property
     def spatial_filter(self) -> Optional[_GeometryBase]:
         """Return a geojson-pydantic object representing the spatial filter for the search request.
