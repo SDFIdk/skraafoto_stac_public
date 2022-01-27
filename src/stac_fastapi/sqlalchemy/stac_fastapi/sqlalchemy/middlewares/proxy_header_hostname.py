@@ -13,6 +13,11 @@ Altered to accomodate x-forwarded-host instead of x-forwarded-for
 Altered: 27-01-2022
 """
 from typing import List, Optional, Tuple, Union, cast
+import logging
+
+from starlette.types import ASGIApp, Receive, Scope, Send
+
+Headers = List[Tuple[bytes, bytes]]
 
 class ProxyHeadersMiddleware:
     def __init__(
@@ -36,6 +41,24 @@ class ProxyHeadersMiddleware:
                 return host
 
         return None
+    def remap_headers(self, src: Headers, before: bytes, after: bytes) -> Headers:
+        remapped = []
+        before_value = None
+        after_value = None
+        for header in src:
+            k, v = header
+            if k == before:
+                before_value = v
+                continue
+            elif k == after:
+                after_value = v
+                continue
+            remapped.append(header)
+        if after_value:
+            remapped.append((before, after_value))
+        elif before_value:
+            remapped.append((before, before_value))
+        return remapped
 
     async def __call__(
         self, scope, receive, send
@@ -47,7 +70,6 @@ class ProxyHeadersMiddleware:
 
             if self.always_trust or client_host in self.trusted_hosts:
                 headers = dict(scope["headers"])
-
                 if b"x-forwarded-proto" in headers:
                     # Determine if the incoming request was http or https based on
                     # the X-Forwarded-Proto header.
@@ -65,5 +87,8 @@ class ProxyHeadersMiddleware:
                     host = self.get_trusted_client_host(x_forwarded_hosts)
                     port = 0
                     scope["client"] = (host, port)  # type: ignore[index]
-
+                    scope["headers"] = self.remap_headers(
+                        scope["headers"], b"host", b"x-forwarded-host"
+                    )
+        
         return await self.app(scope, receive, send)
