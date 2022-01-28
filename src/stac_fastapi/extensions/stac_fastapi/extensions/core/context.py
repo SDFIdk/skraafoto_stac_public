@@ -19,8 +19,8 @@ class ContextExtension(ApiExtension):
 
     conformance_classes: List[str] = attr.ib(
         factory=lambda: [
-            "https://api.stacspec.org/v1.0.0-beta.5/item-search/#context",
-            "https://api.stacspec.org/v1.0.0-beta.5/ogcapi-features#context",
+            "https://api.stacspec.org/v1.0.0-beta.4/item-search/#context",
+            "https://api.stacspec.org/v1.0.0-beta.4/ogcapi-features#context",
         ]
     )
     schema_href: Optional[str] = attr.ib(

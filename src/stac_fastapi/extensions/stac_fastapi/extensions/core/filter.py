@@ -20,29 +20,29 @@ class FilterConformanceClasses(str, Enum):
     """
 
     # Conformance classes from https://github.com/radiantearth/stac-api-spec/tree/master/fragments/filter
-    # CQLL2-Text, Functions, and Arrays are not supported
+    # CQL-Text, Functions, and Arrays are not supported
     FILTER = "http://www.opengis.net/spec/ogcapi-features-3/1.0/conf/filter"
     ITEM_SEARCH_FILTER = (
-        "https://api.stacspec.org/v1.0.0-beta.5/item-search#filter:item-search-filter"
+        "https://api.stacspec.org/v1.0.0-beta.4/item-search#filter:item-search-filter"
     )
-    # CQL2_TEXT = "http://www.opengis.net/spec/cql2/1.0/conf/cql2-text"
-    CQL2_JSON = "http://www.opengis.net/spec/cql2/1.0/conf/cql2-json"
-    BASIC_CQL2 = "http://www.opengis.net/spec/cql2/1.0/conf/basic-cql2"
-    ADVANCED_COMPARISON_OPERATORS = (
-        "http://www.opengis.net/spec/cql2/1.0/conf/advanced-comparison-operators"
-    )
+    BASIC_CQL = "http://www.opengis.net/spec/ogcapi-features-3/1.0/conf/basic-cql"
+    # CQL_TEXT = "http://www.opengis.net/spec/cql2/1.0/conf/cql2-text"
+    CQL_JSON = "http://www.opengis.net/spec/ogcapi-features-3/1.0/conf/cql-json"
+    ADVANCED_COMPARISON_OPERATORS = "http://www.opengis.net/spec/ogcapi-features-3/1.0/conf/advanced-comparison-operators"
     BASIC_SPATIAL_OPERATORS = (
-        "http://www.opengis.net/spec/cql2/1.0/conf/basic-spatial-operators"
+        "http://www.opengis.net/spec/ogcapi-features-3/1.0/conf/basic-spatial-operators"
     )
-    ENHANCED_SPATIAL_OPERATORS = (
-        "http://www.opengis.net/spec/cql2/1.0/conf/spatial-operators"
+    SPATIAL_OPERATORS = (
+        "http://www.opengis.net/spec/ogcapi-features-3/1.0/conf/spatial-operators"
     )
-    TEMPORAL_OPERATORS = "http://www.opengis.net/spec/cql2/1.0/conf/temporal-operators"
-    # FUNCTIONS = "http://www.opengis.net/spec/cql2/1.0/conf/functions"
-    ARITHMETIC = "http://www.opengis.net/spec/cql2/1.0/conf/arithmetic"
-    # ARRAYS = "http://www.opengis.net/spec/cql2/1.0/conf/array-operators"
+    TEMPORAL_OPERATORS = (
+        "http://www.opengis.net/spec/ogcapi-features-3/1.0/conf/temporal-operators"
+    )
+    # FUNCTIONS = "http://www.opengis.net/spec/ogcapi-features-3/1.0/conf/functions"
+    ARITHMETIC = "http://www.opengis.net/spec/ogcapi-features-3/1.0/conf/arithmetic"
+    # ARRAYS = "http://www.opengis.net/spec/ogcapi-features-3/1.0/conf/array-operators"
     QUERYABLE_SECOND_OPERAND = (
-        "http://www.opengis.net/spec/cql2/1.0/conf/property-property"
+        "http://www.opengis.net/spec/ogcapi-features-3/1.0/conf/property-property"
     )
 
 
@@ -71,11 +71,11 @@ class FilterExtension(ApiExtension):
             FilterConformanceClasses.FILTER,
             FilterConformanceClasses.ITEM_SEARCH_FILTER,
             # FilterConformanceClasses.CQL2_TEXT,
-            FilterConformanceClasses.CQL2_JSON,
-            FilterConformanceClasses.BASIC_CQL2,
+            FilterConformanceClasses.CQL_JSON,
+            FilterConformanceClasses.BASIC_CQL,
             FilterConformanceClasses.ADVANCED_COMPARISON_OPERATORS,
             FilterConformanceClasses.BASIC_SPATIAL_OPERATORS,
-            FilterConformanceClasses.ENHANCED_SPATIAL_OPERATORS,
+            FilterConformanceClasses.SPATIAL_OPERATORS,
             FilterConformanceClasses.TEMPORAL_OPERATORS,
             # FilterConformanceClasses.FUNCTIONS,
             FilterConformanceClasses.ARITHMETIC,
