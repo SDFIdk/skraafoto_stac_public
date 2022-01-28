@@ -45,6 +45,15 @@ class Collection(Catalog, total=False):
     summaries: Dict[str, Any]
     assets: Dict[str, Any]
 
+class CrsCollection(Catalog, total=False):
+    keywords: List[str]
+    license: str
+    providers: List[Dict[str, Any]]
+    extent: Dict[str, Any]
+    summaries: Dict[str, Any]
+    assets: Dict[str, Any]
+    crs: Dict[str,Any]
+    storageCrs: str
 
 class Item(TypedDict, total=False):
     """STAC Item."""

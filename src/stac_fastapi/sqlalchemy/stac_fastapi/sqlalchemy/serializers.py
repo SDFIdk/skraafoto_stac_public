@@ -246,8 +246,8 @@ class CollectionSerializer(Serializer):
 
         stac_extensions = db_model.stac_extensions or []
         try:
-            if isinstance(db_model, database.CrsCollection):
-                return stac_types.Collection(
+            if hasattr(db_model,"storage_crs"):
+                return stac_types.CrsCollection(
                     type="Collection",
                     id=db_model.id,
                     stac_extensions=stac_extensions,
@@ -255,8 +255,8 @@ class CollectionSerializer(Serializer):
                     title=db_model.title,
                     description=db_model.description,
                     keywords=db_model.keywords,
-                    storageCrs=db_model.storageCrs,
-                    crs=[],  # Gets update after serialization by the crs extension
+                    storageCrs=db_model.storage_crs,
+                    crs=[],  # Gets update after seriawlization by the crs extension
                     license=db_model.license,
                     providers=db_model.providers,
                     summaries=db_model.summaries,
@@ -274,6 +274,8 @@ class CollectionSerializer(Serializer):
             title=db_model.title,
             description=db_model.description,
             keywords=db_model.keywords,
+            #storageCrs=db_model.storage_crs,
+            #crs=[],  # Gets update after seriawlization by the crs extension
             license=db_model.license,
             providers=db_model.providers,
             summaries=db_model.summaries,
