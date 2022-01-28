@@ -21,4 +21,4 @@ RUN mkdir -p /install && \
     pip install -e ./stac_fastapi/extensions && \
     pip install -e ./stac_fastapi/sqlalchemy[server]
 
-CMD ["python","-m","uvicorn","--proxy-headers","stac_fastapi.sqlalchemy.app:app","--host","0.0.0.0","--port","8081"]
+CMD ["python","-m","uvicorn","--proxy-headers","--no-server-header","stac_fastapi.sqlalchemy.app:app","--host","0.0.0.0","--port","8081"]
