@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 import json
+import pytest
 from ..conftest import TEST_COLLECTION_ID, MockStarletteRequest
 from stac_fastapi.sqlalchemy.config import (
     SkraafotosProperties,
@@ -65,6 +66,7 @@ def test_app_context_extension(load_test_data, app_client, postgres_transactions
         assert resp_json["context"]["limit"] > resp_json["context"]["matched"]
 
 
+@pytest.mark.skip(reason="FieldExtension switched off")
 def test_app_fields_extension(load_test_data, app_client, postgres_transactions):
     item = load_test_data("test_item.json")
     postgres_transactions.create_item(item, request=MockStarletteRequest)
@@ -288,6 +290,7 @@ def test_filter_queryables_config(app_client, load_test_data):
 
 
 def test_filter_queryables_single_collection(app_client, load_test_data):
+    test_item = load_test_data("test_item.json")
     resp = app_client.get(f"/collections/{test_item['collection']}/queryables")
     assert resp.status_code == 200
 

@@ -1,5 +1,4 @@
-#@host=http://localhost:8091
-@host=http://localhost:8081
+@host=http://localhost:8000
 
 @collection=skraafotos2019
 
@@ -131,3 +130,11 @@ Content-Type: application/json
     "meets": [{ "property": "datetime" }, ["2019-06-24T07:41:13Z", "2019-06-24T07:41:15Z"]]
   }
 }
+
+###
+# Test with headers. Should return links with this host and path
+
+GET http://localhost:8000/ HTTP/1.1
+x-forwarded-proto: http
+x-forwarded-host: www.test.dk
+x-forwarded-prefix: /skraafotoapi_xxx

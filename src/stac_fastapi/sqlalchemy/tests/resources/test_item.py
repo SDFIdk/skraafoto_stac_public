@@ -415,16 +415,22 @@ def test_item_search_temporal_window_get(app_client, load_test_data):
     resp_json = resp.json()
     assert resp_json["features"][0]["id"] == test_item["id"]
 
-def test_item_search_temporal_tailed_get(app_client,load_test_data):
+
+def test_item_search_temporal_tailed_get(app_client, load_test_data):
     test_item = load_test_data("test_item.json")
     resp = app_client.post(
         f"/collections/{test_item['collection']}/items", json=test_item
     )
     assert resp.status_code == 200
 
-    dates = ["/1985-04-12T23:20:50.52Z","1985-04-12T23:20:50.52Z/","1985-04-12t23:20:50.000z", datetime.strptime(test_item["properties"]["datetime"], DATETIME_RFC339)]
+    dates = [
+        "/1985-04-12T23:20:50.52Z",
+        "1985-04-12T23:20:50.52Z/",
+        "1985-04-12t23:20:50.000z",
+        datetime.strptime(test_item["properties"]["datetime"], DATETIME_RFC339),
+    ]
     for d in dates:
-        
+
         params = {
             "collections": test_item["collection"],
             "datetime": d,
@@ -637,6 +643,7 @@ def test_pagination_token_idempotent(app_client, load_test_data):
     ]
 
 
+@pytest.mark.skip(reason="FieldExtension switched off")
 def test_field_extension_get(app_client, load_test_data):
     """Test GET search with included fields (fields extension)"""
 
@@ -646,7 +653,7 @@ def test_field_extension_get(app_client, load_test_data):
     assert not set(feat_properties) - {"pers:phi", "gsd", "datetime"}
 
 
-# #TODO: Vi kan ikke exclude datetime?
+@pytest.mark.skip(reason="FieldExtension switched off")
 def test_field_extension_post(app_client, load_test_data):
     """Test POST search with included and excluded fields (fields extension)"""
 
@@ -662,6 +669,7 @@ def test_field_extension_post(app_client, load_test_data):
     assert not set(resp_json["features"][0]["properties"]) - {"gsd", "pers:phi"}
 
 
+@pytest.mark.skip(reason="FieldExtension switched off")
 def test_field_extension_exclude_and_include(app_client, load_test_data):
     """Test POST search including/excluding same field (fields extension)"""
 
@@ -677,6 +685,7 @@ def test_field_extension_exclude_and_include(app_client, load_test_data):
     assert "properties.gsd" not in resp_json["features"][0]["properties"]
 
 
+@pytest.mark.skip(reason="FieldExtension switched off")
 def test_field_extension_exclude_default_includes(app_client, load_test_data):
     """Test POST search excluding a forbidden field (fields extension)"""
 
@@ -831,14 +840,6 @@ def test_item_search_invalid_filter_crs(app_client, load_test_data):
 
 
 def test_search_bbox_errors(app_client):
-    body = {"query": {"bbox": [0]}}
-    resp = app_client.post("/search", json=body)
-    assert resp.status_code == 400
-
-    body = {"query": {"bbox": [100.0, 0.0, 0.0, 105.0, 1.0, 1.0]}}
-    resp = app_client.post("/search", json=body)
-    assert resp.status_code == 400
-
     params = {"bbox": "100.0,0.0,0.0,105.0"}
     resp = app_client.get("/search", params=params)
     assert resp.status_code == 400

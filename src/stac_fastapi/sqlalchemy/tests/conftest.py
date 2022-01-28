@@ -291,8 +291,8 @@ def api_client(db_session):
             CrsExtension(),
             ContextExtension(),
             SortExtension(),
-            FieldsExtension(),
-            QueryExtension(),
+            # FieldsExtension(),
+            # QueryExtension(),
             TransactionExtension(
                 client=TestTransactionsClient(session=db_session, storage_srid=25832),
                 settings=settings,
