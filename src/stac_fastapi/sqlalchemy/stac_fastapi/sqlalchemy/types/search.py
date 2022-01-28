@@ -148,7 +148,7 @@ class FieldsExtension(BaseModel):
         }
 
 
-class SQLAlchemySTACSearch(BaseModel):
+class STACSearch(BaseModel):
     """Search model."""
 
     # Parameter from stac_pydantic.api.Search are written into this class so we can control which parameters to expose
@@ -267,7 +267,7 @@ class SQLAlchemySTACSearch(BaseModel):
                             "STACSearch",
                         )
                     ],
-                    SQLAlchemySTACSearch,
+                    STACSearch,
                 )
         return res
 
@@ -327,7 +327,7 @@ class SQLAlchemySTACSearch(BaseModel):
                             "STACSearch",
                         )
                     ],
-                    SQLAlchemySTACSearch,
+                    STACSearch,
                 )
 
     @validator("bbox_crs")
@@ -380,7 +380,7 @@ class SQLAlchemySTACSearch(BaseModel):
                             "STACSearch",
                         )
                     ],
-                    SQLAlchemySTACSearch,
+                    STACSearch,
                 )
 
             # Validate filter-crs
@@ -408,7 +408,7 @@ class SQLAlchemySTACSearch(BaseModel):
                                 "STACSearch",
                             )
                         ],
-                        SQLAlchemySTACSearch,
+                        STACSearch,
                     )
                 # add filter-crs to filter if crs is not 4326 - hack in order to pass crs to pygeofilter through the geojson
                 if values["filter-crs"] != 4326:
@@ -424,7 +424,7 @@ class SQLAlchemySTACSearch(BaseModel):
                             "STACSearch",
                         )
                     ],
-                    SQLAlchemySTACSearch,
+                    STACSearch,
                 )
             if "collections" in values and values["collections"]:
                 (

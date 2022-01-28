@@ -27,7 +27,7 @@ from stac_fastapi.sqlalchemy.models import database
 from stac_fastapi.sqlalchemy.session import Session
 from stac_fastapi.sqlalchemy.pagination import PaginationTokenClient
 from stac_fastapi.sqlalchemy.types.search import (
-    SQLAlchemySTACSearch,
+    STACSearch,
     Queryables,
 )
 from stac_fastapi.types.config import Settings
@@ -232,7 +232,7 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                 )
 
         try:
-            search_request = SQLAlchemySTACSearch(**base_args)
+            search_request = STACSearch(**base_args)
         except ValidationError:
             raise HTTPException(status_code=400, detail="Invalid parameters provided")
         resp = self.post_search(search_request, False, request=kwargs["request"])
@@ -348,7 +348,7 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
 
         # Do the request
         try:
-            search_request = SQLAlchemySTACSearch(**base_args)
+            search_request = STACSearch(**base_args)
         except ValidationError as e:
             raise HTTPException(
                 status_code=400,
@@ -375,7 +375,7 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
 
     def post_search(
         self,
-        search_request: SQLAlchemySTACSearch,
+        search_request: STACSearch,
         is_direct_post=True,
         **kwargs,
     ) -> ItemCollection:

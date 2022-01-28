@@ -32,7 +32,7 @@ from stac_fastapi.sqlalchemy.app import (
     ROUTES_REQUIRING_TOKEN,
 )
 
-from stac_fastapi.sqlalchemy.types.search import SQLAlchemySTACSearch
+from stac_fastapi.sqlalchemy.types.search import STACSearch
 from stac_fastapi.types.config import Settings
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
@@ -299,7 +299,7 @@ def api_client(db_session):
             ),
             FilterExtension(client=CoreFiltersClient(session=db_session)),
         ],
-        search_request_model=SQLAlchemySTACSearch,
+        search_request_model=STACSearch,
     )
 
 
