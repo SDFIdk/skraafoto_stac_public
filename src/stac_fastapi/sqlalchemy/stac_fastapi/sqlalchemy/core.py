@@ -268,7 +268,7 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
         resp["links"] = page_links
 
         # ItemCollection
-        if self.get_extension("CrsExtension"):
+        if self.extension_is_enabled("CrsExtension"):
             return self.create_crs_response(resp,crs)
 
         return resp
@@ -421,7 +421,9 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                     )
             else:
                 output_srid = 4326
-                output_crs = self.get_extension("CrsExtension").storageCrs
+                output_crs = "http://www.opengis.net/def/crs/OGC/1.3/CRS84"
+                if self.extension_is_enabled("CrsExtension"):
+                    output_crs = self.get_extension("CrsExtension").storageCrs
 
             # Transform footprint and bbox if necessary
             query = query.options(self._geometry_expression(output_srid))
