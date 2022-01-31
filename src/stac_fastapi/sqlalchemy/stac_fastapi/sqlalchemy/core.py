@@ -413,6 +413,7 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                 stac_crs = self.get_extension("CrsExtension")
                 try:
                     output_srid = stac_crs.epsg_from_crs(search_request.crs)
+                    output_crs = search_request.crs
                 except ValueError as e:
                     raise HTTPException(
                         status_code=400,
@@ -420,6 +421,7 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                     )
             else:
                 output_srid = 4326
+                output_crs = self.get_extension("CrsExtension").storageCrs
 
             # Transform footprint and bbox if necessary
             query = query.options(self._geometry_expression(output_srid))
@@ -531,6 +533,7 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                     elif dts[1] != "..":
                         query = query.filter(self.item_table.datetime <= dts[1])
 
+                # Query is disabled for this implementation
                 # Query fields
                 # if search_request.query:
                 #     for (field_name, expr) in search_request.query.items():
@@ -661,7 +664,7 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
         for feat in response_features:
             crs_obj = {
                 "type": "name",
-                "properties": {"name": f"EPSG:{output_srid}"},
+                "properties": {"name": f"{output_crs}"},
             }
             feat["crs"] = crs_obj
 

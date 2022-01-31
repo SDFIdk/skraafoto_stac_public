@@ -998,7 +998,7 @@ def test_collection_item_get_bbox_with_bbox_crs(app_client, load_test_data):
     assert len(matching_feat) == 1
     assert matching_feat[0]["bbox"] != test_item["bbox"]
     assert (
-        matching_feat[0]["crs"]["properties"]["name"] == "EPSG:25832"
+        matching_feat[0]["crs"]["properties"]["name"] == "http://www.opengis.net/def/crs/EPSG/0/25832"
     )  # TODO rewrite to uri
 
 
@@ -1041,7 +1041,7 @@ def test_item_post_bbox_with_crs(app_client, load_test_data):
     assert len(matching_feat) == 1
     assert matching_feat[0]["bbox"] != test_item["bbox"]
     assert (
-        matching_feat[0]["crs"]["properties"]["name"] == "EPSG:25832"
+        matching_feat[0]["crs"]["properties"]["name"] == "http://www.opengis.net/def/crs/EPSG/0/25832"
     )  # TODO rewrite to uri
 
 
@@ -1066,7 +1066,7 @@ def test_item_post_bbox_with_bbox_crs(app_client, load_test_data):
     assert len(matching_feat) == 1
     assert matching_feat[0]["bbox"] == pytest.approx(test_item["bbox"])
     assert (
-        matching_feat[0]["crs"]["properties"]["name"] == "EPSG:4326"
+        matching_feat[0]["crs"]["properties"]["name"] == "http://www.opengis.net/def/crs/OGC/1.3/CRS84"
     )  # TODO rewrite to uri
 
 
@@ -1091,7 +1091,7 @@ def test_item_search_bbox_crs_with_crs(app_client, load_test_data):
     assert len(matching_feat) == 1
     assert matching_feat[0]["bbox"] != test_item["bbox"]
     assert (
-        matching_feat[0]["crs"]["properties"]["name"] == "EPSG:25832"
+        matching_feat[0]["crs"]["properties"]["name"] == "http://www.opengis.net/def/crs/EPSG/0/25832"
     )  # TODO rewrite to uri
 
 
