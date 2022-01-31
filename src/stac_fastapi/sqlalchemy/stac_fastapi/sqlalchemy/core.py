@@ -12,6 +12,7 @@ import sqlalchemy as sa
 from sqlalchemy.sql.expression import true, tuple_
 import stac_pydantic
 from fastapi import HTTPException
+from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 from shapely.geometry import Polygon as ShapelyPolygon
 from shapely.geometry import shape
@@ -118,6 +119,15 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                 ]
             ),
         )
+    def create_crs_response(self, resp, crs, **kwargs) -> JSONResponse:
+        """Add Content-Crs header to JSONResponse to comply with OGC API Feat part 2"""
+        crs_ext = self.get_extension("CrsExtension")
+        if crs is None:
+            crs = crs_ext.storageCrs
+        if crs in crs_ext.crs: # If the CRS is valid
+            return JSONResponse(resp, headers={"Content-Crs": crs})
+        else:
+            return resp
 
     def href_builder(self, **kwargs) -> BaseHrefBuilder:
         """Override with HrefBuilder which adds API token to all hrefs if present"""
@@ -258,6 +268,9 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
         resp["links"] = page_links
 
         # ItemCollection
+        if self.get_extension("CrsExtension"):
+            return self.create_crs_response(resp,crs)
+
         return resp
 
     def get_item(self, item_id: str, collection_id: str, **kwargs) -> Item:
@@ -282,7 +295,11 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                 self._geometry_expression(output_srid),
             )
             item = self._lookup_id(item_id, self.item_table, session, options)
-            return self.item_serializer.db_to_stac(item, hrefbuilder)
+            resp = self.item_serializer.db_to_stac(item, hrefbuilder)
+            if self.get_extension("CrsExtension"):
+                return self.create_crs_response(resp,req_crs)
+
+            return resp
 
     def get_search(
         self,

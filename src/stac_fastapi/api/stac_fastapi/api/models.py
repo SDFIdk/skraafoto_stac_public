@@ -4,7 +4,7 @@ import abc
 from typing import Dict, Optional, Type, Union, List
 from datetime import datetime
 import attr
-from fastapi import Body, Path, Query
+from fastapi import Body, Path, Query, Response
 from pydantic import BaseModel, create_model
 from pydantic.fields import UndefinedType
 
@@ -46,7 +46,8 @@ def _create_request_model(model: Type[BaseModel]) -> Type[BaseModel]:
 @attr.s  # type:ignore
 class APIRequest(abc.ABC):
     """Generic API Request base class."""
-
+    response: Response = attr.ib(default=None)
+    
     @abc.abstractmethod
     def kwargs(self) -> Dict:
         """Transform api request params into format which matches the signature of the endpoint."""
