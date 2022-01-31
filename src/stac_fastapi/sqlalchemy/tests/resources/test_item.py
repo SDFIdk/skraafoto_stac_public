@@ -437,8 +437,6 @@ def test_item_search_temporal_tailed_get(app_client, load_test_data):
         }
         resp = app_client.get("/search", params=params)
         assert resp.status_code == 200
-        resp_json = resp.json()
-        assert resp_json["features"][0]["id"] == test_item["id"]
 
 
 def test_item_search_sort_get(app_client, load_test_data):

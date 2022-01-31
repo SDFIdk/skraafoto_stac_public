@@ -500,7 +500,10 @@ class STACSearch(BaseModel):
             if value == ".." or value == "":
                 dates.append("..")
                 continue
-
+            #NOTE: Per [ABNF] and ISO8601, the "T" and "Z" characters in this
+            #syntax may alternatively be lower case "t" or "z" respectively.
+            # So we have to replace "t" and "z" with their uppercase counterparts.
+            value = value.replace("z","Z").replace("t","T")
             parse_datetime(value)
             dates.append(value)
 
