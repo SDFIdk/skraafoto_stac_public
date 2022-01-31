@@ -14,7 +14,7 @@ from stac_fastapi.sqlalchemy.config import SqlalchemySettings
 from stac_fastapi.sqlalchemy.models import database
 from stac_fastapi.sqlalchemy.core import CoreCrudClient, CoreFiltersClient
 from stac_fastapi.sqlalchemy.session import Session
-from stac_fastapi.sqlalchemy.types.search import SQLAlchemySTACSearch
+from stac_fastapi.sqlalchemy.types.search import STACSearch
 from stac_fastapi.sqlalchemy.middlewares.proxy_headers import ProxyHeadersMiddleware
 
 
@@ -60,7 +60,7 @@ api = StacApi(
         collection_table=database.Collection,
         landing_page_id="dataforsyningen-flyfotoapi",
     ),
-    search_request_model=SQLAlchemySTACSearch,
+    search_request_model=STACSearch,
     route_dependencies=[(ROUTES_REQUIRING_TOKEN, [Depends(token_query_param)])],
 )
 app = api.app
