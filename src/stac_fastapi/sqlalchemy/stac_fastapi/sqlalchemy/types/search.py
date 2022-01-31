@@ -179,7 +179,7 @@ class STACSearch(BaseModel):
     crs: Optional[str] = None
     bbox_crs: Optional[str] = Field(alias="bbox-crs")
     pt: Optional[str] = None
-    limit: Optional[conint(ge=0, le=10000)] = 10
+    limit: Optional[conint(gt=0, le=10000)] = 10
     filter_crs: Optional[str] = Field(None, alias="filter-crs")
     filter_lang: Optional[str] = Field(None, alias="filter-lang")
     filter: Optional[Any]
