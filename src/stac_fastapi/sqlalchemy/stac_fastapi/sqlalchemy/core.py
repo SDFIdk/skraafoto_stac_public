@@ -119,12 +119,13 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                 ]
             ),
         )
+
     def create_crs_response(self, resp, crs, **kwargs) -> JSONResponse:
         """Add Content-Crs header to JSONResponse to comply with OGC API Feat part 2"""
         crs_ext = self.get_extension("CrsExtension")
         if crs is None:
             crs = crs_ext.storageCrs
-        if crs in crs_ext.crs: # If the CRS is valid
+        if crs in crs_ext.crs:  # If the CRS is valid
             return JSONResponse(resp, headers={"Content-Crs": crs})
         else:
             return resp
@@ -251,7 +252,11 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
         hrefbuilder = self.href_builder(**kwargs)
         page_links = []
         for link in resp["links"]:
-            if link["rel"] == Relations.next or link["rel"] == Relations.previous:
+            if (
+                link["rel"] == Relations.next
+                or link["rel"] == Relations.previous
+                or link["rel"] == Relations.self
+            ):
                 query_params = dict(kwargs["request"].query_params)
                 if link["body"]:
                     query_params.update(link["body"])
@@ -269,7 +274,7 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
 
         # ItemCollection
         if self.extension_is_enabled("CrsExtension"):
-            return self.create_crs_response(resp,crs)
+            return self.create_crs_response(resp, crs)
 
         return resp
 
@@ -297,7 +302,7 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
             item = self._lookup_id(item_id, self.item_table, session, options)
             resp = self.item_serializer.db_to_stac(item, hrefbuilder)
             if self.get_extension("CrsExtension"):
-                return self.create_crs_response(resp,req_crs)
+                return self.create_crs_response(resp, req_crs)
 
             return resp
 
@@ -377,7 +382,11 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
         page_links = []
         hrefbuilder = self.href_builder(**kwargs)
         for link in resp["links"]:
-            if link["rel"] == Relations.next or link["rel"] == Relations.previous:
+            if (
+                link["rel"] == Relations.next
+                or link["rel"] == Relations.previous
+                or link["rel"] == Relations.self
+            ):
                 query_params = dict(kwargs["request"].query_params)
                 if link["body"]:
                     query_params.update(link["body"])
@@ -527,13 +536,13 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                     if len(dts) == 1:
                         query = query.filter(self.item_table.datetime == dts[0])
                     # If both dates are valid strings, it's a between comparison
-                    elif not any(x in search_request.datetime for x in ["..",""]):
+                    elif not any(x in search_request.datetime for x in ["..", ""]):
                         query = query.filter(self.item_table.datetime.between(*dts))
                     # All items after the start date
-                    elif dts[0] not in ["..",""]:
+                    elif dts[0] not in ["..", ""]:
                         query = query.filter(self.item_table.datetime >= dts[0])
                     # All items before the end date
-                    elif dts[1] not in ["..",""]:
+                    elif dts[1] not in ["..", ""]:
                         query = query.filter(self.item_table.datetime <= dts[1])
 
                 # Query is disabled for this implementation
@@ -592,6 +601,20 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                 query_params.update(
                     {"limit": search_request.limit}
                 )  # always include limit
+
+            links.append(
+                {
+                    "rel": Relations.self.value,
+                    "type": "application/geo+json",
+                    "href": hrefbuilder.build("./search"),
+                    "method": "POST",
+                    "body": {
+                        **query_params,
+                    },
+                }
+            )
+            if search_request.pt:
+                links[0]["body"]["pt"] = search_request.pt
 
             if page.next:
                 links.append(
