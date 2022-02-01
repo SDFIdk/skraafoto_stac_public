@@ -18,7 +18,9 @@ Copyright (c) 2020 Arturo AI
 ---
 
 ## Configuration
+
 The application is configured using environment variables. These may be put in a file `/.env` like
+
 ```.env
 WEB_CONCURRENCY=10
 DEBUG=TRUE
@@ -48,88 +50,88 @@ Using vscode install the [Docker](https://marketplace.visualstudio.com/items?ite
 Then create
 
 `.vscode/launch.json`:
+
 ```json
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Docker: Python - Fastapi",
-            "type": "docker",
-            "request": "launch",
-            "preLaunchTask": "docker-run: debug",
-            "python": {
-                "pathMappings": [
-                    {
-                        "localRoot": "${workspaceFolder}/src/stac_fastapi",
-                        "remoteRoot": "/app/stac_fastapi"
-                    }
-                ],
-                "projectType": "fastapi"
-            }
-        }
-    ]
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Docker: Python - Fastapi",
+      "type": "docker",
+      "request": "launch",
+      "preLaunchTask": "docker-run: debug",
+      "python": {
+        "pathMappings": [
+          {
+            "localRoot": "${workspaceFolder}/src/stac_fastapi",
+            "remoteRoot": "/app/stac_fastapi"
+          }
+        ],
+        "projectType": "fastapi"
+      }
+    }
+  ]
 }
 ```
 
 and `.vscode/tasks.json` (note that app configuration cannot be read from the `.env` file here and needs to be repeated):
+
 ```json
 {
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"type": "docker-build",
-			"label": "docker-build",
-			"platform": "python",
-			"dockerBuild": {
-				"tag": "skraafoto_stac_public:latest",
-				"dockerfile": "${workspaceFolder}/Dockerfile_dev",
-				"context": "${workspaceFolder}",
-				"pull": true
-			}
-		},
-		{
-			"type": "docker-run",
-			"label": "docker-run: debug",
-			"dependsOn": [
-				"docker-build"
-			],
-			"dockerRun": {
-				"ports": [
-					{
-						"containerPort": 8081,
-						"hostPort": 8081
-					}
-				],
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "docker-build",
+      "label": "docker-build",
+      "platform": "python",
+      "dockerBuild": {
+        "tag": "skraafoto_stac_public:latest",
+        "dockerfile": "${workspaceFolder}/Dockerfile_dev",
+        "context": "${workspaceFolder}",
+        "pull": true
+      }
+    },
+    {
+      "type": "docker-run",
+      "label": "docker-run: debug",
+      "dependsOn": ["docker-build"],
+      "dockerRun": {
+        "ports": [
+          {
+            "containerPort": 8081,
+            "hostPort": 8081
+          }
+        ],
         "env": {
-					"APP_PORT": "8081",
-					"DEBUG": "TRUE",
-					"ENVIRONMENT": "local",
-					"POSTGRES_USER": "my_db_user",
-					"POSTGRES_PASS": "my_db_password",
-					"POSTGRES_DBNAME": "db_name",
-					"POSTGRES_HOST": "db_host",
-					"POSTGRES_PORT": "db_port",
-					"POSTGRES_APPLICATION_NAME": "stac_fastapi_vscode_debugging",
-					"WEB_CONCURRENCY": "1",
-					"COGTILER_BASEPATH": "https://skraafotodistribution-tile-api.k8s-test-121.septima.dk/cogtiler"
-				}
-			},
-			"python": {
-				"args": [
-					"stac_fastapi.sqlalchemy.app:app",
-					"--host",
-					"0.0.0.0",
-					"--port",
-					"8081",
-					"--reload"
-				],
-				"module": "uvicorn"
-			}
-		}
-	]
+          "APP_PORT": "8081",
+          "DEBUG": "TRUE",
+          "ENVIRONMENT": "local",
+          "POSTGRES_USER": "my_db_user",
+          "POSTGRES_PASS": "my_db_password",
+          "POSTGRES_DBNAME": "db_name",
+          "POSTGRES_HOST": "db_host",
+          "POSTGRES_PORT": "db_port",
+          "POSTGRES_APPLICATION_NAME": "stac_fastapi_vscode_debugging",
+          "WEB_CONCURRENCY": "1",
+          "COGTILER_BASEPATH": "https://skraafotodistribution-tile-api.k8s-test-121.septima.dk/cogtiler"
+        }
+      },
+      "python": {
+        "args": [
+          "stac_fastapi.sqlalchemy.app:app",
+          "--host",
+          "0.0.0.0",
+          "--port",
+          "8081",
+          "--reload"
+        ],
+        "module": "uvicorn"
+      }
+    }
+  ]
 }
 ```
 
@@ -163,3 +165,9 @@ Now install the SQLalchemy implementation:
 `pip install -e "./src/stac_fastapi/sqlalchemy[dev,server]"`
 
 And finally you should be able to run `pytest src` on the commandline, and have VScode discover the tests using the `testing` icon in the left-hand toolbar ( it looks like a chemestry vial). Make sure VScode has the proper python interpreter configured. It can be set typing `CTRL + P` -> `Python: Select interpreter` and then finding the new interpreter. If you can't find it, you need to reload VSCode.
+
+### Self-contained test
+
+SKRAAFOTO_STAC_PUBLIC requires a database, populated with data, to run the tests against. To run a completely self-contained test, a docker-compose file named `docker-compose.test.yml` is made available.
+
+Run the test compose file `docker compose -f .\docker-compose.test.yml up`. The docker compose file spins up a database, and populates it with data using an alembic migration file. The tests are then run using pytest against the API and a report is generated at `./test_report` in the root directory. Any changes made to the database, has to be mirrored by creating a new alembic version. For more information see https://alembic.sqlalchemy.org/en/latest/tutorial.html
