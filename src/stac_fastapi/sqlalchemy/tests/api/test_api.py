@@ -249,7 +249,7 @@ def test_search_line_string_intersects(
     postgres_transactions.create_item(item, request=MockStarletteRequest)
 
     line = [
-        [11.249865714048164, 55.17886766328200],
+        [8.91023817166338, 55.91173821232403],
         [
             13.095568839048,
             56.26776108,

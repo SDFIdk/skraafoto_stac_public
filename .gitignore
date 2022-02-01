@@ -130,3 +130,6 @@ docs/api/*
 # vscode
 .vscode/
 traefik/traefik.exe
+
+# test db data
+data
