@@ -293,6 +293,9 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                     detail="CRS provided for argument crs is invalid, valid options are: "
                     + ",".join(self.get_extension("CrsExtension").crs),
                 )
+        else:
+            req_crs = "http://www.opengis.net/def/crs/OGC/1.3/CRS84"
+
         hrefbuilder = self.href_builder(**kwargs)
         with self.session.session_maker.context_session() as session:
             options = (
@@ -302,6 +305,14 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
             item = self._lookup_id(item_id, self.item_table, session, options)
             resp = self.item_serializer.db_to_stac(item, hrefbuilder)
             if self.get_extension("CrsExtension"):
+                if (
+                    "crs" not in resp["properties"]
+                ):  # If the CRS type has not been populated to the response
+                    crs_obj = {
+                        "type": "name",
+                        "properties": {"name": f"{req_crs}"},
+                    }
+                resp["properties"]["crs"] = crs_obj
                 return self.create_crs_response(resp, req_crs)
 
             return resp
