@@ -345,7 +345,7 @@ class StacApi:
 
     def __attrs_pre_init__(self):
         def setup(self) -> None:
-           
+
             self.add_route(
                 "/ogc/openapi.json",
                 get_openapi_handler(self),
@@ -377,11 +377,15 @@ class StacApi:
 
                 async def swagger_ui_html(req: Request) -> HTMLResponse:
                     root_path = req.scope.get("root_path", "").rstrip("/")
+                    token = req.query_params.get("token")
+
                     openapi_url = root_path + self.openapi_url
                     oauth2_redirect_url = self.swagger_ui_oauth2_redirect_url
 
                     if oauth2_redirect_url:
                         oauth2_redirect_url = root_path + oauth2_redirect_url
+                    if token:
+                        openapi_url = openapi_url + f"?token={token}"
                     return get_swagger_ui_html(
                         openapi_url=openapi_url,
                         title=self.title + " - Swagger UI",
@@ -457,8 +461,6 @@ class StacApi:
         # add middlewares
         for middleware in self.middlewares:
             self.app.add_middleware(middleware)
-        
-        
 
         # customize route dependencies
         for scopes, dependencies in self.route_dependencies:
