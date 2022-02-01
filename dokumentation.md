@@ -19,9 +19,44 @@ Udgangspunktet for navigering af STAC. Det består af links til items og andre c
 Magen til catalog, men indeholder yderligere metadata der beskriver en samling af items som er defineret med samme attributter og deler samme metadata. I GIS termer udgør et STAC item en _feature_, og en STAC collection et _layer_
 
 ### STAC API
-RESTful API specification til dynamisk at forespørge STAC catalogs. Det er designet med et standard set af endpoint til at søge i catalogs, collections, og items.
+RESTful API specification til dynamisk at forespørge STAC catalogs. Det er designet med et standard set af endpoints til at søge i catalogs, collections, og items.
+
+## Conformance Classes
+Servicen indeholder 
+
+## Extensions
 
 ## Endpoints
-endpoints med parametre og eksempel kald
+API'et har følgende endpoints:  
+**Landing Page**: `/`  
+https://api.dataforsyningen.dk/skraafotoapi_test/?token=4adf32524ae6d6998565f638a1090ba1  
+
+**Get Conformance Classes**: `/conformance`  
+https://api.dataforsyningen.dk/skraafotoapi_test/conformance?token=4adf32524ae6d6998565f638a1090ba1  
+
+**Get Item**: `/collections/{collectionid}/items/{itemid}`  
+https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/items/2019_83_37_2_0046_00001113?token=4adf32524ae6d6998565f638a1090ba1  
+
+**Get/Post Search**: `/search`  
+https://api.dataforsyningen.dk/skraafotoapi_test/search?token=4adf32524ae6d6998565f638a1090ba1  
+
+**Get Collections**: `/collections`  
+https://api.dataforsyningen.dk/skraafotoapi_test/collections?token=4adf32524ae6d6998565f638a1090ba1  
+
+**Get Collection**: `/collections/{collectionid}`  
+https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019?token=4adf32524ae6d6998565f638a1090ba1  
+
+**Get ItemCollection**: `/collections/{collectionid}/items`  
+https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/items?token=4adf32524ae6d6998565f638a1090ba1  
+
+**Get Queryables**: `/queryables`  
+https://api.dataforsyningen.dk/skraafotoapi_test/queryables?token=4adf32524ae6d6998565f638a1090ba1  
+
+**Get Collection Queryables**: `/collections/{collectionid}/queryables`  
+https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/queryables?token=4adf32524ae6d6998565f638a1090ba1  
 
 ## Output fra STAC API
+Servicen returnerer GeoJSON/JSON, medmindre en forespørgsel er ugyldig pga. uauoriseret token, i så fald returneres text. Hvis token er autoriseret returneres enten:  
+- En fejlmeddelelse som JSON på formen ```detail:	"Invalid parameters provided"```, hvis en input parameter er ugyldig eller collectionen ikke eksisterer.
+- Et succesfudt GeoJSON/JSON svar med et array af `Features`, eller `Collections`.
+- Hvis parametre er gyldige men der ikke findes et `Feature` match returneres GeoJSON/JSON med et tomt array af features
