@@ -15,41 +15,6 @@ services:
     #volumes:
     #  - ./data:/var/lib/postgresql/12 # Persists data
 
-  test-app-sqlalchemy:
-    container_name: test-stac-fastapi-sqlalchemy
-    image: stac-utils/stac-fastapi
-    build:
-      context: .
-      dockerfile: Dockerfile
-
-    platform: linux/amd64
-    environment:
-      - APP_HOST=0.0.0.0
-      - DB_MIN_CONN_SIZE=1
-      - DB_MAX_CONN_SIZE=1
-      - APP_PORT=8081
-      - WEB_CONCURRENCY=${WEB_CONCURRENCY:-10}
-      - ENVIRONMENT=${ENVIRONMENT:-production}
-      - DEBUG=${DEBUG:-FALSE}
-      - POSTGRES_USER=test_user
-      - POSTGRES_PASS=test_password
-      - POSTGRES_DBNAME=udv_skraafotodistribution
-      - POSTGRES_HOST=test-database
-      - POSTGRES_PORT=5432
-      - POSTGRES_APPLICATION_NAME=${POSTGRES_APPLICATION_NAME:-stac_fastapi_dockercompose}
-      - COG_FILE_SERVER_BASEPATH=$COG_FILE_SERVER_BASEPATH
-      - COGTILER_BASEPATH=$COGTILER_BASEPATH
-    ports:
-      - "8081:8081"
-    volumes:
-      - ./src/stac_fastapi:/app/stac_fastapi
-      - ./src/scripts:/app/scripts
-    depends_on:
-      - test-database
-    command:
-      bash -c "./scripts/wait-for-it.sh -t 40 test-database:5432 && python
-      -m stac_fastapi.sqlalchemy.app"
-
   pytest-app-sqlalchemy:
     container_name: pytest-stac-fastapi-sqlalchemy
     image: stac-utils/stac-fastapi
@@ -76,13 +41,14 @@ services:
     volumes:
       - ./src/stac_fastapi:/app/stac_fastapi
       - ./src/scripts:/app/scripts
+      - ./docker/report:/app/report
     depends_on:
       - test-app-sqlalchemy
       - test-alembic-run-migration
     command: bash -c "pip install -e "/app/stac_fastapi/api[dev]" && \
       pip install -e "/app/stac_fastapi/types[dev]" && \
       pip install -e "/app/stac_fastapi/extensions[dev]" && \
-      pytest /app/stac_fastapi"
+      pytest /app/stac_fastapi --junitxml=/app/report/report.xml"
 
   test-alembic-run-migration:
     image: stac-utils/stac-fastapi
@@ -102,11 +68,9 @@ services:
 
     # Wait for the LOCAL DEV application - load S3 data
     command: >
-      bash -c "./scripts/wait-for-it.sh -t 40 test-app-sqlalchemy:8081 && cd
-      ./stac_fastapi/sqlalchemy && alembic upgrade head"
+      bash -c  "cd ./stac_fastapi/sqlalchemy && alembic upgrade head"
     depends_on:
       - database
-      - app-sqlalchemy
 
 networks:
   default:

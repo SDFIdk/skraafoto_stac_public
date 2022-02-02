@@ -133,3 +133,6 @@ traefik/traefik.exe
 
 # test db data
 data
+
+# junitxml report
+docker/report

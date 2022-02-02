@@ -188,7 +188,7 @@ def test_search_point_intersects(load_test_data, app_client, postgres_transactio
     item = load_test_data("test_item.json")
     postgres_transactions.create_item(item, request=MockStarletteRequest)
 
-    point = [12.095, 55.26]
+    point = [8.4570, 56.24298]
     intersects = {"type": "Point", "coordinates": point}
 
     params = {
@@ -198,7 +198,7 @@ def test_search_point_intersects(load_test_data, app_client, postgres_transactio
     resp = app_client.post("/search", json=params)
     assert resp.status_code == 200
     resp_json = resp.json()
-    assert len(resp_json["features"]) == 10  # TODO write a proper point intersection
+    assert len(resp_json["features"]) >= 1
 
 
 def test_datetime_non_interval(load_test_data, app_client, postgres_transactions):
@@ -264,7 +264,7 @@ def test_search_line_string_intersects(
     resp = app_client.post("/search", json=params)
     assert resp.status_code == 200
     resp_json = resp.json()
-    assert len(resp_json["features"]) == 10
+    assert len(resp_json["features"]) >= 1
 
 
 # Check that the hardcoded queryable names matches an equivalent in QueryableInfo, and in result property names
