@@ -199,7 +199,7 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
         crs: Optional[str] = None,
         filter: Optional[str] = None,
         filter_lang: Optional[str] = "cql-json",
-        filter_crs: Optional[str] = "4326",
+        filter_crs: Optional[str] = "http://www.opengis.net/def/crs/OGC/1.3/CRS84",
         limit: int = 10,
         pt: str = None,
         **kwargs,
