@@ -180,7 +180,9 @@ class STACSearch(BaseModel):
     bbox_crs: Optional[str] = Field(alias="bbox-crs")
     pt: Optional[str] = None
     limit: Optional[conint(gt=0, le=10000)] = 10
-    filter_crs: Optional[str] = Field("http://www.opengis.net/def/crs/OGC/1.3/CRS84", alias="filter-crs")
+    filter_crs: Optional[str] = Field(
+        "http://www.opengis.net/def/crs/OGC/1.3/CRS84", alias="filter-crs"
+    )
     filter_lang: Optional[str] = Field("cql-json", alias="filter-lang")
     filter: Optional[Any]
     filter_fields: Optional[List[str]] = None
@@ -428,7 +430,7 @@ class STACSearch(BaseModel):
                     [
                         ErrorWrapper(
                             ValueError(
-                                f"'{values['filter-lang']}' is not a supported filter-language. Currently supported languages are: cql-json"
+                                f"'{values['filter_lang']}' is not a supported filter-language. Currently supported languages are: cql-json"
                             ),
                             "STACSearch",
                         )
