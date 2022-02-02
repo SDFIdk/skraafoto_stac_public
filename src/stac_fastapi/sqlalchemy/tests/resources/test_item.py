@@ -891,20 +891,6 @@ def test_filter_crs_epsg4326(app_client, load_test_data):
     assert len(matching_feat) == 1
     assert matching_feat[0]["bbox"] == pytest.approx(test_item["bbox"])
 
-    body = {
-        "collections": [test_item["collection"]],
-        "filter": {"intersects": [{"property": "geometry"}, test_item["geometry"]]},
-        "filter-crs": "4326",
-        "limit": 200,
-    }
-    resp = app_client.post("/search", json=body)
-    assert resp.status_code == 200
-
-    resp_json = resp.json()
-    matching_feat = [x for x in resp_json["features"] if x["id"] == test_item["id"]]
-    assert len(matching_feat) == 1
-    assert matching_feat[0]["bbox"] == pytest.approx(test_item["bbox"])
-
 
 def test_filter_crs_eps25832(app_client, load_test_data):
     """Test filter with default bbox, result in supported crs (crsExtension)"""
@@ -930,36 +916,6 @@ def test_filter_crs_eps25832(app_client, load_test_data):
             ]
         },
         "filter-crs": "http://www.opengis.net/def/crs/EPSG/0/25832",
-        "limit": 200,
-    }
-    resp = app_client.post("/search", json=body)
-    assert resp.status_code == 200
-
-    resp_json = resp.json()
-    matching_feat = [x for x in resp_json["features"] if x["id"] == test_item["id"]]
-    assert len(matching_feat) == 1
-    assert matching_feat[0]["bbox"] == pytest.approx(test_item["bbox"])
-
-    body = {
-        "collections": [test_item["collection"]],
-        "filter": {
-            "intersects": [
-                {"property": "geometry"},
-                {
-                    "type": "Polygon",
-                    "coordinates": [
-                        [
-                            [494389.00000000006, 6196260],
-                            [493085.00000000006, 6196409.999999999],
-                            [493092.99999999994, 6196989.999999999],
-                            [494402, 6197140],
-                            [494389.00000000006, 6196260],
-                        ]
-                    ],
-                },
-            ]
-        },
-        "filter-crs": "25832",
         "limit": 200,
     }
     resp = app_client.post("/search", json=body)
