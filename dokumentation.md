@@ -114,7 +114,8 @@ Filter extensionen tilføjer særlig funktionalitet til at søge ved hjælp af f
 Nærmere beskrivelse af Filter extension: https://github.com/radiantearth/stac-api-spec/tree/master/fragments/filter  
 
 Eksempler på brug af filter parameter:
-
+eksempel her med filter - images i en bestemt bbox
+eksempel her med filter - direction
 
 ### Crs Extension
 Crs extension tilføjer funktionalitet til håndtering af koordinatsystemer. Som default forventer den WGS84 som input og returnerer WGS84 som output. Parameteren `crs` i `/search` og `/collections/{collectionid/items}` bruges hvis man ønsker retursvar i et andet coordinatsystem, som f.eks. EPSG:25832. Desuden kan parametrene `bbox-crs` og `filter-crs` bruges til at angive hvilket koordinatsystem input parametre til hhv. `bbox` og `filter` er angivet i. Crs Extensionen benytter crs URI's til at angive en ønsket crs, f.eks. skrives `WGS84` som  `http://www.opengis.net/def/crs/OGC/1.3/CRS84` og EPSG:25832 som `http://www.opengis.net/def/crs/EPSG/0/25832`.  
