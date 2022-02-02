@@ -444,6 +444,7 @@ class BaseCoreClient(LandingPageMixin, abc.ABC):
         pt: Optional[str] = None,
         fields: Optional[List[str]] = None,
         sortby: Optional[str] = None,
+        crs: Optional[str] = None,
         **kwargs,
     ) -> stac_types.ItemCollection:
         """Cross catalog search (GET).

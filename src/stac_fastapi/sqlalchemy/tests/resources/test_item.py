@@ -877,6 +877,44 @@ def test_search_bbox_errors(app_client):
 #     )
 
 
+def test_crs_epsg25832(app_client):
+    """Test response geometry in crs 25832"""
+    params = {"crs": "http://www.opengis.net/def/crs/EPSG/0/25832"}
+    resp = app_client.get("/search", params=params)
+    resp_json = resp.json()
+    assert (
+        resp_json["features"][0]["crs"]["properties"]["name"]
+        == "http://www.opengis.net/def/crs/EPSG/0/25832"
+    )
+
+    body = {"crs": "http://www.opengis.net/def/crs/EPSG/0/25832"}
+    resp = app_client.post("/search", json=body)
+    resp_json = resp.json()
+    assert (
+        resp_json["features"][0]["crs"]["properties"]["name"]
+        == "http://www.opengis.net/def/crs/EPSG/0/25832"
+    )
+
+
+def test_crs_epsg4326(app_client):
+    """Test response geometry in crs 4326"""
+    params = {"crs": "http://www.opengis.net/def/crs/OGC/1.3/CRS84"}
+    resp = app_client.get(f"/search", params=params)
+    resp_json = resp.json()
+    assert (
+        resp_json["features"][0]["crs"]["properties"]["name"]
+        == "http://www.opengis.net/def/crs/OGC/1.3/CRS84"
+    )
+
+    body = {"crs": "http://www.opengis.net/def/crs/OGC/1.3/CRS84"}
+    resp = app_client.post("/search", json=body)
+    resp_json = resp.json()
+    assert (
+        resp_json["features"][0]["crs"]["properties"]["name"]
+        == "http://www.opengis.net/def/crs/OGC/1.3/CRS84"
+    )
+
+
 def test_filter_crs_epsg4326(app_client, load_test_data):
     """Test filter with default bbox, result in supported crs (crsExtension)"""
     test_item = load_test_data("test_item.json")
@@ -884,20 +922,6 @@ def test_filter_crs_epsg4326(app_client, load_test_data):
         "collections": [test_item["collection"]],
         "filter": {"intersects": [{"property": "geometry"}, test_item["geometry"]]},
         "filter-crs": "http://www.opengis.net/def/crs/OGC/1.3/CRS84",
-        "limit": 200,
-    }
-    resp = app_client.post("/search", json=body)
-    assert resp.status_code == 200
-
-    resp_json = resp.json()
-    matching_feat = [x for x in resp_json["features"] if x["id"] == test_item["id"]]
-    assert len(matching_feat) == 1
-    assert matching_feat[0]["bbox"] == pytest.approx(test_item["bbox"])
-
-    body = {
-        "collections": [test_item["collection"]],
-        "filter": {"intersects": [{"property": "geometry"}, test_item["geometry"]]},
-        "filter-crs": "4326",
         "limit": 200,
     }
     resp = app_client.post("/search", json=body)
@@ -933,36 +957,6 @@ def test_filter_crs_eps25832(app_client, load_test_data):
             ]
         },
         "filter-crs": "http://www.opengis.net/def/crs/EPSG/0/25832",
-        "limit": 200,
-    }
-    resp = app_client.post("/search", json=body)
-    assert resp.status_code == 200
-
-    resp_json = resp.json()
-    matching_feat = [x for x in resp_json["features"] if x["id"] == test_item["id"]]
-    assert len(matching_feat) == 1
-    assert matching_feat[0]["bbox"] == pytest.approx(test_item["bbox"])
-
-    body = {
-        "collections": [test_item["collection"]],
-        "filter": {
-            "intersects": [
-                {"property": "geometry"},
-                {
-                    "type": "Polygon",
-                    "coordinates": [
-                        [
-                            [494389.00000000006, 6196260],
-                            [493085.00000000006, 6196409.999999999],
-                            [493092.99999999994, 6196989.999999999],
-                            [494402, 6197140],
-                            [494389.00000000006, 6196260],
-                        ]
-                    ],
-                },
-            ]
-        },
-        "filter-crs": "25832",
         "limit": 200,
     }
     resp = app_client.post("/search", json=body)
