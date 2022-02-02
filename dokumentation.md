@@ -1,6 +1,6 @@
 # Skraafotodistribution-stac-api - Dokumentation
 ## Introduktion
-Skraafoto-stac-api bygger på api-teknologien STAC (Spatio Temporal Asset Catalog), som er en nyere api-standard som har til formål at forene dynamisk søgning og forespørgsler af geospatielt data.
+Skraafoto-stac-api bygger på api-teknologien STAC (Spatio Temporal Asset Catalog), en nyere api-standard med formål at forene dynamisk søgning og forespørgsler af geospatielt data.
 Api'et følger specifikationen angivet i [stac-api-spec](https://github.com/radiantearth/stac-api-spec), som er udarbejdet på baggrund af [ogc-api-features](https://ogcapi.ogc.org/features/).
 STAC api'ets core består af fire komponenter:
 - [Items](#STAC-Item)
@@ -19,24 +19,9 @@ Udgangspunktet for navigering af STAC. Det består af links til items og andre c
 Magen til catalog, men indeholder yderligere metadata der beskriver en samling af items som er defineret med samme attributter og deler samme metadata. I GIS termer udgør et STAC item en _feature_, og en STAC collection et _layer_
 
 ### STAC API
-RESTful API specification til dynamisk at forespørge STAC catalogs. Det er designet med et standard set af endpoints til at søge i catalogs, collections, og items.
+RESTful API specification til dynamisk at forespørge STAC catalogs. Det er designet med et standard set af endpoints til at søge i catalogs, collections, og items.  
 
-## Extensions
-Ud over de nævnte fire core komponenter indeholder servicen en række extensions som udbyder ekstra funktionalitet:  
-- Filter Extension
-- Crs Extension
-- Context Extension
-- Sort Extension
-
-
-### Filter Extension
-Filter extensionen tilføjer særlig funktionalitet til at søge ved hjælp af forespørgsler i CQL (Common Query Language). Extensionen implementerer specifikationer beskrevet i [OGC Api Features - Part 3: Filtering and the Common Query Language (CQL)](https://portal.ogc.org/files/96288). Den tilføjer desuden to ekstra endpoints `/queryables` og `/collections/{collectionid}/queryables` som uddybes i [Filter & queryables](#Filter-&-queryables)
-### Crs Extension
-### Context Extension
-### Sort Extension
-
-## Filter & queryables
-Skriv om filter udtryk og queryables
+En nærmere beskrivelse af stac-spec core'en kan læses [her](https://github.com/radiantearth/stac-api-spec/blob/master/stac-spec/overview.md)
 
 ## Endpoints og outputs
 Servicen returnerer GeoJSON/JSON, medmindre en forespørgsel er ugyldig pga. uauoriseret token, i så fald returneres text. 
@@ -49,7 +34,7 @@ Denne ressource er roden af api'et som beskriver hvilke funktionaliteter der er 
 
 _Parametre_:  
 _Output_: STAC Catalog (JSON)  
-_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/?token=4adf32524ae6d6998565f638a1090ba1
+_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/?token=4adf32524ae6d6998565f638a1090ba1  
 
 
 **Get Conformance Classes**: `/conformance`  
@@ -57,7 +42,7 @@ Denne ressource returnerer et array af links til conformance klasser. Selve link
 
 _Parametre_:  
 _Output_: Array af conformance klasser (JSON)  
-_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/conformance?token=4adf32524ae6d6998565f638a1090ba1
+_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/conformance?token=4adf32524ae6d6998565f638a1090ba1  
 
 
 **Get Item**: `/collections/{collectionid}/items/{itemid}`
@@ -65,7 +50,7 @@ Denne ressource tager i mod et collectionid, itemid, og en crs og returnerer ét
 
 _Parametere_: collectionid, itemid, crs
 _Output_: Feature (STAC Item) (GeoJSON)  
-_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/items/2019_83_37_2_0046_00001113?token=4adf32524ae6d6998565f638a1090ba1
+_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/items/2019_83_37_2_0046_00001113?token=4adf32524ae6d6998565f638a1090ba1  
 
 
 **Get/Post Search**: `/search`  
@@ -73,7 +58,7 @@ Denne ressource tager i mod diverse parametre og bruges til at fremsøge en coll
 
 _Parametre_: crs, limit, pt (page_token), ids, bbox, bbox-crs, datetime, filter, filter-lang, filter-crs, collections, sortby  
 _Output_: FeatureCollection (Array af STAC Items) (GeoJSON)  
-_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/search?token=4adf32524ae6d6998565f638a1090ba1
+_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/search?token=4adf32524ae6d6998565f638a1090ba1  
 
 
 **Get Collections**: `/collections`  
@@ -81,7 +66,7 @@ Denne ressource returnerer en liste af collectioner API'et udstiller.
 
 _Parametre_:  
 _Output_: Collections (Array af STAC Collections) (JSON)  
-_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/collections?token=4adf32524ae6d6998565f638a1090ba1
+_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/collections?token=4adf32524ae6d6998565f638a1090ba1  
 
 
 **Get Collection**: `/collections/{collectionid}`  
@@ -89,7 +74,7 @@ Denne ressource tager i mod et collectionid og returnerer én collection med bes
 
 _Parametre_: collectionid
 _Output_: Collection (STAC Collection) (JSON)  
-_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019?token=4adf32524ae6d6998565f638a1090ba1
+_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019?token=4adf32524ae6d6998565f638a1090ba1  
 
 
 **Get ItemCollection**: `/collections/{collectionid}/items`  
@@ -97,7 +82,7 @@ Denne ressource tager i mod et collectionid og laver en søgning magen til `/sea
 
 _Parametre_: collectionid, crs, limit, pt, ids, bbox, bbox-crs, datetime, filter, filter-lang, filter-crs,
 _Output_: FeatureCollection (Array af STAC Items) ( GeoJSON)  
-_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/items?token=4adf32524ae6d6998565f638a1090ba1
+_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/items?token=4adf32524ae6d6998565f638a1090ba1  
 
 
 **Get Queryables**: `/queryables`  
@@ -105,7 +90,7 @@ Denne ressource returnerer en union af properties der kan indgå i et filter udt
 
 _Paramtre_:  
 _Output_: Array af STAC Item properties der kan bruges over alle collection i filter udtryk (JSON)  
-_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/queryables?token=4adf32524ae6d6998565f638a1090ba1
+_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/queryables?token=4adf32524ae6d6998565f638a1090ba1  
 
 
 **Get Collection Queryables**: `/collections/{collectionid}/queryables`  
@@ -113,7 +98,82 @@ Denne ressource returnerer alle properties der kan indgå i et filter udtryk for
 
 _Parametre_: collectionid
 _Output_: Array af STAC Item properties for den givne collection, som kan bruges i filter udtryk (JSON)  
-_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/queryables?token=4adf32524ae6d6998565f638a1090ba1
+_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/queryables?token=4adf32524ae6d6998565f638a1090ba1  
+
+
+## Extensions
+Ud over de nævnte fire core komponenter indeholder servicen en række extensions som udbyder ekstra funktionalitet:  
+- Filter Extension
+- Crs Extension
+- Context Extension
+- Sort Extension
+
+
+### Filter Extension
+Filter extensionen tilføjer særlig funktionalitet til at søge ved hjælp af forespørgsler i CQL (Common Query Language). Extensionen implementerer specifikationer beskrevet i [OGC Api Features - Part 3: Filtering and the Common Query Language (CQL)](https://portal.ogc.org/files/96288). Den tilføjer desuden to ekstra endpoints `/queryables` og `/collections/{collectionid}/queryables` som uddybes i [Filter & queryables](#Filter-&-queryables).  
+Nærmere beskrivelse af Filter extension: https://github.com/radiantearth/stac-api-spec/tree/master/fragments/filter  
+
+Eksempler på brug af filter parameter:
+
+
+### Crs Extension
+Crs extension tilføjer funktionalitet til håndtering af koordinatsystemer. Som default forventer den WGS84 som input og returnerer WGS84 som output. Parameteren `crs` i `/search` og `/collections/{collectionid/items}` bruges hvis man ønsker retursvar i et andet coordinatsystem, som f.eks. EPSG:25832. Desuden kan parametrene `bbox-crs` og `filter-crs` bruges til at angive hvilket koordinatsystem input parametre til hhv. `bbox` og `filter` er angivet i. Crs Extensionen benytter crs URI's til at angive en ønsket crs, f.eks. skrives `WGS84` som  `http://www.opengis.net/def/crs/OGC/1.3/CRS84` og EPSG:25832 som `http://www.opengis.net/def/crs/EPSG/0/25832`.  
+
+Eksempler på brug af crs, bbox-crs, og filter-crs parametre:  
+1. `GET /search?crs=http://www.opengis.net/def/crs/EPSG/0/25832` -  Returner geometrier i EPSG:25832
+2. `GET /search?bbox=492283,6195600,493583,6196470&bbox-crs=http://www.opengis.net/def/crs/EPSG/0/25832` - Input bbox er angivet i EPSG:25832 
+3. `POST /search` - Hent features der intersecter med geometri angivet i EPSG 25832, resultater returneres i WGS84
+```
+{
+    "filter": { 
+        "intersects": [
+            { "property": "geometry" },
+            {
+                "type": "Polygon",
+                "coordinates": [[
+                [721250.0000012278, 6190390.000002561], [721244.0000012267, 6191220.000002562],
+                [722491.0000012581, 6191080.000002566], [722493.0000012588, 6190540.000002567],
+                [721250.0000012278, 6190390.000002561]
+                ]]
+            }
+        ]
+    },
+  "filter-crs": "25832",
+  "crs": "http://www.opengis.net/def/crs/OGC/1.3/CRS84"     
+}
+```
+
+
+### Context Extension
+Context extensionen tilføjer ekstra information omkring en returneret `FeatureCollection` hentet via `/search` eller `/collections/{collectionid}/items`. Den returnerer følgenede tre attributter sammen med FeatureCollectionen:  
+- Returned:Antallet af features returneret af resultatet
+- Limit: Det maksimale antal resultater returneret
+- Matched: Det totale antal resultater der matcher søge forespørgslen
+
+Hvis `matched` er større end `limit` kan links relationerne `next`/`previous` bruges til at navigere frem og tilbage i det totale antal matchede søgeresultater.  
+Nærmere beskrivelse af Context extension: https://github.com/radiantearth/stac-api-spec/tree/master/fragments/context
+
+
+### Sort Extension
+Sort extensionen tilføjer funktionalitet til at sortere resultater hentet via `/search` endpointet. Der kan sorteres på samtlige Item attributter såsom `id`, `collection`, `datetime`, samt diverse properties attributter. Der kan angives om sorteringsretningen skal være _ascending_ eller _descending_. I et GET `/search` request kan der bruges en forsimplet syntaks; `+` for _ascending_ og `-` for _descending_, ingen fortegn defaulter til _ascending_.  
+Nærmere beskrivelse af Sort Extension: https://github.com/radiantearth/stac-api-spec/tree/master/fragments/sort
+
+Eksempler på brug af sortBy parameter:  
+1. `GET /search?sortby=+properties.datetime` - Sorter på properties.datetime ascending
+2. `GET /search?sortby=properties.datetime,-id` - Sorter på properties.datetime ascending og id descending
+3. `POST /search` - Sorter på collection descending
+```
+  {
+    "sortby": [
+        {
+            "field": "collection",
+            "direction": "desc"
+        }
+    ]
+}
+```
+
+
 
 
 
