@@ -876,7 +876,8 @@ def test_search_bbox_errors(app_client):
 
 def test_crs_epsg25832(app_client):
     """Test response geometry in crs 25832"""
-    resp = app_client.get(f"/search?/crs=http://www.opengis.net/def/crs/EPSG/0/25832")
+    params = {"crs": "http://www.opengis.net/def/crs/EPSG/0/25832"}
+    resp = app_client.get("/search", params=params)
     resp_json = resp.json()
     assert (
         resp_json["features"][0]["crs"]["properties"]["name"]
@@ -894,7 +895,8 @@ def test_crs_epsg25832(app_client):
 
 def test_crs_epsg4326(app_client):
     """Test response geometry in crs 4326"""
-    resp = app_client.get(f"/search?/crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84")
+    params = {"crs": "http://www.opengis.net/def/crs/OGC/1.3/CRS84"}
+    resp = app_client.get(f"/search", params=params)
     resp_json = resp.json()
     assert (
         resp_json["features"][0]["crs"]["properties"]["name"]
