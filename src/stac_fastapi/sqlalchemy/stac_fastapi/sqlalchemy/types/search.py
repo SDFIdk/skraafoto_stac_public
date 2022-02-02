@@ -180,8 +180,8 @@ class STACSearch(BaseModel):
     bbox_crs: Optional[str] = Field(alias="bbox-crs")
     pt: Optional[str] = None
     limit: Optional[conint(gt=0, le=10000)] = 10
-    filter_crs: Optional[str] = Field(None, alias="filter-crs")
-    filter_lang: Optional[str] = Field(None, alias="filter-lang")
+    filter_crs: Optional[str] = Field("http://www.opengis.net/def/crs/OGC/1.3/CRS84", alias="filter-crs")
+    filter_lang: Optional[str] = Field("cql-json", alias="filter-lang")
     filter: Optional[Any]
     filter_fields: Optional[List[str]] = None
 
@@ -332,57 +332,60 @@ class STACSearch(BaseModel):
 
     @validator("bbox_crs")
     def validate_bbox_crs(cls, bbox_crs):
-        crs_extension = CrsExtension()  # TODO, might be ugly to do it like this
-        if bbox_crs in crs_extension.crs:
-            return bbox_crs
-        else:
-            raise ValidationError(
-                [
-                    ErrorWrapper(
-                        ValueError(
-                            f"'{bbox_crs}' is not a supported bbox-crs. Currently supported crs are: {crs_extension.crs}"
-                        ),
-                        "STACSearch",
-                    )
-                ],
-                STACSearch,
-            )
-
-    @validator("filter_crs")
-    def validate_filter_crs(cls, filter_crs):
-        crs_extension = CrsExtension()  # TODO, might be ugly to do it like this
-        if filter_crs in crs_extension.crs:
-            return filter_crs
-        else:
-            raise ValidationError(
-                [
-                    ErrorWrapper(
-                        ValueError(
-                            f"'{filter_crs}' is not a supported filter-crs. Currently supported crs are: {crs_extension.crs}"
-                        ),
-                        "STACSearch",
-                    )
-                ],
-                STACSearch,
-            )
+        if bbox_crs:
+            crs_extension = CrsExtension()  # TODO, might be ugly to do it like this
+            if bbox_crs in crs_extension.crs:
+                return bbox_crs
+            else:
+                raise ValidationError(
+                    [
+                        ErrorWrapper(
+                            ValueError(
+                                f"'{bbox_crs}' is not a supported bbox-crs. Currently supported crs are: {crs_extension.crs}"
+                            ),
+                            "STACSearch",
+                        )
+                    ],
+                    STACSearch,
+                )
 
     @validator("crs")
     def validate_crs(cls, crs):
-        crs_extension = CrsExtension()
-        if crs in crs_extension.crs:
-            return crs
-        else:
-            raise ValidationError(
-                [
-                    ErrorWrapper(
-                        ValueError(
-                            f"'{crs}' is not a supported crs. Currently supported crs are: {crs_extension.crs}"
-                        ),
-                        "STACSearch",
-                    )
-                ],
-                STACSearch,
-            )
+        if crs:
+            crs_extension = CrsExtension()
+            if crs in crs_extension.crs:
+                return crs
+            else:
+                raise ValidationError(
+                    [
+                        ErrorWrapper(
+                            ValueError(
+                                f"'{crs}' is not a supported crs. Currently supported crs are: {crs_extension.crs}"
+                            ),
+                            "STACSearch",
+                        )
+                    ],
+                    STACSearch,
+                )
+
+    @validator("filter_crs")
+    def validate_filter_crs(cls, filter_crs):
+        if filter_crs:
+            crs_extension = CrsExtension()  # TODO, might be ugly to do it like this
+            if filter_crs in crs_extension.crs:
+                return filter_crs
+            else:
+                raise ValidationError(
+                    [
+                        ErrorWrapper(
+                            ValueError(
+                                f"'{filter_crs}' is not a supported filter-crs. Currently supported crs are: {crs_extension.crs}"
+                            ),
+                            "STACSearch",
+                        )
+                    ],
+                    STACSearch,
+                )
 
     # Override the bbox validator because it only works for WGS84
     @validator("bbox")
@@ -415,12 +418,12 @@ class STACSearch(BaseModel):
 
         return v
 
-    @root_validator(pre=True)
+    @root_validator(pre=False)
     def validate_filter(cls, values: Dict) -> Dict:
         """Validate filter fields."""
         if "filter" in values and values["filter"]:
             # Validate filter-lang
-            if "filter-lang" in values and values["filter-lang"] != "cql-json":
+            if "filter_lang" in values and values["filter_lang"] != "cql-json":
                 raise ValidationError(
                     [
                         ErrorWrapper(
@@ -434,17 +437,17 @@ class STACSearch(BaseModel):
                 )
 
             # Validate filter-crs
-            if "filter-crs" in values and values["filter-crs"]:
+            if "filter_crs" in values and values["filter_crs"]:
                 crs_extension = CrsExtension()  # TODO, might be ugly to do it like this
-                if values["filter-crs"] in crs_extension.crs:
+                if values["filter_crs"] in crs_extension.crs:
                     # Convert the URI crs to a SRID
-                    values["filter-crs"] = crs_extension.epsg_from_crs(
-                        values["filter-crs"]
+                    values["filter_crs"] = crs_extension.epsg_from_crs(
+                        values["filter_crs"]
                     )
-                elif values["filter-crs"] in [
+                elif values["filter_crs"] in [
                     str(crs_extension.epsg_from_crs(x)) for x in crs_extension.crs
                 ]:
-                    values["filter-crs"] = int(values["filter-crs"])
+                    values["filter_crs"] = int(values["filter_crs"])
                 else:
                     # SRID was given
                     raise ValidationError(
@@ -461,8 +464,8 @@ class STACSearch(BaseModel):
                         STACSearch,
                     )
                 # add filter-crs to filter if crs is not 4326 - hack in order to pass crs to pygeofilter through the geojson
-                if values["filter-crs"] != 4326:
-                    cls.add_filter_crs(values["filter"], values["filter-crs"])
+                if values["filter_crs"] != 4326:
+                    cls.add_filter_crs(values["filter"], values["filter_crs"])
 
             # Validate filter
             ast = parse_json(values["filter"])  # pygeofilter cql-json parse

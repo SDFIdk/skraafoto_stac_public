@@ -327,7 +327,7 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
         limit: Optional[int] = 10,
         filter: Optional[str] = None,
         filter_lang: Optional[str] = "cql-json",
-        filter_crs: Optional[str] = "4326",
+        filter_crs: Optional[str] = "http://www.opengis.net/def/crs/OGC/1.3/CRS84",
         # query: Optional[str] = None,
         pt: Optional[str] = None,
         fields: Optional[List[str]] = None,
