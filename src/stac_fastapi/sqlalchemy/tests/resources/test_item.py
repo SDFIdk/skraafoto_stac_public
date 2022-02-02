@@ -874,6 +874,42 @@ def test_search_bbox_errors(app_client):
 #     )
 
 
+def test_crs_epsg25832(app_client):
+    """Test response geometry in crs 25832"""
+    resp = app_client.get(f"/search?/crs=http://www.opengis.net/def/crs/EPSG/0/25832")
+    resp_json = resp.json()
+    assert (
+        resp_json["features"][0]["crs"]["properties"]["name"]
+        == "http://www.opengis.net/def/crs/EPSG/0/25832"
+    )
+
+    body = {"crs": "http://www.opengis.net/def/crs/EPSG/0/25832"}
+    resp = app_client.post("/search", json=body)
+    resp_json = resp.json()
+    assert (
+        resp_json["features"][0]["crs"]["properties"]["name"]
+        == "http://www.opengis.net/def/crs/EPSG/0/25832"
+    )
+
+
+def test_crs_epsg4326(app_client):
+    """Test response geometry in crs 4326"""
+    resp = app_client.get(f"/search?/crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84")
+    resp_json = resp.json()
+    assert (
+        resp_json["features"][0]["crs"]["properties"]["name"]
+        == "http://www.opengis.net/def/crs/OGC/1.3/CRS84"
+    )
+
+    body = {"crs": "http://www.opengis.net/def/crs/OGC/1.3/CRS84"}
+    resp = app_client.post("/search", json=body)
+    resp_json = resp.json()
+    assert (
+        resp_json["features"][0]["crs"]["properties"]["name"]
+        == "http://www.opengis.net/def/crs/OGC/1.3/CRS84"
+    )
+
+
 def test_filter_crs_epsg4326(app_client, load_test_data):
     """Test filter with default bbox, result in supported crs (crsExtension)"""
     test_item = load_test_data("test_item.json")
