@@ -332,7 +332,57 @@ class STACSearch(BaseModel):
 
     @validator("bbox_crs")
     def validate_bbox_crs(cls, bbox_crs):
-        return bbox_crs
+        crs_extension = CrsExtension()  # TODO, might be ugly to do it like this
+        if bbox_crs in crs_extension.crs:
+            return bbox_crs
+        else:
+            raise ValidationError(
+                [
+                    ErrorWrapper(
+                        ValueError(
+                            f"'{bbox_crs}' is not a supported bbox-crs. Currently supported crs are: {crs_extension.crs}"
+                        ),
+                        "STACSearch",
+                    )
+                ],
+                STACSearch,
+            )
+
+    @validator("filter_crs")
+    def validate_filter_crs(cls, filter_crs):
+        crs_extension = CrsExtension()  # TODO, might be ugly to do it like this
+        if filter_crs in crs_extension.crs:
+            return filter_crs
+        else:
+            raise ValidationError(
+                [
+                    ErrorWrapper(
+                        ValueError(
+                            f"'{filter_crs}' is not a supported filter-crs. Currently supported crs are: {crs_extension.crs}"
+                        ),
+                        "STACSearch",
+                    )
+                ],
+                STACSearch,
+            )
+
+    @validator("crs")
+    def validate_crs(cls, crs):
+        crs_extension = CrsExtension()
+        if crs in crs_extension.crs:
+            return crs
+        else:
+            raise ValidationError(
+                [
+                    ErrorWrapper(
+                        ValueError(
+                            f"'{crs}' is not a supported crs. Currently supported crs are: {crs_extension.crs}"
+                        ),
+                        "STACSearch",
+                    )
+                ],
+                STACSearch,
+            )
 
     # Override the bbox validator because it only works for WGS84
     @validator("bbox")
@@ -500,10 +550,10 @@ class STACSearch(BaseModel):
             if value == ".." or value == "":
                 dates.append("..")
                 continue
-            #NOTE: Per [ABNF] and ISO8601, the "T" and "Z" characters in this
-            #syntax may alternatively be lower case "t" or "z" respectively.
+            # NOTE: Per [ABNF] and ISO8601, the "T" and "Z" characters in this
+            # syntax may alternatively be lower case "t" or "z" respectively.
             # So we have to replace "t" and "z" with their uppercase counterparts.
-            value = value.replace("z","Z").replace("t","T")
+            value = value.replace("z", "Z").replace("t", "T")
             parse_datetime(value)
             dates.append(value)
 
