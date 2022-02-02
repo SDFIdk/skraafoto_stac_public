@@ -205,8 +205,8 @@ class ItemSerializer(Serializer):
                 db_model.principal_point_y,
             ],  # Principal point offset in mm as [offset_x, offset_y]
             "sensor_array_dimensions": [
-                db_model.sensor_rows,
                 db_model.sensor_columns,
+                db_model.sensor_rows,
             ],  # Sensor dimensions as [number_of_columns, number_of_rows]
         }
 
@@ -246,7 +246,7 @@ class CollectionSerializer(Serializer):
 
         stac_extensions = db_model.stac_extensions or []
         try:
-            if hasattr(db_model,"storage_crs"):
+            if hasattr(db_model, "storage_crs"):
                 return stac_types.CrsCollection(
                     type="Collection",
                     id=db_model.id,
@@ -274,8 +274,8 @@ class CollectionSerializer(Serializer):
             title=db_model.title,
             description=db_model.description,
             keywords=db_model.keywords,
-            #storageCrs=db_model.storage_crs,
-            #crs=[],  # Gets update after seriawlization by the crs extension
+            # storageCrs=db_model.storage_crs,
+            # crs=[],  # Gets update after seriawlization by the crs extension
             license=db_model.license,
             providers=db_model.providers,
             summaries=db_model.summaries,
