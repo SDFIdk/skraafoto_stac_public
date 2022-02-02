@@ -459,6 +459,15 @@ def test_item_search_sort_get(app_client, load_test_data):
     assert date1 > date10
 
 
+def test_item_search_sort_get_no_prefix(app_client, load_test_data):
+    """Test GET search with sorting with no default prefix(sort extension)"""
+    first_item = load_test_data("test_item.json")
+
+    params = {"collections": [first_item["collection"]], "sortby": "datetime"}
+    resp = app_client.get("/search", params=params)
+    assert resp.status_code == 200
+
+
 def test_item_search_post_without_collection(app_client, load_test_data):
     """Test POST search without specifying a collection"""
     test_item = load_test_data("test_item.json")
