@@ -470,7 +470,18 @@ class STACSearch(BaseModel):
                     cls.add_filter_crs(values["filter"], values["filter_crs"])
 
             # Validate filter
-            ast = parse_json(values["filter"])  # pygeofilter cql-json parse
+            try:
+                ast = parse_json(values["filter"])  # pygeofilter cql-json parse
+            except Exception as e:
+                raise ValidationError(
+                    [
+                        ErrorWrapper(
+                            ValueError(f"The input cql-json could not be parsed"),
+                            "STACSearch",
+                        )
+                    ],
+                    STACSearch,
+                )
             if not ast:
                 raise ValidationError(
                     [

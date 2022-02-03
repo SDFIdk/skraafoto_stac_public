@@ -48,7 +48,7 @@ class BaseQueryables(str, AutoValueEnum):
     id = auto()
     collection_id = "collection"
     footprint = "geometry"
-    bbox = auto()
+    # bbox = auto()
     datetime = auto()
     # stac_version = auto()
     # stac_extensions = auto()
@@ -99,12 +99,12 @@ class QueryableInfo:
         "Geometry",
         "https://schemas.stacspec.org/v1.0.0/item-spec/json-schema/item.json#/geometry",
     )
-    bbox = (
-        None,
-        "Geometry",
-        "BBOX",
-        "https://schemas.stacspec.org/v1.0.0/item-spec/json-schema/item.json#/bbox",
-    )
+    # bbox = (
+    #     None,
+    #     "Geometry",
+    #     "BBOX",
+    #     "https://schemas.stacspec.org/v1.0.0/item-spec/json-schema/item.json#/bbox",
+    # )
     datetime = (
         None,
         "string",
