@@ -114,7 +114,6 @@ Ud over de nævnte fire core komponenter indeholder servicen en række extension
 ### Filter Extension
 
 Filter extensionen tilføjer særlig funktionalitet til at søge ved hjælp af forespørgsler i CQL (Common Query Language). Extensionen implementerer specifikationer beskrevet i [OGC Api Features - Part 3: Filtering and the Common Query Language (CQL)](https://portal.ogc.org/files/96288). Den tilføjer desuden to ekstra endpoints `/queryables` og `/collections/{collectionid}/queryables` som uddybes i [Filter & queryables](#Filter-&-queryables). Queryables beskriver hvilke properties der kan indgå i filter forespørgsler. Alle filter properties valideres mod queryables, og der returneres en validation fejl hvis der bruges en ugyldig property.  
-Nærmere beskrivelse af Filter extension: https://github.com/radiantearth/stac-api-spec/tree/master/fragments/filter
 
 Eksempler på brug af filter parameter:  
 1. `POST /search` - Hent features, hvis geometri intersecter med input geometri
@@ -147,7 +146,7 @@ Eksempler på brug af filter parameter:
   }
 }
 ``` 
-
+Nærmere beskrivelse af Filter extension: https://github.com/radiantearth/stac-api-spec/tree/master/fragments/filter
 
 ### Crs Extension
 
@@ -219,7 +218,6 @@ Nærmere beskrivelse af Context extension: https://github.com/radiantearth/stac-
 ### Sort Extension
 
 Sort extensionen tilføjer funktionalitet til at sortere resultater hentet via `/search` endpointet. Der kan sorteres på samtlige Item attributter såsom `id`, `collection`, `datetime`, samt diverse properties attributter. Der kan angives om sorteringsretningen skal være _ascending_ eller _descending_. I et GET `/search` request kan der bruges en forsimplet syntaks; `+` for _ascending_ og `-` for _descending_, ingen fortegn defaulter til _ascending_.  
-Nærmere beskrivelse af Sort Extension: https://github.com/radiantearth/stac-api-spec/tree/master/fragments/sort
 
 Eksempler på brug af sortBy parameter:
 
@@ -237,3 +235,4 @@ Eksempler på brug af sortBy parameter:
     ]
 }
 ```
+Nærmere beskrivelse af Sort Extension: https://github.com/radiantearth/stac-api-spec/tree/master/fragments/sort
