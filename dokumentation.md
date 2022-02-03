@@ -113,12 +113,41 @@ Ud over de nævnte fire core komponenter indeholder servicen en række extension
 
 ### Filter Extension
 
-Filter extensionen tilføjer særlig funktionalitet til at søge ved hjælp af forespørgsler i CQL (Common Query Language). Extensionen implementerer specifikationer beskrevet i [OGC Api Features - Part 3: Filtering and the Common Query Language (CQL)](https://portal.ogc.org/files/96288). Den tilføjer desuden to ekstra endpoints `/queryables` og `/collections/{collectionid}/queryables` som uddybes i [Filter & queryables](#Filter-&-queryables). Queryables beskriver hvilke properties der kan indgå i filter forespørgsler. Alle filter properties valideres mod queryables, og der returneres en validation fejl hvis der bruges en ugyldig property.
+Filter extensionen tilføjer særlig funktionalitet til at søge ved hjælp af forespørgsler i CQL (Common Query Language). Extensionen implementerer specifikationer beskrevet i [OGC Api Features - Part 3: Filtering and the Common Query Language (CQL)](https://portal.ogc.org/files/96288). Den tilføjer desuden to ekstra endpoints `/queryables` og `/collections/{collectionid}/queryables` som uddybes i [Filter & queryables](#Filter-&-queryables). Queryables beskriver hvilke properties der kan indgå i filter forespørgsler. Alle filter properties valideres mod queryables, og der returneres en validation fejl hvis der bruges en ugyldig property.  
 Nærmere beskrivelse af Filter extension: https://github.com/radiantearth/stac-api-spec/tree/master/fragments/filter
 
-Eksempler på brug af filter parameter:
-eksempel her med filter - images i en bestemt bbox
-eksempel her med filter - direction
+Eksempler på brug af filter parameter:  
+1. `POST /search` - Hent features, hvis geometri intersecter med input geometri
+```
+{
+    "filter": { 
+        "intersects": [
+            { "property": "geometry" },
+            {
+                "type": "Polygon",
+                "coordinates": [[
+                [721250.0000012278, 6190390.000002561], [721244.0000012267, 6191220.000002562],
+                [722491.0000012581, 6191080.000002566], [722493.0000012588, 6190540.000002567],
+                [721250.0000012278, 6190390.000002561]
+                ]]
+            }
+        ]
+    },
+  "filter-crs": "http://www.opengis.net/def/crs/EPSG/0/25832",
+}
+```
+2. `POST /search` - Hent features hvor property.direction er lig øst og gsd er større end 0.1
+```
+{
+  "filter": { 
+      "and": [ 
+        {"eq": [ { "property": "direction" }, "east" ] }, 
+        {"gt": [ { "property": "gsd" }, 0.101 ] } 
+   ]
+  }
+}
+``` 
+
 
 ### Crs Extension
 
