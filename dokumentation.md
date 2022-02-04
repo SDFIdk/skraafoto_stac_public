@@ -182,7 +182,7 @@ Eksempler på brug af crs, bbox-crs, og filter-crs parametre:
 
 Context extensionen tilføjer ekstra information omkring en returneret `FeatureCollection` hentet via `/search` eller `/collections/{collectionid}/items`. Den returnerer følgenede tre attributter sammen med FeatureCollectionen:
 
-- Returned:Antallet af features returneret af resultatet
+- Returned: Antallet af features returneret af resultatet
 - Limit: Det maksimale antal resultater returneret
 - Matched: Det totale antal resultater der matcher søge forespørgslen
 
