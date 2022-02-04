@@ -38,7 +38,7 @@ Servicen udstillet af Dataforsyningen kræver gyldig token, som kan erhverves p�
 Servicen returnerer GeoJSON/JSON, medmindre en forespørgsel er ugyldig pga. uauoriseret token, i så fald returneres text.
 Hvis token er autoriseret men har en ugyldig parameter returneres en fejlmeddelelse som JSON på formen `detail: "error message here"`
 
-API'et udstiller endpoints:
+API'et udstiller endpoints:  
 **Landing Page**: `/`  
 Denne ressource er roden af api'et som beskriver hvilke funktionaliteter der er udstillet via et `ConformsTo` array samt URIs af andre ressourcer via link relationer.
 
