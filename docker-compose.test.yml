@@ -42,13 +42,12 @@ services:
       - ./src/stac_fastapi:/app/stac_fastapi
       - ./src/scripts:/app/scripts
       - ./docker/report:/app/report
-    depends_on:
-      - test-app-sqlalchemy
-      - test-alembic-run-migration
-    command: bash -c "pip install -e "/app/stac_fastapi/api[dev]" && \
+    command: bash -c "sleep 10s && \
+      pip install -e "/app/stac_fastapi/api[dev]" && \
       pip install -e "/app/stac_fastapi/types[dev]" && \
       pip install -e "/app/stac_fastapi/extensions[dev]" && \
       pytest /app/stac_fastapi --junitxml=/app/report/report.xml"
+
 
   test-alembic-run-migration:
     image: stac-utils/stac-fastapi
@@ -69,8 +68,6 @@ services:
     # Wait for the LOCAL DEV application - load S3 data
     command: >
       bash -c  "./scripts/wait-for-it.sh test-database:5432 && cd ./stac_fastapi/sqlalchemy && alembic upgrade head"
-    depends_on:
-      - database
 
 networks:
   default:
