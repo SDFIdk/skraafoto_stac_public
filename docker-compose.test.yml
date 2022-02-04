@@ -68,7 +68,7 @@ services:
 
     # Wait for the LOCAL DEV application - load S3 data
     command: >
-      bash -c  "cd ./stac_fastapi/sqlalchemy && alembic upgrade head"
+      bash -c  "./scripts/wait-for-it.sh test-database:5432 && cd ./stac_fastapi/sqlalchemy && alembic upgrade head"
     depends_on:
       - database
 
