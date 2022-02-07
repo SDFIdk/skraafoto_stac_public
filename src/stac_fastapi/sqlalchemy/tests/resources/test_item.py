@@ -1,3 +1,4 @@
+import operator
 import json
 import os
 import time
@@ -412,36 +413,64 @@ def test_item_search_temporal_window_get(app_client, load_test_data):
 
     params = {
         "collections": test_item["collection"],
-        "bbox": ",".join([str(coord) for coord in test_item["bbox"]]),
         "datetime": f"{item_date_before.strftime(DATETIME_RFC339)}/{item_date_after.strftime(DATETIME_RFC339)}",
+        "limit": 100,
     }
     resp = app_client.get("/search", params=params)
     resp_json = resp.json()
-    # Query can contain multiple records with same datetime, assert the the test_item is atleast in there.
-    assert any(test_item["id"] == f["id"] for f in resp_json["features"])
+
+    assert any(
+        test_item["id"] == f["id"] for f in resp_json["features"]
+    ), "test item should be returned within interval"
+
+    assert all(
+        item_date_after
+        > datetime.strptime(f["properties"]["datetime"], DATETIME_RFC339)
+        for f in resp_json["features"]
+    ), "Item with datetime outside (greater than) filter interval"
+
+    assert all(
+        item_date_before
+        < datetime.strptime(f["properties"]["datetime"], DATETIME_RFC339)
+        for f in resp_json["features"]
+    ), "Item with datetime outside (less than) filter interval"
 
 
-def test_item_search_temporal_tailed_get(app_client, load_test_data):
+def test_item_search_temporal_open_interval_get(app_client, load_test_data):
     test_item = load_test_data("test_item.json")
-    resp = app_client.post(
-        f"/collections/{test_item['collection']}/items", json=test_item
-    )
-    assert resp.status_code == 200
 
-    dates = [
-        "/1985-04-12T23:20:50.52Z",
-        "1985-04-12T23:20:50.52Z/",
-        "1985-04-12t23:20:50.000z",
-        datetime.strptime(test_item["properties"]["datetime"], DATETIME_RFC339),
+    item_date = datetime.strptime(test_item["properties"]["datetime"], DATETIME_RFC339)
+
+    intervals = [
+        (operator.le, f"/{item_date.strftime(DATETIME_RFC339)}"),
+        (operator.le, f"../{item_date.strftime(DATETIME_RFC339)}"),
+        (operator.ge, f"{item_date.strftime(DATETIME_RFC339)}/"),
+        (operator.ge, f"{item_date.strftime(DATETIME_RFC339)}/.."),
     ]
-    for d in dates:
+    for ival in intervals:
 
         params = {
             "collections": test_item["collection"],
-            "datetime": d,
+            "datetime": ival[1],
+            "limit": 100,
         }
         resp = app_client.get("/search", params=params)
         assert resp.status_code == 200
+
+        resp_json = resp.json()
+        assert any(
+            datetime.strptime(f["properties"]["datetime"], DATETIME_RFC339) != item_date
+            for f in resp_json["features"]
+        ), f"Expexted more than one distinct datetime in output for interval {ival[1]}"
+
+        comparison_op = ival[0]
+        assert all(
+            comparison_op(
+                datetime.strptime(f["properties"]["datetime"], DATETIME_RFC339),
+                item_date,
+            )
+            for f in resp_json["features"]
+        ), f"Item with datetime outside requested interval {ival[1]}"
 
 
 def test_item_search_sort_get(app_client, load_test_data):
