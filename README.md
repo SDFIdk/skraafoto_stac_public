@@ -139,6 +139,7 @@ Now you should be able to hit "Start debugging" `Docker: Python - Fastapi` which
 
 ### Testing
 
+Pytest use the configuration from the `.env`
 Pytest requires the modules to be installed in editable mode. To do this correctly, we use Anaconda.
 
 `conda create --name skraafoto-stac-api python=3.9`
@@ -151,7 +152,9 @@ To make sure that conda grabs the right python interpreter. Now activate the env
 
 `conda activate skraafoto-stac-api`
 
-And install the packages in this order:
+Go to the projects folder in the environment
+
+Install the packages in this order:
 
 ```
   pip install wheel && \
@@ -164,7 +167,7 @@ Now install the SQLalchemy implementation:
 
 `pip install -e "./src/stac_fastapi/sqlalchemy[dev,server]"`
 
-And finally you should be able to run `pytest src` on the commandline, and have VScode discover the tests using the `testing` icon in the left-hand toolbar ( it looks like a chemestry vial). Make sure VScode has the proper python interpreter configured. It can be set typing `CTRL + P` -> `Python: Select interpreter` and then finding the new interpreter. If you can't find it, you need to reload VSCode.
+And finally you should be able to run `pytest src` on the commandline, and have VScode discover the tests using the `testing` icon in the left-hand toolbar ( it looks like a chemestry vial). Make sure VScode has the proper python interpreter configured. It can be set typing `CTRL + SHIFT + P` -> `Python: Select interpreter` and then finding the new interpreter. If you can't find it, you need to reload VSCode.
 
 ### Self-contained test
 
