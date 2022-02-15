@@ -139,7 +139,7 @@ Now you should be able to hit "Start debugging" `Docker: Python - Fastapi` which
 
 ### Testing
 
-Pytest use the configuration from the `.env`
+Pytest use the configuration from the `.env`.
 Pytest requires the modules to be installed in editable mode. To do this correctly, we use Anaconda.
 
 `conda create --name skraafoto-stac-api python=3.9`
@@ -148,11 +148,11 @@ On my machine it was also needed to run:
 
 `conda bash init`
 
-To make sure that conda grabs the right python interpreter. Now activate the environment:
+Now activate the environment:
 
 `conda activate skraafoto-stac-api`
 
-Go to the projects folder in the environment
+Go to the projects folder in the environment.
 
 Install the packages in this order:
 
@@ -167,7 +167,11 @@ Now install the SQLalchemy implementation:
 
 `pip install -e "./src/stac_fastapi/sqlalchemy[dev,server]"`
 
-And finally you should be able to run `pytest src` on the commandline, and have VScode discover the tests using the `testing` icon in the left-hand toolbar ( it looks like a chemestry vial). Make sure VScode has the proper python interpreter configured. It can be set typing `CTRL + SHIFT + P` -> `Python: Select interpreter` and then finding the new interpreter. If you can't find it, you need to reload VSCode.
+And finally you should be able to run `pytest src` on the commandline, and have VScode discover the tests using the `testing` icon in the left-hand toolbar (it looks like a chemestry vial). Make sure VScode has the proper python interpreter configured, it should be something like `~\anaconda3\envs\skraafoto-stac-api\python.exe` or `~\Miniconda3\envs\skraafoto-stac-api\python.exe`. It can be set typing `CTRL + SHIFT + P` -> `Python: Select interpreter` and then finding the new interpreter. If you can't find it, you need to reload VSCode.
+
+You can also now debug the test methods from VSCode.
+If you get an error saying `ImportError: DLL load failed while importing _sqlite3` when trying to debug the test methods, check the DDLs folder from the `skraafoto-stac-api` env `C:\Users\YOURUSER\{Anaconda3 or Miniconda3}\envs\skraafoto-stac-api\DLLs` if it is missing the `sqlite3.ddl` file. If it is missing download the sqlite3 dll from https://www.sqlite.org/download.html under `Precompiled Binaries for Windows` (find your system version), place it in the 
+folder `C:\Users\YOURUSER\{Anaconda3 or Miniconda3}\envs\skraafoto-stac-api\DLLs` and restart your VSCode.
 
 ### Self-contained test
 
