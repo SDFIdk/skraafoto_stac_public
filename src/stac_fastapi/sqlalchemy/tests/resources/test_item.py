@@ -133,7 +133,6 @@ from stac_fastapi.types.core import LandingPageMixin
 #        [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]
 #    ]
 
-
 def test_get_item(app_client, load_test_data):
     """Test read an item by id (core)"""
     test_item = load_test_data("test_item.json")
@@ -142,7 +141,18 @@ def test_get_item(app_client, load_test_data):
         f"/collections/{test_item['collection']}/items/{test_item['id']}"
     )
     assert get_item.status_code == 200
+    resp_json = get_item.json()
+    assert resp_json["id"] == test_item["id"]
 
+# This test shows that collectionId is ignored!
+# def test_get_item_wrong_id(app_client, load_test_data):
+#     """Test read an item by id (core)"""
+#     test_item = load_test_data("test_item.json")
+
+#     get_item = app_client.get(
+#         f"/collections/skraafoto2019/items/{test_item['id']}"
+#     )
+#     assert get_item.status_code == 404
 
 @pytest.mark.skip(
     reason="Validation fails because we allow unknown query parameters due to technical limitations"
@@ -472,6 +482,13 @@ def test_item_search_temporal_open_interval_get(app_client, load_test_data):
             for f in resp_json["features"]
         ), f"Item with datetime outside requested interval {ival[1]}"
 
+def test_item_search_sort_get_no_prefix(app_client, load_test_data):
+    """Test GET search with sorting with no default prefix(sort extension)"""
+    first_item = load_test_data("test_item.json")
+
+    params = {"collections": [first_item["collection"]], "sortby": "datetime"}
+    resp = app_client.get("/search", params=params)
+    assert resp.status_code == 200
 
 def test_item_search_sort_get(app_client, load_test_data):
     """Test GET search with sorting (sort extension)"""
@@ -490,15 +507,28 @@ def test_item_search_sort_get(app_client, load_test_data):
     )
     assert date1 > date10
 
-
-def test_item_search_sort_get_no_prefix(app_client, load_test_data):
-    """Test GET search with sorting with no default prefix(sort extension)"""
+def test_item_search_sort_datetime_asc_id_desc_get(app_client, load_test_data):
+    """Test GET search with sorting (sort extension)"""
     first_item = load_test_data("test_item.json")
 
-    params = {"collections": [first_item["collection"]], "sortby": "datetime"}
+    params = {"collections": [first_item["collection"]], "sortby": "datetime,-id"}
     resp = app_client.get("/search", params=params)
-    assert resp.status_code == 200
 
+    assert resp.status_code == 200
+    resp_json = resp.json()
+    assert len(resp_json["features"]) == 10
+    
+    id1 = resp_json["features"][0]["id"]
+    id10 = resp_json["features"][9]["id"]
+    assert id1 > id10
+
+    date1 = datetime.strptime(
+        resp_json["features"][0]["properties"]["datetime"], DATETIME_RFC339
+    )
+    date10 = datetime.strptime(
+        resp_json["features"][9]["properties"]["datetime"], DATETIME_RFC339
+    )
+    assert date1 < date10
 
 def test_item_search_post_without_collection(app_client, load_test_data):
     """Test POST search without specifying a collection"""
@@ -1055,9 +1085,8 @@ def test_single_item_get_bbox_crs_with_crs(app_client, load_test_data):
     resp_json = resp.json()
     assert resp_json["context"]["matched"] >= 1
 
-
-def test_item_post_bbox_with_crs(app_client, load_test_data):
-    """Test post with default bbox, result in supported crs(crsExtension)"""
+def test_item_search_bbox_crs_with_crs(app_client, load_test_data):
+    """Test get with default bbox, result in supported crs(crsExtension)"""
     test_item = load_test_data("test_item.json")
     bbox = [492283, 6195600, 493583, 6196470]
     params = {
@@ -1108,7 +1137,7 @@ def test_item_post_bbox_with_bbox_crs(app_client, load_test_data):
     )  # TODO rewrite to uri
 
 
-def test_item_search_bbox_crs_with_crs(app_client, load_test_data):
+def test_item_post_bbox_with_crs(app_client, load_test_data):
     """Test post with default bbox, result in supported crs(crsExtension)"""
     test_item = load_test_data("test_item.json")
     bbox = [492283, 6195600, 493583, 6196470]
@@ -1135,7 +1164,7 @@ def test_item_search_bbox_crs_with_crs(app_client, load_test_data):
 
 
 def test_item_wrong_crs(app_client, load_test_data):
-    """Test post with default bbox, result in not supported crs(crsExtension)"""
+    """Test post with default bbox, response should be an error defining what supported that is crs(crsExtension)"""
     test_item = load_test_data("test_item.json")
     bbox = [492283, 6195600, 493583, 6196470]
     params = {
@@ -1149,6 +1178,7 @@ def test_item_wrong_crs(app_client, load_test_data):
     resp = app_client.post(f"/search", json=params)
     assert resp.status_code == 400
 
+    """Test get with default bbox, response should be an error defining what supported that is crs(crsExtension)"""
     params = {
         "bbox": ",".join([str(coord) for coord in bbox]),
         "bbox-crs": "http://www.opengis.net/def/crs/EPSG/0/25832",
@@ -1166,6 +1196,33 @@ def test_item_wrong_crs(app_client, load_test_data):
     )
     assert resp.status_code == 400
 
+def test_item_wrong_bbox_crs(app_client, load_test_data):
+    """Test post with default bbox, response should be an error defining what supported that is crs(crsExtension)"""
+    test_item = load_test_data("test_item.json")
+    bbox = [492283, 6195600, 493583, 6196470]
+    params = {
+        "bbox": bbox,
+        "ids": [test_item["id"]],
+        "collections": [test_item["collection"]],
+        "bbox-crs": "wrong-bbox-crs",
+        "crs": "http://www.opengis.net/def/crs/EPSG/0/25832",
+        "limit": 1,
+    }
+    resp = app_client.post(f"/search", json=params)
+    assert resp.status_code == 400
+
+    """Test get with default bbox, response should be an error defining what supported that is crs(crsExtension)"""
+    params = {
+        "bbox": ",".join([str(coord) for coord in bbox]),
+        "bbox-crs": "wrong-bbox-crs",
+        "crs": "http://www.opengis.net/def/crs/EPSG/0/25832",
+        "limit": 1,
+    }
+
+    resp = app_client.get(
+        f'/collections/{test_item["collection"]}/items', params=params
+    )
+    assert resp.status_code == 400
 
 def test_conformance_classes_configurable():
     """Test conformance class configurability"""
