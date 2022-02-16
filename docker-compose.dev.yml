@@ -1,0 +1,82 @@
+version: "3"
+
+services:
+  test-database:
+    container_name: test-database
+    image: kartoza/postgis:12.4 # Feel free to change version to match production environment
+    environment:
+      - POSTGRES_USER=test_user
+      - POSTGRES_PASS=test_password
+      - POSTGRES_DBNAME=udv_skraafotodistribution
+      - POSTGRES_MULTIPLE_EXTENSIONS=postgis
+      #- SCHEMA_NAME=data # default stac-api thing i think
+    ports:
+      - "5439:5432"
+    #volumes:
+    #  - ./data:/var/lib/postgresql/12 # Persists data
+    networks:
+      - dev-stac-fastapi-network
+
+  app-sqlalchemy:
+    container_name: stac-fastapi-sqlalchemy
+    image: stac-utils/stac-fastapi
+    build:
+      context: .
+      dockerfile: Dockerfile_dev
+
+    platform: linux/amd64
+    environment:
+      - APP_HOST=0.0.0.0
+      - DB_MIN_CONN_SIZE=1
+      - DB_MAX_CONN_SIZE=1
+      - APP_PORT=8081
+      - WEB_CONCURRENCY=$WEB_CONCURRENCY
+      - ENVIRONMENT=${ENVIRONMENT:-dev}
+      - DEBUG=$DEBUG
+      - POSTGRES_USER=test_user
+      - POSTGRES_PASS=test_password
+      - POSTGRES_DBNAME=udv_skraafotodistribution
+      - POSTGRES_HOST=test-database
+      - POSTGRES_PORT=5432
+      - POSTGRES_APPLICATION_NAME=${POSTGRES_APPLICATION_NAME:-stac_fastapi_dockercompose}
+      - COGTILER_BASEPATH=$COGTILER_BASEPATH
+    volumes:
+      - ./src/stac_fastapi:/app/stac_fastapi
+      - ./src/scripts:/app/scripts
+    ports:
+      - 8081:8081
+      - 5678:5678
+    networks:
+      - dev-stac-fastapi-network  
+    command:  [
+        "sh",
+        "-c",
+        "pip install debugpy && python -m debugpy --wait-for-client --listen
+          0.0.0.0:5678 -m uvicorn stac_fastapi.sqlalchemy.app:app --reload
+          --host 0.0.0.0 --port 8081"
+      ]
+
+  test-alembic-run-migration:
+      image: stac-utils/stac-fastapi
+      build:
+        context: .
+        dockerfile: Dockerfile_dev
+      environment:
+        - ENVIRONMENT=development
+        - POSTGRES_USER=test_user
+        - POSTGRES_PASS=test_password
+        - POSTGRES_DBNAME=udv_skraafotodistribution
+        - POSTGRES_HOST=test-database
+        - POSTGRES_PORT=5432
+      volumes:
+        - ./src/stac_fastapi:/app/stac_fastapi
+        - ./src/scripts:/app/scripts
+      networks:
+        - dev-stac-fastapi-network
+      # Wait for the LOCAL DEV application - load S3 data
+      command: >
+        bash -c  "./scripts/wait-for-it.sh test-database:5432 && cd ./stac_fastapi/sqlalchemy && alembic upgrade head"
+
+networks:
+  dev-stac-fastapi-network:
+    driver: bridge 
