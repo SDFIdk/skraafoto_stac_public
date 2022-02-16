@@ -278,6 +278,7 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
 
         return resp
 
+# FIXME collection_id is not used at all
     def get_item(self, item_id: str, collection_id: str, **kwargs) -> Item:
         """Get item by id."""
         request = kwargs["request"]
