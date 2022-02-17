@@ -318,6 +318,7 @@ def test_item_search_temporal_open_window(app_client, load_test_data):
     # We can't match on just one, because of overlapping geometries
     # assert resp_json["features"][0]["id"] == test_item["id"]
     # Instead just check that we got atleast a hit
+    assert resp.status_code == 200
     assert len(resp_json["features"]) >= 1
 
 
