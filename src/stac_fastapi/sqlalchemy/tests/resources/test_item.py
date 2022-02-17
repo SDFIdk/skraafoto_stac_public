@@ -300,6 +300,7 @@ def test_item_search_temporal_window_post(app_client, load_test_data):
     }
     resp = app_client.post("/search", json=params)
     resp_json = resp.json()
+    assert resp.status_code == 200
     # Query can contain multiple records with same datetime, assert the the test_item is atleast in there.
     assert any(test_item["id"] == f["id"] for f in resp_json["features"])
 
