@@ -3,7 +3,7 @@ FROM python:3.8-slim as production
 # Any python libraries that require system libraries to be installed will likely
 # need the following packages in order to build
 RUN apt-get update \
-    && apt-get install -y build-essential \
+    && apt-get install -y build-essential postgresql-client \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 ARG install_dev_dependencies=true
