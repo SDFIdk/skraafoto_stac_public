@@ -40,7 +40,7 @@ services:
         volumes:
             - ./src/stac_fastapi:/app/stac_fastapi
             - ./src/scripts:/app/scripts
-            - ./docker/report:/app/report
+            - ./docker/reports:/app/report
         command: bash -c "sleep 7s && 
             pip install -e /app/stac_fastapi/api[dev] && 
             pip install -e /app/stac_fastapi/types[dev] && 
