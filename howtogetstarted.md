@@ -8,9 +8,13 @@ Hvordan får man vist et billede, hente som COG, thumbnail eller vieweren, og at
 
 ## Introduktion
 
-Guiden er en hurtig gennemgang af, hvordan man får et skråfoto billeder af et bestemt koordinat.
-Hvis man kun ønsker skråfoto billeder fra samme årgang, så anbefales det at benytte  `/collections/{collectionid}` endpointet i stedet for `/search`.
+Guiden er en hurtig gennemgang af, hvordan man får skråfoto billeder for et bestemt geografisk område ved hjælp af koordinater.
+
+## Authentication
+Der skal altid anvendes token, når der benyttes Dataforsyningens services. Du kan oprette og administrere dine tokens {tag guiden som supporterne sender til brugere) på Dataforsyningens hjemmeside.
+https://dataforsyningen.dk/news/3808
+
+## Tips og tricks
+Hvis man kun ønsker skråfoto billeder fra samme årgang, så anbefales det at benytte  `/collections/{collectionid}` endpoint i stedet for `/search` endpoint.
 
 https://api.dataforsyningen.dk/skraafotoapi_test/?token=
-
-Der skal altid benyttes token for at benytte API'erne
