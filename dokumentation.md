@@ -44,63 +44,63 @@ Denne ressource er roden af api'et som beskriver hvilke funktionaliteter der er 
 
 _Parametre_:  
 _Output_: STAC Catalog (JSON)  
-_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/?token=
+_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/?token={DinToken}
 
 **Get Conformance Classes**: `/conformance`  
 Denne ressource returnerer et array af links til conformance klasser. Selve linksene bruges ikke, men fungerer som et "universelt" id til STAC klienter, som fortæller hvilke STAC og OGC API - Features krav servicen understøtter og overholder.
 
 _Parametre_:  
 _Output_: Array af conformance klasser (JSON)  
-_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/conformance?token=
+_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/conformance?token={DinToken}
 
 **Get Item**: `/collections/{collectionid}/items/{itemid}`
 Denne ressource tager i mod et collectionid, itemid, og en crs og returnerer ét STAC Item i en bestemt collection, som et GeoJSON objekt. Geometrier i output returneres i angivet crs parameter.
 
 _Parametere_: collectionid, itemid, crs
 _Output_: Feature (STAC Item) (GeoJSON)  
-_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/items/2019_83_37_2_0046_00001113?token=
+_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/items/2019_83_37_2_0046_00001113?token={DinToken}
 
 **Get/Post Search**: `/search`
 Denne ressource tager i mod diverse parametre og bruges til at fremsøge en collection af STAC Items, der matcher de angivede parametre. Search kan søge på tværs af collectioner, samt i subset af collections som kan angives i 'collections' parametren. Hvis `collections` er tom er default en søgning over alle collections. `datetime`, `bbox`, `ids` er basale søgekriterer på hvilke Items der skal returneres. `crs` angiver hvilket koordinatsystemet eventuelle geometrier i retur objekter skal returneres i, mens `bbox-crs` og `filter-crs` angiver hvilket koordinatsystem geometrier i parametrene bbox og filter er angivet i. `pt` (page_token) angiver en bestemt side der skal fremsøges i forhold til paging og `limit` angiver hvor mange features der skal returneres i et svar. `sortby` angiver en sorteringsorden resultatet returneres i (se [Sort Extension](#Sort-Extension)). `filter` er et CQL-json udtryk som kan bruges til at lave avanceret søgninger på specifikke Item properties (Se [Filter Extension](#Filter-Extension)). `filter-lang` angiver hvilket query-sprog filteret er skrevet i. Post endpointet har samme funktionalitet, men parametre angives i body.
 
 _Parametre_: crs, limit, pt (page*token), ids, bbox, bbox-crs, datetime, filter, filter-lang, filter-crs, collections, sortby
 _Output_: FeatureCollection (Array af STAC Items) (GeoJSON)
-_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/search?token=
+_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/search?token={DinToken}
 
 **Get Collections**: `/collections`  
 Denne ressource returnerer en liste af collectioner API'et udstiller.
 
 _Parametre_:  
 _Output_: Collections (Array af STAC Collections) (JSON)  
-_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/collections?token=
+_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/collections?token={DinToken}
 
 **Get Collection**: `/collections/{collectionid}`  
 Denne ressource tager i mod et collectionid og returnerer én collection med beskrivelser og diverse link relationer.
 
 _Parametre_: collectionid
 _Output_: Collection (STAC Collection) (JSON)  
-_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019?token=
+_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019?token={DinToken}
 
 **Get ItemCollection**: `/collections/{collectionid}/items`  
 Denne ressource tager i mod et collectionid og laver en søgning magen til `/search` endpointet i den angivet collection.
 
-_Parametre_: collectionid, crs, limit, pt, ids, bbox, bbox-crs, datetime, filter, filter-lang, filter-crs,
+_Parametre_: collectionid, crs, limit, pt, ids, bbox, bbox-crs, datetime, filter, filter-lang, filter-crs
 _Output_: FeatureCollection (Array af STAC Items) (GeoJSON)  
-_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/items?token=
+_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/items?token={DinToken}
 
 **Get Queryables**: `/queryables`  
 Denne ressource returnerer en union af properties der kan indgå i et filter udtryk på tværs af alle collectioner. Dvs. at properties som kun kan indgå i et filter udtryk for én collection men ikke en anden, medtages ikke her.
 
 _Paramtre_:  
 _Output_: Array af STAC Item properties der kan bruges over alle collection i filter udtryk (JSON)  
-_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/queryables?token=
+_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/queryables?token={DinToken}
 
 **Get Collection Queryables**: `/collections/{collectionid}/queryables`  
 Denne ressource returnerer alle properties der kan indgå i et filter udtryk for den angivede collection.
 
 _Parametre_: collectionid
 _Output_: Array af STAC Item properties for den givne collection, som kan bruges i filter udtryk (JSON)  
-_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/queryables?token=
+_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/queryables?token={DinToken}
 
 ## Extensions
 
@@ -194,14 +194,14 @@ Hvis `matched` er større end `limit` kan links relationerne `next`/`previous` b
     {
       "rel": "self",
       "type": "application/geo+json",
-      "href": ".../collections/skraafotos2019/items?token=xxx&limit=10",
+      "href": ".../collections/skraafotos2019/items?token={DinToken}xxx&limit=10",
       "method": "GET",
       "body": false
     },
     {
       "rel": "next",
       "type": "application/geo+json",
-      "href": ".../collections/skraafotos2019/items?token=xxx&limit=10&pt=PmR0OjIwMTktMDctMTAgMTE6MDM6MzIrMDI6MDB-czoyMDE5XzgzXzM3XzJfMDA0OF8wMDAwMDg5NQ%3D%3D",
+      "href": ".../collections/skraafotos2019/items?token={DinToken}xxx&limit=10&pt=PmR0OjIwMTktMDctMTAgMTE6MDM6MzIrMDI6MDB-czoyMDE5XzgzXzM3XzJfMDA0OF8wMDAwMDg5NQ%3D%3D",
       "method": "GET",
       "body": false
     }
