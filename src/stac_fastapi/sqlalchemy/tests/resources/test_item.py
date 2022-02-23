@@ -144,15 +144,6 @@ def test_get_item(app_client, load_test_data):
     resp_json = get_item.json()
     assert resp_json["id"] == test_item["id"]
 
-# This test shows that collectionId is ignored!
-# def test_get_item_wrong_id(app_client, load_test_data):
-#     """Test read an item by id (core)"""
-#     test_item = load_test_data("test_item.json")
-
-#     get_item = app_client.get(
-#         f"/collections/skraafoto2019/items/{test_item['id']}"
-#     )
-#     assert get_item.status_code == 404
 
 @pytest.mark.skip(
     reason="Validation fails because we allow unknown query parameters due to technical limitations"
