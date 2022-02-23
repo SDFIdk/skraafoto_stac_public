@@ -133,6 +133,7 @@ from stac_fastapi.types.core import LandingPageMixin
 #        [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]
 #    ]
 
+
 def test_get_item(app_client, load_test_data):
     """Test read an item by id (core)"""
     test_item = load_test_data("test_item.json")
@@ -428,13 +429,13 @@ def test_item_search_temporal_window_get(app_client, load_test_data):
 
     assert all(
         item_date_after
-        > datetime.strptime(f["properties"]["datetime"], DATETIME_RFC339)
+        >= datetime.strptime(f["properties"]["datetime"], DATETIME_RFC339)
         for f in resp_json["features"]
     ), "Item with datetime outside (greater than) filter interval"
 
     assert all(
         item_date_before
-        < datetime.strptime(f["properties"]["datetime"], DATETIME_RFC339)
+        <= datetime.strptime(f["properties"]["datetime"], DATETIME_RFC339)
         for f in resp_json["features"]
     ), "Item with datetime outside (less than) filter interval"
 
@@ -475,6 +476,7 @@ def test_item_search_temporal_open_interval_get(app_client, load_test_data):
             for f in resp_json["features"]
         ), f"Item with datetime outside requested interval {ival[1]}"
 
+
 def test_item_search_sort_get_no_prefix(app_client, load_test_data):
     """Test GET search with sorting with no default prefix(sort extension)"""
     first_item = load_test_data("test_item.json")
@@ -482,6 +484,7 @@ def test_item_search_sort_get_no_prefix(app_client, load_test_data):
     params = {"collections": [first_item["collection"]], "sortby": "datetime"}
     resp = app_client.get("/search", params=params)
     assert resp.status_code == 200
+
 
 def test_item_search_sort_get(app_client, load_test_data):
     """Test GET search with sorting (sort extension)"""
@@ -500,6 +503,7 @@ def test_item_search_sort_get(app_client, load_test_data):
     )
     assert date1 > date10
 
+
 def test_item_search_sort_datetime_asc_id_desc_get(app_client, load_test_data):
     """Test GET search with sorting (sort extension)"""
     first_item = load_test_data("test_item.json")
@@ -510,7 +514,7 @@ def test_item_search_sort_datetime_asc_id_desc_get(app_client, load_test_data):
     assert resp.status_code == 200
     resp_json = resp.json()
     assert len(resp_json["features"]) == 10
-    
+
     id1 = resp_json["features"][0]["id"]
     id10 = resp_json["features"][9]["id"]
     assert id1 > id10
@@ -522,6 +526,7 @@ def test_item_search_sort_datetime_asc_id_desc_get(app_client, load_test_data):
         resp_json["features"][9]["properties"]["datetime"], DATETIME_RFC339
     )
     assert date1 < date10
+
 
 def test_item_search_post_without_collection(app_client, load_test_data):
     """Test POST search without specifying a collection"""
@@ -1078,6 +1083,7 @@ def test_single_item_get_bbox_crs_with_crs(app_client, load_test_data):
     resp_json = resp.json()
     assert resp_json["context"]["matched"] >= 1
 
+
 def test_item_search_bbox_crs_with_crs(app_client, load_test_data):
     """Test get with default bbox, result in supported crs(crsExtension)"""
     test_item = load_test_data("test_item.json")
@@ -1189,6 +1195,7 @@ def test_item_wrong_crs(app_client, load_test_data):
     )
     assert resp.status_code == 400
 
+
 def test_item_wrong_bbox_crs(app_client, load_test_data):
     """Test post with default bbox, response should be an error defining what supported that is crs(crsExtension)"""
     test_item = load_test_data("test_item.json")
@@ -1216,6 +1223,7 @@ def test_item_wrong_bbox_crs(app_client, load_test_data):
         f'/collections/{test_item["collection"]}/items', params=params
     )
     assert resp.status_code == 400
+
 
 def test_conformance_classes_configurable():
     """Test conformance class configurability"""
