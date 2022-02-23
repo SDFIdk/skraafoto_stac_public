@@ -1,9 +1,3 @@
-Eksempler på fulde use cases i kode (fra bbox til billede på skærmen)
-Til udvikleren uden det avancerede behov
-"Jeg har en koordinat i hånden, hvordan får jeg vist et billede af stedet"-opskrift
-Hvis man altid ønsker billeder fra 2021, så gå på den collection i stedet for ”/search”, da den er tungere rent database
-Hvordan får man vist et billede, hente som COG, thumbnail eller vieweren, og at man går igennem metadataen først.
-
 # Skraafoto-stac-api - How to get started
 
 ## Introduktion
@@ -11,20 +5,28 @@ Hvordan får man vist et billede, hente som COG, thumbnail eller vieweren, og at
 Guiden er en hurtig gennemgang af, hvordan man får skråfoto billeder for et bestemt geografisk område ved hjælp af koordinater.
 
 ## Authentication
-Der skal altid anvendes `token`, når der benyttes Dataforsyningens services. Du kan oprette og administrere dine `tokens` på `dataforsyningen.dk` ved at følge denne [guide](https://dataforsyningen.dk/news/3808).
+Benyttes i webapplikationer og GIS systemer, når du kalder API’er og webservices. Dataforsyningen er stateless, derfor skal `token` altid sendes med hver forespørgsel til `Dataforsyningen`, undtagen alle DAWA og Inspire OGC-tjenesterne.
 
-Token skal angives på én af følgende måder i requesten (URL'erne er til testmiljøet og derfor ikke de blivende!):
-1. Som header parameteren `token`
+Du skal være oprettet som bruger på `Dataforsyningen` og være logget ind, for at oprette og administrere dine `tokens` på `Dataforsyningen` (direkte link til stedet):
+1. Klik på brugerikonet øverst i højre hjørne
+2. Gå til "Administrer token til webservices og API’er"
+3. Klik på ”Opret ny token”
+Der bliver generet en `token` bestående af tilfælde tal og har et navn af tilfældige bogstaver og tal. Man kan om navngive `tokens`, så den kan blive navngivet noget der giver mening for dig - er især anbefaldet hvis den skal bruges til noget specifikt. Man kan også definere udløbsdata for `tokens`.
+
+Token benyttes til at identificere sig overfor `Dataforsyningen` uden risiko for at afsløre brugernavn og adgangskode. Det kan f.eks. være relevant, hvis `Dataforsyningens` webservices er implementeret i webapplikationer tilgængelige for alle på internettet.
+
+Token skal angives på én af følgende måder i requesten:
+1. Som header parameteren `token` (anbefalder vi at bruge, da det er den mest sikre måde)
 ```
-https://api.dataforsyningen.dk/skraafotoapi_test
+https://api.dataforsyningen.dk/{servicenavnet på tjenesten}
 token: {DinToken}
 ```
 2. Som queryparameter `token` i URL'en
 ```
-https://api.dataforsyningen.dk/skraafotoapi_test?token={DinToken}
+https://api.dataforsyningen.dk/{servicenavnet på tjenesten}?token={DinToken}
 ```
 
-Alle kald til API'erne skal bruge HTTPS, da der ikke understøttes HTTP. Kald hvor token ikke er angivet eller er ugyldig vil fejle.
+Alle kald til `Dataforsyningens` API'erne og webservices skal bruge HTTPS, da der ikke understøttes HTTP, og `token` skal være angivet (undtagen alle DAWA og Inspire OGC-tjenesterne). Kald uden `token` angivet eller med ugyldig `token` vil fejle.
 
 ## Jeg har en bbox, hvordan får jeg vist billeder af stedet?
 STAC API'et returnerer metadata om skråfoto billederne, som er inddelt i collection niveau, som hver har items i sig. Hvert `item object` indeholder metadata om ét bestemt billede, og der er også URL'er til de forskellige måder det `items` billeder kan hentes ned/ses:
