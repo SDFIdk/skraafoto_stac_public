@@ -48,7 +48,7 @@ _Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafo
 
 _Response_:
 <details>
-```json
+```
 {
     "type": "FeatureCollection",
     "features": [
@@ -1841,7 +1841,7 @@ _Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/search?bbox=7,54,15
 
 _Response_:
 <details>
-```json
+```
 {
     "type": "FeatureCollection",
     "features": [
