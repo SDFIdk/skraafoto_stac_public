@@ -10,6 +10,7 @@ import attr
 import geoalchemy2 as ga
 import sqlalchemy as sa
 from sqlalchemy.sql.expression import true, tuple_
+from sqlalchemy import and_
 import stac_pydantic
 from fastapi import HTTPException
 from fastapi.responses import JSONResponse
@@ -80,9 +81,14 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
         table: Type[database.BaseModel],
         session: SqlSession,
         query_options: Any = [],
+        collection_id: str = None,
     ) -> Type[database.BaseModel]:
         """Lookup row by id."""
-        row = session.query(table).options(query_options).filter(table.id == id).first()
+        if collection_id:
+            _filter = and_(table.id == id, collection_id == table.collection_id)
+        else:
+            _filter = table.id == id
+        row = session.query(table).options(query_options).filter(_filter).first()
         if not row:
             raise NotFoundError(f"{table.__name__} {id} not found")
         return row
@@ -278,7 +284,6 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
 
         return resp
 
-# FIXME collection_id is not used at all
     def get_item(self, item_id: str, collection_id: str, **kwargs) -> Item:
         """Get item by id."""
         request = kwargs["request"]
@@ -303,7 +308,10 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                 self._bbox_expression(output_srid),
                 self._geometry_expression(output_srid),
             )
-            item = self._lookup_id(item_id, self.item_table, session, options)
+
+            item = self._lookup_id(
+                item_id, self.item_table, session, options, collection_id=collection_id
+            )
             resp = self.item_serializer.db_to_stac(item, hrefbuilder)
             if self.get_extension("CrsExtension"):
                 if (
