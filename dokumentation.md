@@ -44,7 +44,7 @@ Denne ressource er roden af api'et som beskriver hvilke funktionaliteter der er 
 
 _Parametre_:  
 _Output_: STAC Catalog (JSON)  
-_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/?token={DinToken}
+_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test?token={DinToken}
 
 **Get Conformance Classes**: `/conformance`  
 Denne ressource returnerer et array af links til conformance klasser. Selve linksene bruges ikke, men fungerer som et "universelt" id til STAC klienter, som fortæller hvilke STAC og OGC API - Features krav servicen understøtter og overholder.
@@ -54,7 +54,10 @@ _Output_: Array af conformance klasser (JSON)
 _Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/conformance?token={DinToken}
 
 **Get Item**: `/collections/{collectionid}/items/{itemid}`
-Denne ressource tager i mod et collectionid, itemid, og en crs og returnerer ét STAC Item i en bestemt collection, som et GeoJSON objekt. Geometrier i output returneres i angivet crs parameter.
+{% documentation_reusables get_item %}
+
+
+Denne ressource tager i mod et collectionid, itemid, og en crs og returnerer ét STAC Item i en bestemt collection, som er et GeoJSON objekt. Geometrier i output returneres i angivet crs parameter.
 
 _Parametere_: collectionid, itemid, crs
 _Output_: Feature (STAC Item) (GeoJSON)  
