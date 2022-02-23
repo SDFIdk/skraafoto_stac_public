@@ -132,7 +132,7 @@ docs/api/*
 traefik/traefik.exe
 
 # test db data
-data
+#data
 
 # junitxml report
 docker/report
