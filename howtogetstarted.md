@@ -38,7 +38,8 @@ Hvis der ønskes billeder af det samme sted, på tværs af collectionerne skal d
 **Samme årgang**
 Man angiver ved {collectionid} i URL pathen, hvilken collection man ønsker at fremsøge billeder fra. I dette tilfælde er det `skraafotos2019` collection. Dernæst angiver man i parameterne, i dette tilfælde ved hjælp af en bbox `7,54,15,57`, hvilket geografisk område, man ønsker metadata om billederne fra. I dette eksempel er bbox i projektion `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, hvilket bliver angivet i `bbox-crs` parameteren.
 
-_URL_: https://api.dataforsyningen.dk/skraafotoapi_test/collections/{collectionid}/items?token={DinToken}  
+_URL_: https://api.dataforsyningen.dk/skraafotoapi_test/collections/{collectionid}/items?token={DinToken}
+
 _Parametre_: collectionid, crs (default: http://www.opengis.net/def/crs/OGC/1.3/CRS84), limit, pt (page*token), ids, bbox, bbox-crs (default: http://www.opengis.net/def/crs/EPSG/0/25832), datetime, filter, filter-lang, filter-crs
 
 _Output_: FeatureCollection (Array af STAC Items) (GeoJSON)  
@@ -47,7 +48,7 @@ _Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafo
 
 _Response_:
 <details>
-``` json
+```json
 {
     "type": "FeatureCollection",
     "features": [
@@ -1831,12 +1832,16 @@ _Response_:
 Man angiver i parameterne, i dette tilfælde ved hjælp af en bbox i parameteren `bbox` med værdierne `7,54,15,57`, hvilket geografisk område, man ønsker metadata om billederne fra. I dette eksempel er bbox i projektion `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, hvilket bliver angivet i `bbox-crs` parameteren.
 
 _URL_: https://api.dataforsyningen.dk/skraafotoapi_test/search?token={DinToken}
+
 _Parametre_: crs (default: http://www.opengis.net/def/crs/OGC/1.3/CRS84), limit, (page*token), ids, bbox, bbox-crs (default: http://www.opengis.net/def/crs/EPSG/0/25832), datetime, filter, filter-lang, filter-crs, collections, sortby
-_Output_: FeatureCollection (Array af STAC Items) (GeoJSON)  
+
+_Output_: FeatureCollection (Array af STAC Items) (GeoJSON)
+
 _Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/search?bbox=7,54,15,57&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84&token={DinToken}
+
 _Response_:
 <details>
-``` json
+```json
 {
     "type": "FeatureCollection",
     "features": [
