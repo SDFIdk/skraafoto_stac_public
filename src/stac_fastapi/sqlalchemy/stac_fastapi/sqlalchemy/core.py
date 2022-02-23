@@ -563,7 +563,6 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                             ),
                         )
 
-                # Is this a FIXME?
                 # Temporal query
                 if search_request.datetime:
                     # Two tailed query (between)
