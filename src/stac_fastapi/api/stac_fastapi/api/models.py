@@ -46,7 +46,6 @@ def _create_request_model(model: Type[BaseModel]) -> Type[BaseModel]:
 @attr.s  # type:ignore
 class APIRequest(abc.ABC):
     """Generic API Request base class."""
-    response: Response = attr.ib(default=None)
 
     @abc.abstractmethod
     def kwargs(self) -> Dict:
