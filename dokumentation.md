@@ -54,9 +54,6 @@ _Output_: Array af conformance klasser (JSON)
 _Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/conformance?token={DinToken}
 
 **Get Item**: `/collections/{collectionid}/items/{itemid}`
-{% data reusables.get_item %}
-
-
 Denne ressource tager i mod et collectionid, itemid, og en crs og returnerer ét STAC Item i en bestemt collection, som er et GeoJSON objekt. Geometrier i output returneres i angivet crs parameter.
 
 _Parametere_: collectionid, itemid, crs
