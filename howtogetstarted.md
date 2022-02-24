@@ -2,7 +2,7 @@
 
 ## Introduktion
 
-Guiden er en hurtig gennemgang af, hvordan man får skråfoto billeder for et bestemt geografisk område ved hjælp af koordinater.
+Guiden er en hurtig gennemgang af, hvordan man får skråfoto billeder for et bestemt geografisk område ved hjælp af koordinater. Dokumentationen til api'et kan findes [her](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md).
 
 ## Authentication
 Benyttes i webapplikationer og GIS systemer, når du kalder API’er og webservices. Dataforsyningen er stateless, derfor skal `token` altid sendes med hver forespørgsel til `Dataforsyningen`, undtagen alle DAWA og Inspire OGC-tjenesterne.
@@ -42,7 +42,7 @@ Man angiver ved {collectionid} i URL pathen, hvilken collection man ønsker at f
 
 _URL_: https://api.dataforsyningen.dk/skraafotoapi_test/collections/{collectionid}/items?token={DinToken}
 
-_Parametre_: collectionid, crs (default: http://www.opengis.net/def/crs/OGC/1.3/CRS84), limit, pt (page*token), ids, bbox, bbox-crs (default: http://www.opengis.net/def/crs/EPSG/0/25832), datetime, filter, filter-lang, filter-crs
+_Parametre_: collectionid, crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`), limit (default: 10, maks: 10000), pt (page*token), ids, bbox, bbox-crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`), datetime, filter, filter-lang, filter-crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`)
 
 _Output_: FeatureCollection (Array af STAC Items) (GeoJSON)  
 
@@ -3630,5 +3630,3 @@ _Response_:
 
 ## Tips og tricks
 Hvis man kun ønsker skråfoto billeder fra samme årgang, så anbefales det at benytte  `/collections/{collectionid}` endpoint i stedet for `/search` endpoint.
-
-https://api.dataforsyningen.dk/skraafotoapi_test?token={DinToken}

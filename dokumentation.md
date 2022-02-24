@@ -3,7 +3,7 @@
 ## Introduktion
 
 Skraafoto-stac-api bygger på api-specifikationen STAC (Spatio Temporal Asset Catalog), en nyere api-standard med formål at forene dynamisk søgning og forespørgsler af geospatielt data.
-Api'et følger specifikationen angivet i [stac-api-spec](https://github.com/radiantearth/stac-api-spec), som er udarbejdet på baggrund af [OGC API - Features](https://ogcapi.ogc.org/features/), tidligere kaldt WFS3. Det vil sige at de fleste OGCAPI klienter også vil kunne læse et STAC API, om det er konfigureret efter standarden.
+Api'et følger specifikationen angivet i [stac-api-spec](https://github.com/radiantearth/stac-api-spec), som er udarbejdet på baggrund af [OGC API - Features](https://ogcapi.ogc.org/features/), tidligere kaldt WFS3. Det vil sige, at de fleste OGCAPI klienter også vil kunne læse et STAC API, hvis det er konfigureret efter standarden.
 
 STAC api'ets core består af fire komponenter:
 
@@ -54,14 +54,14 @@ _Output_: Array af conformance klasser (JSON)
 _Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/conformance?token={DinToken}
 
 **Get Item**: `/collections/{collectionid}/items/{itemid}`
-Denne ressource tager i mod et collectionid, itemid, og en crs og returnerer ét STAC Item i en bestemt collection, som er et GeoJSON objekt. Geometrier i output returneres i angivet crs parameter.
+Denne ressource tager imod et collectionid, itemid, og en crs og returnerer ét STAC Item i en bestemt collection, som er et GeoJSON objekt. Geometrier i output returneres i angivet crs parameter.
 
 _Parametere_: collectionid, itemid, crs
 _Output_: Feature (STAC Item) (GeoJSON)  
 _Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/items/2019_83_37_2_0046_00001113?token={DinToken}
 
 **Get/Post Search**: `/search`
-Denne ressource tager i mod diverse parametre og bruges til at fremsøge en collection af STAC Items, der matcher de angivede parametre. Search kan søge på tværs af collectioner, samt i subset af collections som kan angives i 'collections' parametren. Hvis `collections` er tom er default en søgning over alle collections. `datetime`, `bbox`, `ids` er basale søgekriterer på hvilke Items der skal returneres. `crs` angiver hvilket koordinatsystemet eventuelle geometrier i retur objekter skal returneres i, mens `bbox-crs` og `filter-crs` angiver hvilket koordinatsystem geometrier i parametrene bbox og filter er angivet i. `pt` (page_token) angiver en bestemt side der skal fremsøges i forhold til paging og `limit` angiver hvor mange features der skal returneres i et svar. `sortby` angiver en sorteringsorden resultatet returneres i (se [Sort Extension](#Sort-Extension)). `filter` er et CQL-json udtryk som kan bruges til at lave avanceret søgninger på specifikke Item properties (Se [Filter Extension](#Filter-Extension)). `filter-lang` angiver hvilket query-sprog filteret er skrevet i. Post endpointet har samme funktionalitet, men parametre angives i body.
+Denne ressource tager imod diverse parametre og bruges til at fremsøge en collection af STAC Items, der matcher de angivede parametre. Search kan søge på tværs af collectioner, samt i subset af collections som kan angives i 'collections' parametren. Hvis `collections` er tom er default en søgning over alle collections. `datetime`, `bbox`, `ids` er basale søgekriterer på hvilke Items der skal returneres. `crs` angiver hvilket koordinatsystemet eventuelle geometrier i retur objekter skal returneres i, mens `bbox-crs` og `filter-crs` angiver hvilket koordinatsystem geometrier i parametrene bbox og filter er angivet i. `pt` (page_token) angiver en bestemt side der skal fremsøges i forhold til paging og `limit` angiver hvor mange features der skal returneres i et svar. `sortby` angiver en sorteringsorden resultatet returneres i (se [Sort Extension](#Sort-Extension)). `filter` er et CQL-json udtryk som kan bruges til at lave avanceret søgninger på specifikke Item properties (Se [Filter Extension](#Filter-Extension)). `filter-lang` angiver hvilket query-sprog filteret er skrevet i. Post endpointet har samme funktionalitet, men parametre angives i body.
 
 _Parametre_: crs, limit, pt (page*token), ids, bbox, bbox-crs, datetime, filter, filter-lang, filter-crs, collections, sortby
 _Output_: FeatureCollection (Array af STAC Items) (GeoJSON)
@@ -75,14 +75,14 @@ _Output_: Collections (Array af STAC Collections) (JSON)
 _Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/collections?token={DinToken}
 
 **Get Collection**: `/collections/{collectionid}`  
-Denne ressource tager i mod et collectionid og returnerer én collection med beskrivelser og diverse link relationer.
+Denne ressource tager imod et collectionid og returnerer én collection med beskrivelser og diverse link relationer.
 
 _Parametre_: collectionid
 _Output_: Collection (STAC Collection) (JSON)  
 _Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019?token={DinToken}
 
 **Get ItemCollection**: `/collections/{collectionid}/items`  
-Denne ressource tager i mod et collectionid og laver en søgning magen til `/search` endpointet i den angivet collection.
+Denne ressource tager imod et collectionid og laver en søgning magen til `/search` endpointet i den angivet collection.
 
 _Parametre_: collectionid, crs, limit, pt, ids, bbox, bbox-crs, datetime, filter, filter-lang, filter-crs
 _Output_: FeatureCollection (Array af STAC Items) (GeoJSON)  
