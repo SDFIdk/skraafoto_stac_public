@@ -56,14 +56,14 @@ _Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/conformance?token={
 **Get Item**: `/collections/{collectionid}/items/{itemid}`
 Denne ressource tager imod et collectionid, itemid, og en crs og returnerer ét STAC Item i en bestemt collection, som er et GeoJSON objekt. Geometrier i output returneres i angivet crs parameter.
 
-_Parametere_: collectionid, itemid, crs
+_Parametere_: collectionid, itemid, crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`)
 _Output_: Feature (STAC Item) (GeoJSON)  
 _Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/items/2019_83_37_2_0046_00001113?token={DinToken}
 
 **Get/Post Search**: `/search`
 Denne ressource tager imod diverse parametre og bruges til at fremsøge en collection af STAC Items, der matcher de angivede parametre. Search kan søge på tværs af collectioner, samt i subset af collections som kan angives i 'collections' parametren. Hvis `collections` er tom er default en søgning over alle collections. `datetime`, `bbox`, `ids` er basale søgekriterer på hvilke Items der skal returneres. `crs` angiver hvilket koordinatsystemet eventuelle geometrier i retur objekter skal returneres i, mens `bbox-crs` og `filter-crs` angiver hvilket koordinatsystem geometrier i parametrene bbox og filter er angivet i. `pt` (page_token) angiver en bestemt side der skal fremsøges i forhold til paging og `limit` angiver hvor mange features der skal returneres i et svar. `sortby` angiver en sorteringsorden resultatet returneres i (se [Sort Extension](#Sort-Extension)). `filter` er et CQL-json udtryk som kan bruges til at lave avanceret søgninger på specifikke Item properties (Se [Filter Extension](#Filter-Extension)). `filter-lang` angiver hvilket query-sprog filteret er skrevet i. Post endpointet har samme funktionalitet, men parametre angives i body.
 
-_Parametre_: crs, limit, pt (page*token), ids, bbox, bbox-crs, datetime, filter, filter-lang, filter-crs, collections, sortby
+_Parametre_: crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`), limit (default: 10, maks: 10000), pt (page*token), ids, bbox, bbox-crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`), datetime, filter, filter-lang (default: `cql-json`), filter-crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`), collections, sortby
 _Output_: FeatureCollection (Array af STAC Items) (GeoJSON)
 _Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/search?token={DinToken}
 
@@ -84,7 +84,7 @@ _Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafo
 **Get ItemCollection**: `/collections/{collectionid}/items`  
 Denne ressource tager imod et collectionid og laver en søgning magen til `/search` endpointet i den angivet collection.
 
-_Parametre_: collectionid, crs, limit, pt, ids, bbox, bbox-crs, datetime, filter, filter-lang, filter-crs
+_Parametre_: collectionid, crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`), limit (default: 10, maks: 10000), pt, ids, bbox, bbox-crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`), datetime, filter, filter-lang (default: `cql-json`), filter-crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`)
 _Output_: FeatureCollection (Array af STAC Items) (GeoJSON)  
 _Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/items?token={DinToken}
 
@@ -150,9 +150,9 @@ Nærmere beskrivelse af Filter extension: https://github.com/radiantearth/stac-a
 
 ### Crs Extension
 
-Crs extension tilføjer funktionalitet til håndtering af koordinatsystemer. [GeoJSON standarden](https://datatracker.ietf.org/doc/html/rfc7946#section-4) understøtter som sådan ikke andre koordinatsystemer end WGS84, men tillader at gøre brug af andre koordinatsystemer, hvorom alle parter er informeret om format. Parameteren `crs` i `/search` og `/collections/{collectionid/items}` bruges hvis man ønsker retursvar i et andet coordinatsystem, som f.eks. `http://www.opengis.net/def/crs/EPSG/0/25832`. Desuden kan parametrene `bbox-crs` og `filter-crs` bruges til at angive hvilket koordinatsystem input parametre til hhv. `bbox` og `filter` er angivet i. Crs Extensionen benytter crs URI's til at angive en ønsket crs, f.eks. skrives `WGS84` som `http://www.opengis.net/def/crs/OGC/1.3/CRS84` og EPSG:25832 som `http://www.opengis.net/def/crs/EPSG/0/25832`. Dette er for at følge standarden beskrevet i [OGC API - Features Part 2](https://docs.opengeospatial.org/is/18-058/18-058.html). Understøttede CRS parametre kan ses på hver enkel _Collection_. Desuden angiver parametren `storageCrs` på _Collectionen_ hvilket koordinatsystem data er lagret i.
+Crs extension tilføjer funktionalitet til håndtering af koordinatsystemer. [GeoJSON standarden](https://datatracker.ietf.org/doc/html/rfc7946#section-4) understøtter som sådan ikke andre koordinatsystemer end WGS84, men tillader at gøre brug af andre koordinatsystemer, hvorom alle parter er informeret om format. Parameteren `crs` i `/search` og `/collections/{collectionid/items}` bruges hvis man ønsker retursvar i et andet coordinatsystem, som f.eks. `http://www.opengis.net/def/crs/EPSG/0/25832`. Desuden kan parametrene `bbox-crs` og `filter-crs` bruges til at angive hvilket koordinatsystem input parametre til hhv. `bbox` og `filter` er angivet i. Crs Extensionen benytter crs URI's til at angive en ønsket crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`), f.eks. skrives `WGS84` som `http://www.opengis.net/def/crs/OGC/1.3/CRS84` og EPSG:25832 som `http://www.opengis.net/def/crs/EPSG/0/25832`. Dette er for at følge standarden beskrevet i [OGC API - Features Part 2](https://docs.opengeospatial.org/is/18-058/18-058.html). Understøttede CRS parametre kan ses på hver enkel _Collection_. Desuden angiver parametren `storageCrs` på _Collectionen_ hvilket koordinatsystem data er lagret i.
 
-Eksempler på brug af crs, bbox-crs, og filter-crs parametre:
+Eksempler på brug af crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`), bbox-crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`), og filter-crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`) parametre:
 
 1. `GET /search?crs=http://www.opengis.net/def/crs/EPSG/0/25832` - Returner geometrier i EPSG:25832
 2. `GET /search?bbox=492283,6195600,493583,6196470&bbox-crs=http://www.opengis.net/def/crs/EPSG/0/25832` - Input bbox er angivet i EPSG:25832
