@@ -17,13 +17,13 @@ Token benyttes til at identificere sig overfor `Dataforsyningen` uden risiko for
 
 Token skal angives på én af følgende måder i requesten:
 1. Som header parameteren `token` (anbefalder vi at bruge, da det er den mest sikre måde)
-```
-https://api.dataforsyningen.dk/{servicenavnet på tjenesten}
+```http
+GET https://api.dataforsyningen.dk/{servicenavnet på tjenesten}
 token: {DinToken}
 ```
 2. Som queryparameter `token` i URL'en
-```
-https://api.dataforsyningen.dk/{servicenavnet på tjenesten}?token={DinToken}
+```http
+GET https://api.dataforsyningen.dk/{servicenavnet på tjenesten}?token={DinToken}
 ```
 
 Alle kald til `Dataforsyningens` API'erne og webservices skal bruge HTTPS, da der ikke understøttes HTTP, og `token` skal være angivet (undtagen alle DAWA og Inspire OGC-tjenesterne). Kald uden `token` angivet eller med ugyldig `token` vil fejle.
@@ -38,15 +38,37 @@ Hvis der kun ønskes billeder af det samme sted fra samme årgang, så anbefales
 Hvis der ønskes billeder af det samme sted, på tværs af collectionerne skal der bruges `/search`.
 
 **Samme årgang**
+
 Man angiver ved {collectionid} i URL pathen, hvilken collection man ønsker at fremsøge billeder fra. I dette tilfælde er det `skraafotos2019` collection. Dernæst angiver man i parameterne, i dette tilfælde ved hjælp af en bbox, i parameteren `bbox` med værdierne `7,54,15,57`, hvilket geografisk område, man ønsker metadata om billederne fra. I dette eksempel er bbox i projektion `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, hvilket bliver angivet i `bbox-crs` parameteren. Limit er sat til 3, så hvis der er et match mellem den angivets bbox koordinater og metadataen for skåfoto billederne vil json response indeholder tre `items` objekter. Man kan se i `context` objektet attributter `Returned`, `Limit` og `Matched`, som kan læses mere om på [dokumentation](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#context-extension), hvor der også er forklaret hvordan paging fungerer.
 
-_URL_: https://api.dataforsyningen.dk/skraafotoapi_test/collections/{collectionid}/items?token={DinToken}
+_URL_: 
+```http
+https://api.dataforsyningen.dk/skraafotoapi_test/collections/{collectionid}/items?token={DinToken}
+```
 
-_Parametre_: collectionid, crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`), limit (default: 10, maks: 10000), pt (page*token), ids, bbox, bbox-crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`), datetime, filter, filter-lang (default: `cql-json`), filter-crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`)
+_Parametre_:
+
+| **Parameter** | **Type**   | **Description**                                                                                                                                                                 |
+|---------------|------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| collectionid  | \[string]  |                                                                                                                                                                                 |
+| crs           | string     | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`                                                        |
+| limit         | integer    |                                                                                                                                                                                 |
+| pt            | string     |                                                                                                                                                                                 |
+| ids           | \[string]  | Array of Item ids to return.                                                                                                                                                    |
+| bbox          | \[number]  |                                                                                                                                                                                 |
+| bbox-crs      | string     | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`                                                        |
+| datetime      | string     | Single date+time, or a range ('/' separator), formatted to [RFC 3339, section 5.6](https://tools.ietf.org/html/rfc3339#section-5.6). Use double dots `..` for open date ranges. |
+| filter        | string     |                                                                                                                                                                                 |
+| filter-lang   | string     |                                                                                                                                                                                 |
+| filter-crs    | string     | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`                                                        |
+collectionid, crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`), limit (default: 10, maks: 10000), pt (page*token), ids, bbox, bbox-crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`), datetime, filter, filter-lang (default: `cql-json`), filter-crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`)
 
 _Output_: FeatureCollection (Array af STAC Items) (GeoJSON)  
 
-_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/items?bbox=7,54,15,57&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84&limit=3&token={DinToken}
+_Eksempel_: 
+```http
+https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/items?bbox=7,54,15,57&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84&limit=3&token={DinToken}
+```
 
 _Response_:
 <details>
@@ -608,15 +630,22 @@ _Response_:
 </details>
 
 **På tværs af årgange**
+
 Man angiver i parameterne, i dette tilfælde ved hjælp af en bbox, i parameteren `bbox` med værdierne `7,54,15,57`, hvilket geografisk område, man ønsker metadata om billederne fra. I dette eksempel er bbox i projektion `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, hvilket bliver angivet i `bbox-crs` parameteren. Limit er sat til 3, så hvis der er et match mellem den angivets bbox koordinater og metadataen for skåfoto billederne vil json response indeholder tre `items` objekter. Man kan se i `context` objektet attributter `Returned`, `Limit` og `Matched`, som kan læses mere om på [dokumentation](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#context-extension), hvor der også er forklaret hvordan paging fungerer. 
 
-_URL_: https://api.dataforsyningen.dk/skraafotoapi_test/search?token={DinToken}
+_URL_: 
+```http
+https://api.dataforsyningen.dk/skraafotoapi_test/search?token={DinToken}
+```
 
 _Parametre_: crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`), limit (default: 10, maks: 10000), (page*token), ids, bbox, bbox-crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`), datetime, filter, filter-lang (default: `cql-json`), filter-crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`), collections, sortby
 
 _Output_: FeatureCollection (Array af STAC Items) (GeoJSON)
 
-_Eksempel_: https://api.dataforsyningen.dk/skraafotoapi_test/search?bbox=7,54,15,57&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84&limit=3&token={DinToken}
+_Eksempel_: 
+```http
+https://api.dataforsyningen.dk/skraafotoapi_test/search?bbox=7,54,15,57&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84&limit=3&token={DinToken}
+```
 
 _Response_:
 <details>
