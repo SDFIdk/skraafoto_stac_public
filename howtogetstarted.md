@@ -52,8 +52,8 @@ _Parametre_:
 |---------------|------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | collectionid  | \[string]  |                                                                                                                                                                                 |
 | crs           | string     | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`                                                        |
-| limit         | integer    |                                                                                                                                                                                 |
-| pt            | string     |                                                                                                                                                                                 |
+| limit         | integer    | Default: 10, maks: 10000                                                                                                                                                        |
+| pt            | string     | page*token                                                                                                                                                                      |
 | ids           | \[string]  | Array of Item ids to return.                                                                                                                                                    |
 | bbox          | \[number]  |                                                                                                                                                                                 |
 | bbox-crs      | string     | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`                                                        |
@@ -61,7 +61,6 @@ _Parametre_:
 | filter        | string     |                                                                                                                                                                                 |
 | filter-lang   | string     |                                                                                                                                                                                 |
 | filter-crs    | string     | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`                                                        |
-collectionid, crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`), limit (default: 10, maks: 10000), pt (page*token), ids, bbox, bbox-crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`), datetime, filter, filter-lang (default: `cql-json`), filter-crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`)
 
 _Output_: FeatureCollection (Array af STAC Items) (GeoJSON)  
 
