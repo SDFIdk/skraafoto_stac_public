@@ -994,6 +994,7 @@ def test_filter_crs_epsg4326(app_client, load_test_data):
         == "http://www.opengis.net/def/crs/OGC/1.3/CRS84"
     )
 
+
 def test_filter_crs_wrong_filter_crs_epsg25832(app_client, load_test_data):
     """Test filter with default filter geometry, result should return zero items (crsExtension)"""
     test_item = load_test_data("test_item.json")
@@ -1029,9 +1030,9 @@ def test_filter_crs_epsg25832(app_client, load_test_data):
                             [493085.00000000006, 6196409.999999999],
                             [493092.99999999994, 6196989.999999999],
                             [494402, 6197140],
-                            [494389.00000000006, 6196260]
+                            [494389.00000000006, 6196260],
                         ]
-                    ]
+                    ],
                 },
             ]
         },
@@ -1041,6 +1042,47 @@ def test_filter_crs_epsg25832(app_client, load_test_data):
     }
     resp = app_client.post("/search", json=body)
     assert resp.status_code == 200
+
+    resp_json = resp.json()
+    matching_feat = [x for x in resp_json["features"] if x["id"] == test_item["id"]]
+    assert len(matching_feat) == 1
+    assert (
+        resp_json["features"][0]["crs"]["properties"]["name"]
+        == "http://www.opengis.net/def/crs/EPSG/0/25832"
+    )
+
+
+def test_filter_get_crs_epsg25832(app_client, load_test_data):
+    """Test filter with filter geometry in epsg 25832, result in supported crs (crsExtension)"""
+    test_item = load_test_data("test_item.json")
+
+    params = {
+        "collections": [test_item["collection"]],
+        "filter": json.dumps(
+            {
+                "intersects": [
+                    {"property": "geometry"},
+                    {
+                        "type": "Polygon",
+                        "coordinates": [
+                            [
+                                [494389.00000000006, 6196260],
+                                [493085.00000000006, 6196409.999999999],
+                                [493092.99999999994, 6196989.999999999],
+                                [494402, 6197140],
+                                [494389.00000000006, 6196260],
+                            ]
+                        ],
+                    },
+                ]
+            }
+        ),
+        "filter-crs": "http://www.opengis.net/def/crs/EPSG/0/25832",
+        "crs": "http://www.opengis.net/def/crs/EPSG/0/25832",
+        "limit": 200,
+    }
+    resp = app_client.get("/search", params=params)
+    assert resp.status_code == 200, resp.text
 
     resp_json = resp.json()
     matching_feat = [x for x in resp_json["features"] if x["id"] == test_item["id"]]
