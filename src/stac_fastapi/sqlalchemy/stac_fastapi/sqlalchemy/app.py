@@ -29,12 +29,15 @@ def token_query_param(
 # Here we add all paths which produces internal links as they must include the token
 ROUTES_REQUIRING_TOKEN = [
     {"path": "/", "method": "GET"},
+    {"path": "/conformance", "method": "GET"},
     {"path": "/search", "method": "GET"},
     {"path": "/search", "method": "POST"},
     {"path": "/collections", "method": "GET"},
     {"path": "/collections/{collectionId}", "method": "GET"},
     {"path": "/collections/{collectionId}/items", "method": "GET"},
     {"path": "/collections/{collectionId}/items/{itemId}", "method": "GET"},
+    {"path": "/queryables", "method": "GET"},
+    {"path": "/collections/{collectionId}/queryables", "method": "GET"},
 ]
 
 settings = SqlalchemySettings()
