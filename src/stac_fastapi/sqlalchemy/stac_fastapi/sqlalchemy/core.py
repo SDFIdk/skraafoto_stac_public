@@ -352,9 +352,9 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
             "ids": ids,
             "bbox": bbox,
             "limit": limit,
-            "filter": filter,  # json.loads(filter) if filter else filter,
-            "filter_lang": filter_lang,
-            "filter_crs": filter_crs,
+            "filter": json.loads(filter) if filter else filter,
+            "filter_lang": filter_lang or "cql-json",
+            "filter_crs": filter_crs or "http://www.opengis.net/def/crs/OGC/1.3/CRS84",
             "pt": pt,
             # "query": json.loads(query) if query else query,
         }
