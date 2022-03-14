@@ -256,13 +256,13 @@ Nærmere beskrivelse af Context extension: https://github.com/radiantearth/stac-
 
 ### Crs Extension
 
-Crs extension tilføjer funktionalitet til håndtering af koordinatsystemer. [GeoJSON standarden](https://datatracker.ietf.org/doc/html/rfc7946#section-4) understøtter som sådan ikke andre koordinatsystemer end WGS84, men tillader at gøre brug af andre koordinatsystemer, hvorom alle parter er informeret om format. Parameteren `crs` i `/search` og `/collections/{collectionid/items}` bruges hvis man ønsker retursvar i et andet coordinatsystem, som f.eks. `http://www.opengis.net/def/crs/EPSG/0/25832`. Desuden kan parametrene `bbox-crs` og `filter-crs` bruges til at angive hvilket koordinatsystem geometrier i parametrene `bbox` og `filter` er angivet i. Crs Extensionen benytter crs URI's til at angive en ønsket crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`), f.eks. skrives `WGS84` som `http://www.opengis.net/def/crs/OGC/1.3/CRS84` og EPSG:25832 som `http://www.opengis.net/def/crs/EPSG/0/25832`. Dette er for at følge standarden beskrevet i [OGC API - Features Part 2](https://docs.opengeospatial.org/is/18-058/18-058.html). Understøttede CRS parametre kan ses på hver enkel _Collection_. Desuden angiver parametren `storageCrs` på _Collectionen_ hvilket koordinatsystem data er lagret i.
+Crs extension tilføjer funktionalitet til håndtering af koordinatsystemer. [GeoJSON standarden](https://datatracker.ietf.org/doc/html/rfc7946#section-4) understøtter som sådan ikke andre koordinatsystemer end WGS84, men tillader at gøre brug af andre koordinatsystemer, hvorom alle parter er informeret om format. Parameteren `crs` i `/search` og `/collections/{collectionid/items}` bruges hvis man ønsker retursvar i et andet coordinatsystem, som f.eks. `http://www.opengis.net/def/crs/EPSG/0/25832`. Desuden kan parametrene `bbox-crs` og `filter-crs` bruges til at angive hvilket koordinatsystem geometrier i parametrene `bbox` og `filter` er angivet i. Crs Extensionen benytter crs URI's til at angive en ønsket crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`), f.eks. skrives `WGS84` som `http://www.opengis.net/def/crs/OGC/1.3/CRS84` og EPSG:25832 som `http://www.opengis.net/def/crs/EPSG/0/25832`. Dette er for at følge standarden beskrevet i [OGC API - Features Part 2](https://docs.opengeospatial.org/is/18-058/18-058.html). Understøttede CRS parametre kan ses på hver enkel _Collection_. Desuden angiver parametren `storageCrs` på _Collectionen_, hvilket koordinatsystem data er lagret i.
 
 Eksempler på brug af crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`), bbox-crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`), og filter-crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`) parametre:
 
 1. `GET /search?crs=http://www.opengis.net/def/crs/EPSG/0/25832` - Returner geometrier i EPSG:25832
 2. `GET /search?bbox=492283,6195600,493583,6196470&bbox-crs=http://www.opengis.net/def/crs/EPSG/0/25832` - Input bbox er angivet i EPSG:25832
-3. `POST /search` - Hent features der intersecter med geometri angivet i EPSG 25832, resultater returneres i WGS84
+3. `POST /search` - Hent features der intersecter med geometri angivet i EPSG:25832, resultater returneres i WGS84
 
 ```json
 {
@@ -279,15 +279,15 @@ Eksempler på brug af crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS8
             }
         ]
     },
-  "filter-crs": "25832",
+  "filter-crs": "http://www.opengis.net/def/crs/EPSG/0/25832",
   "crs": "http://www.opengis.net/def/crs/OGC/1.3/CRS84"
 }
 ```
 
 ### Filter Extension
 
-Filter extensionen tilføjer særlig funktionalitet til at søge ved hjælp af forespørgsler i CQL (Common Query Language). Extensionen implementerer specifikationer beskrevet i [OGC Api Features - Part 3: Filtering and the Common Query Language (CQL)](https://portal.ogc.org/files/96288). Den tilføjer desuden to ekstra endpoints `/queryables` og `/collections/{collectionid}/queryables`. Queryables beskriver hvilke properties der kan indgå i filter forespørgsler. Alle filter properties valideres mod queryables, og der returneres en validation fejl hvis der bruges en ugyldig property.
-`filter` er et CQL-json udtryk som kan bruges til at lave avanceret søgninger på specifikke Item properties (Se [Filter Extension](#Filter-Extension)). `filter-lang` angiver hvilket query-sprog filteret er skrevet i. Post endpointet har samme funktionalitet, men parametre angives i body.
+Filter extensionen tilføjer særlig funktionalitet til at søge ved hjælp af forespørgsler i CQL (Common Query Language). Extensionen implementerer specifikationer beskrevet i [OGC Api Features - Part 3: Filtering and the Common Query Language (CQL)](https://portal.ogc.org/files/96288). Den tilføjer desuden to ekstra endpoints `/queryables` og `/collections/{collectionid}/queryables`. Queryables beskriver hvilke properties der kan indgå i filter forespørgsler. Alle filter properties valideres mod queryables, og der returneres en validation fejl, hvis der bruges en ugyldig property.
+`filter` er et CQL-json udtryk, som kan bruges til at lave avanceret søgninger på specifikke `Item` properties (Se [Filter Extension](#Filter-Extension)). `filter-lang` angiver hvilket query-sprog filteret er skrevet i. Post endpointet har samme funktionalitet, men parametre angives i body.
 
 Eksempler på brug af filter parameter:  
 1. `POST /search` - Hent features, hvis geometri intersecter med input geometri
@@ -309,7 +309,7 @@ Eksempler på brug af filter parameter:
   "filter-crs": "http://www.opengis.net/def/crs/EPSG/0/25832",
 }
 ```
-2. `POST /search` - Hent features hvor property.direction er lig øst og gsd er større end 0.1
+2. `POST /search` - Hent features hvor `property.direction` er sat til øst og gsd er større end 0.101
 ```json
 {
   "filter": { 
@@ -324,7 +324,7 @@ Nærmere beskrivelse af Filter extension: https://github.com/radiantearth/stac-a
 
 ### Sort Extension
 
-Sort extensionen tilføjer funktionalitet til at sortere resultater hentet via `/search` endpointet. Der kan sorteres på samtlige Item attributter såsom `id`, `collection`, `datetime`, samt diverse properties attributter. Der kan angives om sorteringsretningen skal være _ascending_ eller _descending_. I et GET `/search` request kan der bruges en forsimplet syntaks; `+` for _ascending_ og `-` for _descending_, ingen fortegn defaulter til _ascending_.  
+Sort extensionen tilføjer funktionalitet til at sortere resultater hentet via `/search` endpointet. Der kan sorteres på samtlige `Item` attributter såsom `id`, `collection`, `datetime`, samt diverse properties attributter. Der kan angives om sorteringsretningen skal være _ascending_ eller _descending_. I et GET `/search` request kan der bruges en forsimplet syntaks; `+` for _ascending_ og `-` for _descending_, ingen fortegn defaulter til _ascending_.  
 
 Eksempler på brug af sortBy parameter:
 
