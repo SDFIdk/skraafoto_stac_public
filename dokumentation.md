@@ -266,6 +266,7 @@ Eksempler på brug af crs (default: `http://www.opengis.net/def/crs/OGC/1.3/CRS8
 
 ```json
 {
+    "filter-lang": "cql-json",
     "filter": {
         "intersects": [
             { "property": "geometry" },
@@ -293,6 +294,7 @@ Eksempler på brug af filter parameter:
 1. `POST /search` - Hent features, hvis geometri intersecter med input geometri
 ```json
 {
+    "filter-lang": "cql-json",
     "filter": { 
         "intersects": [
             { "property": "geometry" },
@@ -312,12 +314,13 @@ Eksempler på brug af filter parameter:
 2. `POST /search` - Hent features hvor `property.direction` er sat til øst og gsd er større end 0.101
 ```json
 {
-  "filter": { 
-      "and": [ 
-        {"eq": [ { "property": "direction" }, "east" ] }, 
-        {"gt": [ { "property": "gsd" }, 0.101 ] } 
-   ]
-  }
+    "filter-lang": "cql-json",
+    "filter": { 
+        "and": [ 
+            {"eq": [ { "property": "direction" }, "east" ] }, 
+            {"gt": [ { "property": "gsd" }, 0.101 ] } 
+        ]
+    }
 }
 ``` 
 Nærmere beskrivelse af Filter extension: https://github.com/radiantearth/stac-api-spec/tree/master/fragments/filter
