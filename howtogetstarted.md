@@ -1,4 +1,4 @@
-# Skraafoto-stac-api - How to get started
+# Skråfoto STAC API - How to get started
 
 ## Introduktion
 
@@ -6,20 +6,20 @@ Guiden er en hurtig gennemgang af, hvordan man får skråfoto billeder for et be
 
 ## Authentication
 
-Benyttes i webapplikationer og GIS systemer, når du kalder API’er og webservices. Dataforsyningen er stateless, derfor skal `token` altid sendes med hver forespørgsel til `Dataforsyningen`, undtagen alle DAWA og Inspire OGC-tjenesterne.
+Authentication benyttes i webapplikationer og GIS systemer, når du kalder API’er og webservices. Dataforsyningen er stateless, derfor skal `token` altid sendes med hver forespørgsel til `Dataforsyningen`, undtagen alle DAWA og Inspire OGC-tjenesterne.
 
 Du skal være oprettet som bruger på `Dataforsyningen` og være logget ind, for at oprette og administrere dine `tokens` på `Dataforsyningen` (direkte link til stedet):
 
 1. Klik på brugerikonet øverst i højre hjørne
 2. Gå til "Administrer token til webservices og API’er"
-3. Klik på ”Opret ny token”
-   Der bliver generet en `token` bestående af tilfælde tal og har et navn af tilfældige bogstaver og tal. Man kan om navngive `tokens`, så den kan blive navngivet noget der giver mening for dig - er især anbefaldet hvis den skal bruges til noget specifikt. Man kan også definere udløbsdata for `tokens`.
+3. Klik på ”Opret ny token”.
+   Der bliver generet en `token` bestående af tilfældige tal og har et navn af tilfældige bogstaver og tal. Man kan lave navneændring af `tokens`, til  noget der giver mening for dig - hvilket anbefales hvis den skal bruges til noget specifikt. Man kan definere udløbsdata for `tokens`, og slette `tokens` der ikke længere er i brug, eller hvis der er mistanke om kompromiering.
 
 Token benyttes til at identificere sig overfor `Dataforsyningen` uden risiko for at afsløre brugernavn og adgangskode. Det kan f.eks. være relevant, hvis `Dataforsyningens` webservices er implementeret i webapplikationer tilgængelige for alle på internettet.
 
 Token skal angives på én af følgende måder i requesten:
 
-1. Som header parameteren `token` (anbefalder vi at bruge, da det er den mest sikre måde)
+1. Som header parameteren `token` (dette er den anbefalet metode, da den yder den højeste sikkerhed.)
 
 ```http
 GET https://api.dataforsyningen.dk/{servicenavnet på tjenesten}
@@ -34,22 +34,28 @@ GET https://api.dataforsyningen.dk/{servicenavnet på tjenesten}?token={DinToken
 
 Alle kald til `Dataforsyningens` API'erne og webservices skal bruge HTTPS, da der ikke understøttes HTTP, og `token` skal være angivet (undtagen alle DAWA og Inspire OGC-tjenesterne). Kald uden `token` angivet eller med ugyldig `token` vil fejle.
 
+## Sammenspillet mellem de tre typer API'er
+(Lav en henvisning til den tekst der skal skrives, som beskriver sammenspillet mellem de tre API'er).
+`Skåfoto STAC API` leverer metadata om skråfoto billederne.
+`Skåfoto Server` leverer selve skråfoto billerne som [Cloud Optimized Geotiff](https://www.cogeo.org) (`COG`), hvor der kan bruges range request.
+`Skråfoto Cogtiler` oversætter COG formattet til andre formatter, for de klienter der ikke understøtter COG (undersøg hvad det er for nogle formatter)
+
 ## Jeg har en bbox, hvordan får jeg vist billeder af stedet?
 
-STAC API'et returnerer metadata om skråfoto billederne, som er inddelt i collection niveau, som hver har items i sig. Hvert `Item object` indeholder metadata om ét bestemt billede, og har URL'er til de forskellige måder, det `Items` billeder kan hentes ned/ses:
+Skåfoto STAC API'et returnerer metadata om skråfoto billederne som JSON, som er inddelt på collection niveau, der hver har items i sig. Hvert `Item object` indeholder metadata om ét bestemt billede, og har URL'er til de forskellige måder, det `Item`s billeder kan hentes ned/ses:
 
-1. I features -> assets -> data -> title `Raw tiff file`. Linket starter med `https://api.dataforsyningen.dk/skraafoto_server_test` downloader en [Cloud Optimized Geotiff](https://www.cogeo.org) (`COG`), og den kan man hente ned som en range request.
-2. I features -> assets -> data -> title `Thumbnail`. Linket starter med `https://api.dataforsyningen.dk/skraafoto_cogtiler_test/thumbnail.jpg` henter en thumbnail af COG'en som en jpg.
-3. features -> links -> title `Interactive image viewer`. Linket starter med `https://api.dataforsyningen.dk/skraafoto_cogtiler_test/viewer.html` er en viewer til browseren, som viser COG'en og man kan zoome og full screene COG'en i ens browser.
+1. Under JSON objektet features -> assets -> data -> title `Raw tiff file`. Linket starter med `https://api.dataforsyningen.dk/skraafoto_server_test` downloader en [Cloud Optimized Geotiff](https://www.cogeo.org) (`COG`), og den kan man hente ned som en range request.
+2. Under JSON objektet  features -> assets -> data -> title `Thumbnail`. Linket starter med `https://api.dataforsyningen.dk/skraafoto_cogtiler_test/thumbnail.jpg` henter en thumbnail af COG'en som en jpg.
+3. Under JSON objektet features -> links -> title `Interactive image viewer`. Linket starter med `https://api.dataforsyningen.dk/skraafoto_cogtiler_test/viewer.html` er en viewer til browseren, som viser COG'en og man kan zoome og full screene COG'en i ens browser.
 
 
 ### Tips og tricks
 Hvis der kun ønskes billeder af det samme sted fra samme årgang, så anbefales det at benytte `/collections/{collectionid}/items` endpoint i stedet for `/search` endpoint, da `/search` kræver flere resourcer at udføre.
-Hvis der ønskes billeder af det samme sted, på tværs af collectionerne skal der bruges `/search`.
+Hvis der ønskes billeder af det samme sted, på tværs af collections skal der bruges `/search`.
 
 **Samme årgang**
 
-Man angiver ved `{collectionid}` i URL pathen, hvilken collection man ønsker at fremsøge billeder fra. I dette tilfælde er det `skraafotos2019` collection. Dernæst angiver man i parameterne, i dette tilfælde ved hjælp af en bbox, i parameteren `bbox` med værdierne `7,54,15,57`, hvilket geografisk område, man ønsker metadata om billederne fra. I dette eksempel er bbox i projektion `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, hvilket bliver angivet i `bbox-crs` parameteren. Limit er sat til 3, så hvis der er et match mellem den angivets bbox koordinater og metadataen for skåfoto billederne vil json response indeholder tre `Items` objekter. Man kan se i `context` objektet attributter `Returned`, `Limit` og `Matched`, som kan læses mere om på [dokumentation](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#context-extension), hvor der også er forklaret hvordan paging fungerer.
+I URL'en angives `{collectionid}` i path, hvilken collection man ønsker at fremsøge billeder fra. I dette tilfælde er det `skraafotos2019` collection. Dernæst angives query parameterne. Her er det parameteren `bbox` med værdierne `7,54,15,57`, som beskriver hvilket geografisk område, man ønsker metadata om billederne fra. I dette eksempel er bbox i projektion `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, hvilket bliver angivet i `bbox-crs` parameteren. Limit er sat til 3, så hvis der er et match mellem den angivets bbox koordinater og metadata for skåfoto billederne vil json response indeholder tre `Items` objekter. Man kan se i `context` objektet attributterne `Returned`, `Limit` og `Matched`, som der kan læses mere om på [dokumentation](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#context-extension), hvor der også er forklaret, hvordan paging fungerer.
 
 _URL_:
 
@@ -62,14 +68,14 @@ _Parametre_:
 
 | **Parameter** | **Type**  | **Description**                                                                                                                                                                                                                                                                                                                                            |
 | ------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| collectionid  | string    | Id'et på en collection.                                                                                                                                                                                                                                                                                                                                    |
+| collectionid  | string    | ID'et på en collection.                                                                                                                                                                                                                                                                                                                                    |
 | crs           | string    | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832` <br>Angiver hvilket koordinatsystem returneret geometrier i json response objektet skal returneres i. Se [Crs Extension](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#crs-extension).</br> |
 | limit         | integer   | Default: 10, maks: 10000 <br>Angiver maks antallet af `Item` objekter json response objektet indeholder (page size). Se [Context Extension](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#context-extension).<br/>                                                                                                   |
 | pt            | string    | Angiver en bestemt side, der skal fremsøges i forhold til paging. Se [Context Extension](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#context-extension).                                                                                                                                                           |
-| ids           | \[string] | Array af `Item` id'er.                                                                                                                                                                                                                                                                                                                                     |
+| ids           | \[string] | Array af `Item` ID'er.                                                                                                                                                                                                                                                                                                                                     |
 | bbox          | \[number] | Array af tal                                                                                                                                                                                                                                                                                                                                               |
 | bbox-crs      | string    | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`. <br>Angiver hvilket koordinatsystem geometrier i `bbox` er angivet i.</br>                                                                                                                                                       |
-| datetime      | string    | Dato og tid formatteret efter [RFC 3339, sektion 5.6](https://tools.ietf.org/html/rfc3339#section-5.6). Kan være en enkelt dato og tid eller datointavaller separert med `/`. Der kan bruge to punktummer `..` for en åben dato og tid interval.                                                                                                           |
+| datetime      | string    | Dato og tid formatteret efter [RFC 3339, sektion 5.6](https://tools.ietf.org/html/rfc3339#section-5.6). Kan være en enkelt dato og tid eller intervaller separert med `/`. Der kan bruge to punktummer `..` for en åben dato og tid interval.                                                                                                           |
 | filter        | string    | CQL-json udtryk til avanceret søgninger på specifikke `Item` properties. Se [Filter Extension](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#filter-extension).                                                                                                                                                      |
 | filter-lang   | string    | Default: `cql-json` <br>Angiver hvilket query-sprog filteret er skrevet i. Se [Filter Extension](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#filter-extension).</br>                                                                                                                                               |
 | filter-crs    | string    | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`. <br>Angiver hvilket koordinatsystem geometrier `filter` er angivet i. Se [Filter Extension](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#filter-extension).</br>                          |
@@ -644,7 +650,7 @@ _Response_:
 
 **På tværs af årgange**
 
-Man angiver i parameterne, i dette tilfælde ved hjælp af en bbox, i parameteren `bbox` med værdierne `7,54,15,57`, hvilket geografisk område, man ønsker metadata om billederne fra. I dette eksempel er bbox i projektion `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, hvilket bliver angivet i `bbox-crs` parameteren. Limit er sat til 3, så hvis der er et match mellem den angivets bbox koordinater og metadataen for skåfoto billederne vil json response indeholder tre `items` objekter. Man kan se i `context` objektet attributter `Returned`, `Limit` og `Matched`, som kan læses mere om på [dokumentation](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#context-extension), hvor der også er forklaret hvordan paging fungerer.
+Angiver query parameterne. Her er det parameteren `bbox` med værdierne `7,54,15,57`, som beskriver hvilket geografisk område, man ønsker metadata om billederne fra. I dette eksempel er bbox i projektion `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, hvilket bliver angivet i `bbox-crs` parameteren. Limit er sat til 3, så hvis der er et match mellem den angivets `bbox` koordinater og metadata for skåfoto billederne vil json response indeholder tre `items` objekter. Man kan se i `context` objektet attributterne `Returned`, `Limit` og `Matched`, som kan læses mere om på [dokumentation](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#context-extension), hvor der også er forklaret hvordan paging fungerer.
 
 _URL_:
 
@@ -660,7 +666,7 @@ _Parametre_:
 | crs           | string    | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832` <br>Angiver hvilket koordinatsystem returneret geometrier i json response objektet skal returneres i. Se [Crs Extension](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#crs-extension).</br> |
 | limit         | integer   | Default: 10, maks: 10000 <br>Angiver maks antallet af `Item` objekter json response objektet indeholder (page size). Se [Context Extension](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#context-extension).<br/>                                                                                                   |
 | pt            | string    | Angiver en bestemt side, der skal fremsøges i forhold til paging. Se [Context Extension](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#context-extension).                                                                                                                                                           |
-| ids           | \[string] | Array af `Item` id'er.                                                                                                                                                                                                                                                                                                                                     |
+| ids           | \[string] | Array af `Item` ID'er.                                                                                                                                                                                                                                                                                                                                     |
 | bbox          | \[number] | Array af tal.                                                                                                                                                                                                                                                                                                                                              |
 | bbox-crs      | string    | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`. <br>Angiver hvilket koordinatsystem geometrier i `bbox` er angivet i.</br>                                                                                                                                                       |
 | datetime      | string    | Dato og tid formatteret efter [RFC 3339, sektion 5.6](https://tools.ietf.org/html/rfc3339#section-5.6). Kan være en enkelt dato og tid eller datointavaller separert med `/`. Der kan bruge to punktummer `..` for en åben dato og tid. interval.                                                                                                          |
