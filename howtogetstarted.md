@@ -17,7 +17,7 @@ Du skal være oprettet som bruger på `Dataforsyningen` og være logget ind, for
 
 Token benyttes til at identificere sig overfor `Dataforsyningen` uden risiko for at afsløre brugernavn og adgangskode. Det kan f.eks. være relevant, hvis `Dataforsyningens` webservices er implementeret i webapplikationer tilgængelige for alle på internettet.
 
-Token skal angives på én af følgende måder i requesten:
+Token skal angives på én af følgende måder i requests:
 
 1. Som header parameteren `token` (dette er den anbefalet metode, da den yder den højeste sikkerhed.)
 
@@ -36,26 +36,20 @@ Alle kald til `Dataforsyningens` API'erne og webservices skal bruge HTTPS, da de
 
 ## Sammenspillet mellem de tre typer API'er
 (Lav en henvisning til den tekst der skal skrives, som beskriver sammenspillet mellem de tre API'er).
-`Skåfoto STAC API` leverer metadata om skråfoto billederne.
-`Skåfoto Server` leverer selve skråfoto billerne som [Cloud Optimized Geotiff](https://www.cogeo.org) (`COG`), hvor der kan bruges range request.
-`Skråfoto Cogtiler` oversætter COG formattet til andre formatter, for de klienter der ikke understøtter COG (undersøg hvad det er for nogle formatter)
+- **Skåfoto STAC API** leverer metadata om skråfoto billederne. https://api.dataforsyningen.dk/skraafotoapi_test
+- **Skåfoto Server** leverer selve skråfoto billerne som [Cloud Optimized Geotiff](https://www.cogeo.org) (`COG`), hvor der kan bruges range request. https://api.dataforsyningen.dk/skraafoto_server_test`
+- **Skråfoto Cogtiler** oversætter COG formattet til andre formatter, for de klienter der ikke understøtter COG (undersøg hvad det er for nogle formatter). https://api.dataforsyningen.dk/skraafoto_cogtiler_test
 
-## Jeg har en bbox, hvordan får jeg vist billeder af stedet?
+## Håndtering af collections
 
-Skåfoto STAC API'et returnerer metadata om skråfoto billederne som JSON, som er inddelt på collection niveau, der hver har items i sig. Hvert `Item object` indeholder metadata om ét bestemt billede, og har URL'er til de forskellige måder, det `Item`s billeder kan hentes ned/ses:
+**Vigtig optimering af søgninger**
 
-1. Under JSON objektet features -> assets -> data -> title `Raw tiff file`. Linket starter med `https://api.dataforsyningen.dk/skraafoto_server_test` downloader en [Cloud Optimized Geotiff](https://www.cogeo.org) (`COG`), og den kan man hente ned som en range request.
-2. Under JSON objektet  features -> assets -> data -> title `Thumbnail`. Linket starter med `https://api.dataforsyningen.dk/skraafoto_cogtiler_test/thumbnail.jpg` henter en thumbnail af COG'en som en jpg.
-3. Under JSON objektet features -> links -> title `Interactive image viewer`. Linket starter med `https://api.dataforsyningen.dk/skraafoto_cogtiler_test/viewer.html` er en viewer til browseren, som viser COG'en og man kan zoome og full screene COG'en i ens browser.
-
-
-### Tips og tricks
 Hvis der kun ønskes billeder af det samme sted fra samme årgang, så anbefales det at benytte `/collections/{collectionid}/items` endpoint i stedet for `/search` endpoint, da `/search` kræver flere resourcer at udføre.
 Hvis der ønskes billeder af det samme sted, på tværs af collections skal der bruges `/search`.
 
-**Samme årgang**
+### Samme årgang
 
-I URL'en angives `{collectionid}` i path, hvilken collection man ønsker at fremsøge billeder fra. I dette tilfælde er det `skraafotos2019` collection. Dernæst angives query parameterne. Her er det parameteren `bbox` med værdierne `7,54,15,57`, som beskriver hvilket geografisk område, man ønsker metadata om billederne fra. I dette eksempel er bbox i projektion `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, hvilket bliver angivet i `bbox-crs` parameteren. Limit er sat til 3, så hvis der er et match mellem den angivets bbox koordinater og metadata for skåfoto billederne vil json response indeholder tre `Items` objekter. Man kan se i `context` objektet attributterne `Returned`, `Limit` og `Matched`, som der kan læses mere om på [dokumentation](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#context-extension), hvor der også er forklaret, hvordan paging fungerer.
+I URL'en angives `{collectionid}` i path, hvilken collection man ønsker at fremsøge billeder fra.
 
 _URL_:
 
@@ -80,7 +74,9 @@ _Parametre_:
 | filter-lang   | string    | Default: `cql-json` <br>Angiver hvilket query-sprog filteret er skrevet i. Se [Filter Extension](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#filter-extension).</br>                                                                                                                                               |
 | filter-crs    | string    | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`. <br>Angiver hvilket koordinatsystem geometrier `filter` er angivet i. Se [Filter Extension](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#filter-extension).</br>                          |
 
-_Output_: FeatureCollection (Array af STAC Items) (GeoJSON)
+_Output_: 
+
+FeatureCollection (Array af STAC Items) (GeoJSON)
 
 _Eksempel_:
 
@@ -88,6 +84,8 @@ _Eksempel_:
 GET https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/items?limit=3&bbox=10.3285,55.3556,10.4536,55.4132&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84
 token: {DinToken}
 ```
+
+I dette tilfælde er det `skraafotos2019` collection. Dernæst angives query parameterne. Her er det parameteren `bbox` med værdierne `7,54,15,57`, som beskriver hvilket geografisk område, man ønsker metadata om billederne fra. I dette eksempel er bbox i projektion `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, hvilket bliver angivet i `bbox-crs` parameteren. Limit er sat til 3, så hvis der er et match mellem den angivets bbox koordinater og metadata for skåfoto billederne vil json response indeholde tre `Items` objekter. Man kan se i `context` objektet attributterne `Returned`, `Limit` og `Matched`, som der kan læses mere om på [dokumentation](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#context-extension), hvor der også er forklaret, hvordan paging fungerer.
 
 _Response_:
 
@@ -648,9 +646,7 @@ _Response_:
 ```
 </details>
 
-**På tværs af årgange**
-
-Angiver query parameterne. Her er det parameteren `bbox` med værdierne `7,54,15,57`, som beskriver hvilket geografisk område, man ønsker metadata om billederne fra. I dette eksempel er bbox i projektion `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, hvilket bliver angivet i `bbox-crs` parameteren. Limit er sat til 3, så hvis der er et match mellem den angivets `bbox` koordinater og metadata for skåfoto billederne vil json response indeholder tre `items` objekter. Man kan se i `context` objektet attributterne `Returned`, `Limit` og `Matched`, som kan læses mere om på [dokumentation](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#context-extension), hvor der også er forklaret hvordan paging fungerer.
+### På tværs af årgange
 
 _URL_:
 
@@ -669,14 +665,16 @@ _Parametre_:
 | ids           | \[string] | Array af `Item` ID'er.                                                                                                                                                                                                                                                                                                                                     |
 | bbox          | \[number] | Array af tal.                                                                                                                                                                                                                                                                                                                                              |
 | bbox-crs      | string    | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`. <br>Angiver hvilket koordinatsystem geometrier i `bbox` er angivet i.</br>                                                                                                                                                       |
-| datetime      | string    | Dato og tid formatteret efter [RFC 3339, sektion 5.6](https://tools.ietf.org/html/rfc3339#section-5.6). Kan være en enkelt dato og tid eller datointavaller separert med `/`. Der kan bruge to punktummer `..` for en åben dato og tid. interval.                                                                                                          |
+| datetime      | string    | Dato og tid formatteret efter [RFC 3339, sektion 5.6](https://tools.ietf.org/html/rfc3339#section-5.6). Kan være en enkelt dato og tid eller intavaller separert med `/`. Der kan bruge to punktummer `..` for en åben dato og tid. interval.                                                                                                          |
 | filter        | string    | CQL-json udtryk til avanceret søgninger på specifikke `Item` properties. Se [Filter Extension](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#filter-extension).                                                                                                                                                      |
 | filter-lang   | string    | Default: `cql-json` <br>Angiver hvilket query-sprog filteret er skrevet i. Se [Filter Extension](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#filter-extension).</br>                                                                                                                                               |
 | filter-crs    | string    | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`. <br>Angiver hvilket koordinatsystem geometrier `filter` er angivet i. Se [Filter Extension](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#filter-extension).</br>                          |
 | collections   | \[string] | Default: Søgning over alle collectioner.                                                                                                                                                                                                                                                                                                                   |
 | sortby        | string    | Angiver en sorteringsorden resultatet returneres i. Se [Sort Extension](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#sort-extension).                                                                                                                                                                               |
 
-_Output_: FeatureCollection (Array af STAC Items) (GeoJSON)
+_Output_: 
+
+FeatureCollection (Array af STAC Items) (GeoJSON)
 
 _Eksempel_:
 
@@ -684,6 +682,8 @@ _Eksempel_:
 GET https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=3&bbox=10.3285,55.3556,10.4536,55.4132&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84
 token: {DinToken}
 ```
+
+Angiver query parameterne. Her er det parameteren `bbox` med værdierne `7,54,15,57` som beskriver hvilket geografisk område, man ønsker metadata om billederne fra. I dette eksempel er bbox i projektion `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, hvilket bliver angivet i `bbox-crs` parameteren. Limit er sat til 3, så hvis der er et match mellem den angivets `bbox` koordinater og metadata for skåfoto billederne vil JSON response indeholde tre `items` objekter. Man kan se i `context` objektet attributterne `Returned`, `Limit` og `Matched`, som kan læses mere om på [dokumentation](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#context-extension), hvor der også er forklaret hvordan paging fungerer.
 
 _Response_:
 
