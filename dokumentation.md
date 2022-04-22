@@ -131,7 +131,7 @@ token: {DinToken}
 
 **Get Collections**: `/collections`  
 
-Denne ressource returnerer en liste af collections API'et udstiller.
+Denne ressource returnerer en liste af collections som API'et udstiller.
 
 _Parametre_:  
 _Output_: 
