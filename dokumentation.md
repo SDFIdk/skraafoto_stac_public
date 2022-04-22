@@ -286,7 +286,7 @@ Tilføjer funktionalitet til håndtering af koordinatsystemer. [GeoJSON standard
 
 Eksempler på brug af parametrene `crs`, `bbox-crs`, og `filter-crs`:
 
-1. `GET /search?crs=http://www.opengis.net/def/crs/EPSG/0/25832` - Returner geometrier i EPSG:25832
+1. `GET /search?crs=http://www.opengis.net/def/crs/EPSG/0/25832` - Returnerer geometrier i EPSG:25832
 2. `GET /search?bbox=492283,6195600,493583,6196470&bbox-crs=http://www.opengis.net/def/crs/EPSG/0/25832` - Input `bbox` er angivet i EPSG:25832
 3. `POST /search` - Hent features, der overlapper (intersects) med geometri angivet i EPSG:25832, resultater returneres i WGS84
 
@@ -314,7 +314,7 @@ Eksempler på brug af parametrene `crs`, `bbox-crs`, og `filter-crs`:
 ### Filter Extension
 
 Filter extension tilføjer særlig funktionalitet til at søge ved hjælp af forespørgsler i CQL (Common Query Language). Denne extension implementerer specifikationer beskrevet i [OGC Api Features - Part 3: Filtering and the Common Query Language (CQL)](https://portal.ogc.org/files/96288). Den tilføjer desuden to ekstra endpoints `/queryables` og `/collections/{collectionid}/queryables`.`/queryables` beskriver hvilke properties, der kan indgå i filter-forespørgsler. Alle filter-properties valideres mod `/queryables`, og der returneres en validation-fejl hvis der bruges en ugyldig property.
-`filter` er et CQL-JSON udtryk, som kan bruges til at lave avanceret søgninger på specifikke `Item` properties (Se [Filter Extension](#Filter-Extension)). `filter-lang` angiver hvilket query-sprog filteret er skrevet i. Post endpointet har samme funktionalitet, men parametre angives i body.
+`filter` er et CQL-JSON udtryk, som kan bruges til at lave avancerede søgninger på specifikke `Item` properties (Se [Filter Extension](#Filter-Extension)). `filter-lang` angiver hvilket query-sprog filteret er skrevet i. Post endpointet har samme funktionalitet, men parametre angives i body.
 
 Eksempler på brug af filter parameter:  
 1. `POST /search` - Hent features hvis geometri overlapper (intersects) med input geometri
