@@ -236,7 +236,7 @@ token: {DinToken}
 
 ## Extensions
 
-Ud over de nævnte fire core-komponenter indeholder servicen en række extensions, som udbyder ekstra funktionaliteter:
+Ud over de nævnte fire core-komponenter, indeholder servicen også en række extensions, som udbyder ekstra funktionaliteter:
 
 - Context Extension
 - CRS Extension
