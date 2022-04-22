@@ -683,7 +683,7 @@ GET https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=3&bbox=10.3285
 token: {DinToken}
 ```
 
-Angiver query parameterne. Her er det parameteren `bbox` med værdierne `10.3285,55.3556,10.4536,55.4132`, som beskriver hvilket geografisk område, man ønsker metadata om billederne fra. I dette eksempel er bbox i projektion `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, hvilket bliver angivet i `bbox-crs` parameteren. Limit er sat til 3, så hvis der er et match mellem den angivet `bboxs` koordinater og metadata for skåfotos, vil JSON response indeholde tre `items` objekter. Man kan se i `context` objektet attributterne `Returned`, `Limit` og `Matched`, der kan læses mere om på [dokumentation](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#context-extension), hvor det også er forklaret hvordan paging fungerer.
+Angiver query parameterne. Her er det parameteren `bbox` med værdierne `10.3285,55.3556,10.4536,55.4132`, som beskriver hvilket geografisk område, man ønsker metadata om billederne fra. I dette eksempel er bbox i projektion `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, hvilket bliver angivet i `bbox-crs` parameteren. Limit er sat til 3, så hvis der er et match mellem den angivet `bboxs` koordinater og metadata for skåfotos, vil JSON response indeholde tre `items` objekter. I `context` objektet er attributterne `Returned`, `Limit` og `Matched`, der kan læses mere om på [dokumentation](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#context-extension), hvor det også er forklaret hvordan paging fungerer.
 
 _Response_:
 
