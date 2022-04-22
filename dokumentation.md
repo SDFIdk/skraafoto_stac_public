@@ -38,7 +38,7 @@ En nærmere beskrivelse af STAC-spec core kan læses [her](https://github.com/ra
 Servicen udstillet af Dataforsyningen kræver gyldig token, som kan erhverves på https://dataforsyningen.dk/.
 
 Servicen returnerer GeoJSON/JSON, medmindre en forespørgsel er ugyldig pga. uautoriseret token, i så fald returneres text.
-Hvis token er autoriseret, men ens request har en ugyldig parameter returneres en JSON fejlmeddelelse.
+Hvis token er autoriseret, men ens request har en ugyldig parameter, returneres en JSON fejlmeddelelse.
 
 API'et udstiller endpoints:  
 **Landing Page**: `/`  
