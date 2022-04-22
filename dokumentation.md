@@ -245,7 +245,7 @@ Ud over de nævnte fire core-komponenter, indeholder servicen også en række ex
 
 ### Context Extension
 
-Context extension tilføjer ekstra information omkring en returneret `FeatureCollection` hentet via `/search` eller `/collections/{collectionid}/items`. Den returnerer følgende tre attributter sammen med `FeatureCollectionen`:
+Context extension tilføjer ekstra information omkring en returneret `FeatureCollection` hentet via `/search` eller `/collections/{collectionid}/items`. Den returnerer følgende tre attributter sammen med `FeatureCollection`:
 
 - Returned: Antallet af features returneret af resultatet
 - Limit: Det maksimale antal resultater returneret
