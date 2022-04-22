@@ -25,7 +25,7 @@ Udgangspunktet for navigering af STAC. Det består af links til items og andre c
 
 Collection kan ses som en årgang, der indholder metadata om hvert eneste `Item` for den collection. `Item` i en collection deler de samme attributter og metadata på tværs af collections.
 
-En udvidelse til catalog, som indeholder yderligere metadata. Metadataene beskriver en samling af items, som er defineret med samme attributter og deler samme metadata. STAC Collections er kompatible med `Collection` termet, specificeret i [OGC API - Features](https://ogcapi.ogc.org/features/), men er udvidet med yderligere felter. En liste af felter er angivet i [STAC Collection Specificationen](https://github.com/radiantearth/stac-spec/blob/master/collection-spec/collection-spec.md)
+En udvidelse til catalog, som indeholder yderligere metadata. Metadataene beskriver en samling af items, som er defineret med samme attributter og deler samme metadata. STAC Collections er kompatibel med `Collection` termet, specificeret i [OGC API - Features](https://ogcapi.ogc.org/features/), men er udvidet med yderligere felter. En liste af felter er angivet i [STAC Collection Specificationen](https://github.com/radiantearth/stac-spec/blob/master/collection-spec/collection-spec.md)
 
 ### STAC API
 
