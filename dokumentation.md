@@ -15,7 +15,7 @@ STAC API'ets core består af fire komponenter:
 ### STAC Item
 
 Grundstenen, der udgør et enkelt asset i API'et. Det er formateret som GeoJSON suppleret med ekstra metadata (id, type, geometry, bbox, datetime, properties, mm.), som muliggør det for en klient at søge eller gennemløbe kataloger af spatio temporale aktiver. Ekstra data er tilføjet som pkt. 6 i [GeoJSON standarden](https://datatracker.ietf.org/doc/html/rfc7946#section-6) "Foreign Members".
-Et spatio temporalt aktiv udgør et bestemt geografisk område på et bestemt tidspunkt. Alle aktiver, der opfylder `Ìtem` specifikationen er valid STAC [stac-api-spec-item](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md).
+Et spatio temporalt aktiv udgør et bestemt geografisk område på et bestemt tidspunkt. Alle aktiver, der opfylder `Item` specifikationen er valid STAC [stac-api-spec-item](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md).
 
 ### STAC Catalog
 
