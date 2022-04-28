@@ -2,8 +2,8 @@
 
 ## Introduktion
 
-Skraafoto-stac-api bygger på api-specifikationen STAC (Spatio Temporal Asset Catalog), en nyere API-standard med formål at forene dynamisk søgning og forespørgsler af geospatielt data.
-API'et følger specifikationen angivet i [stac-api-spec](https://github.com/radiantearth/stac-api-spec), som er udarbejdet på baggrund af [OGC API - Features](https://ogcapi.ogc.org/features/), tidligere kaldt WFS3. Det vil sige at de fleste OGCAPI klienter også vil kunne læse et STAC API, hvis det er konfigureret efter standarden.
+Skraafoto-stac-api bygger på API-specifikationen STAC (Spatio Temporal Asset Catalog), en nyere API-standard med formål at forene dynamisk søgning og forespørgsler af geospatielt data.
+API'et følger specifikationen angivet i [stac-api-spec](https://github.com/radiantearth/stac-api-spec), som er udarbejdet på baggrund af [OGC API - Features](https://ogcapi.ogc.org/features/), tidligere kaldt WFS3. Det vil sige, at de fleste OGC API klienter også vil kunne læse et STAC API, hvis det er konfigureret efter standarden.
 
 STAC API'ets core består af fire komponenter:
 
@@ -14,36 +14,36 @@ STAC API'ets core består af fire komponenter:
 
 ### STAC Item
 
-Grundstenen der udgør et enkelt asset i API'et. Det er formatteret som GeoJSON suppleret med ekstra metadata (id, type, geometry, bbox, datetime, properties, mm.), som muliggører en klient at søge eller gennemløbe kataloger af spatio temporale aktiver. Ekstra data er tilføjet som pkt. 6 i [GeoJSON standarden](https://datatracker.ietf.org/doc/html/rfc7946#section-6) "Foreign Members".
-Et spatio temporalt aktiv udgør et bestemt geografisk område på et bestemt tidspunkt. Alle aktiver der opfylder `Ìtem` specifikationen er valid STAC [stac-api-spec-item](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md).
+Grundstenen, der udgør et enkelt asset i API'et. Det er formateret som GeoJSON suppleret med ekstra metadata (id, type, geometry, bbox, datetime, properties, mm.), som muliggør det for en klient at søge eller gennemløbe kataloger af spatio temporale aktiver. Ekstra data er tilføjet som pkt. 6 i [GeoJSON standarden](https://datatracker.ietf.org/doc/html/rfc7946#section-6) "Foreign Members".
+Et spatio temporalt aktiv udgør et bestemt geografisk område på et bestemt tidspunkt. Alle aktiver, der opfylder `Item` specifikationen er valid STAC [stac-api-spec-item](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md).
 
 ### STAC Catalog
 
-Udgangspunktet for navigering af STAC. Det består af links til items og andre catalogs. Det kan forstås som en mappe i en klassisk fil struktur - den er selv en "beholder" til items, men kan også indeholde andre "beholdere" (foldere/catalogs).
+Udgangspunktet for navigering af STAC. Det består af links til items og andre catalogs. Det kan forstås som en mappe i en klassisk filstruktur - den er selv en "beholder" til items, men kan også indeholde andre "beholdere" (foldere/catalogs).
 
 ### STAC Collection
 
 Collection kan ses som en årgang, der indholder metadata om hvert eneste `Item` for den collection. `Item` i en collection deler de samme attributter og metadata på tværs af collections.
 
-En udvidelse til catalog, som indeholder yderligere metadata der beskriver en samling af items som er defineret med samme attributter og deler samme metadata. STAC Collections er kompatible med `Collection` termet, specificeret i [OGC API - Features](https://ogcapi.ogc.org/features/), men er udvidet med yderligere felter. En liste af felter er angivet i [STAC Collection Specificationen](https://github.com/radiantearth/stac-spec/blob/master/collection-spec/collection-spec.md)
+En udvidelse til catalog, som indeholder yderligere metadata. Metadataene beskriver en samling af items, som er defineret med samme attributter og deler samme metadata. STAC Collections er kompatibel med `Collection` termet, specificeret i [OGC API - Features](https://ogcapi.ogc.org/features/), men er udvidet med yderligere felter. En liste af felter er angivet i [STAC Collection Specificationen](https://github.com/radiantearth/stac-spec/blob/master/collection-spec/collection-spec.md)
 
 ### STAC API
 
-RESTful API specification er til at dynamisk forespørge STAC catalogs. Det er designet med et standard set af endpoints til at søge i catalogs, collections, og items.
+RESTful API specification er til dynamisk at forespørge STAC catalogs. Det er designet med et standard set af endpoints til at søge i catalogs, collections, og items.
 
-En nærmere beskrivelse af stac-spec core kan læses [her](https://github.com/radiantearth/stac-api-spec/blob/master/stac-spec/overview.md).
+En nærmere beskrivelse af STAC-spec core kan læses [her](https://github.com/radiantearth/stac-api-spec/blob/master/stac-spec/overview.md).
 
 ## Endpoints og outputs
 
 Servicen udstillet af Dataforsyningen kræver gyldig token, som kan erhverves på https://dataforsyningen.dk/.
 
-Servicen returnerer GeoJSON/JSON, medmindre en forespørgsel er ugyldig pga. uauoriseret token, i så fald returneres text.
-Hvis token er autoriseret, men ens request har en ugyldig parameter returneres en JSON fejlmeddelelse.
+Servicen returnerer GeoJSON/JSON, medmindre en forespørgsel er ugyldig pga. uautoriseret token, i så fald returneres text.
+Hvis token er autoriseret, men ens request har en ugyldig parameter, returneres en JSON fejlmeddelelse.
 
 API'et udstiller endpoints:  
 **Landing Page**: `/`  
 
-Denne ressource er roden af API'et som beskriver hvilke funktionaliteter der er udstillet via et `ConformsTo` array samt URIs af andre ressourcer via link relationer.
+Denne ressource er roden af API'et, som beskriver hvilke funktionaliteter, der er udstillet via et `ConformsTo` array samt URIs af andre ressourcer via link relationer.
 
 _Parametre_:  
 _Output_: 
@@ -59,7 +59,7 @@ token: {DinToken}
 
 **Get Conformance Classes**: `/conformance`  
 
-Denne ressource returnerer et array af links til conformance klasser. Selve links bruges ikke, men fungerer som et "universelt" ID til STAC klienter, som fortæller hvilke STAC og OGC API - Features krav servicen understøtter og overholder.
+Denne ressource returnerer et array af links til conformance klasser. Selve links bruges ikke, men fungerer som et "universelt" ID til STAC klienter, som fortæller hvilke krav STAC og OGC-API-Features servicen understøtter og overholder.
 
 _Parametre_:  
 _Output_: 
@@ -82,7 +82,7 @@ _Parametre_:
 | ------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | collectionid  | string   | ID'et på en collection.                                                                                                                                                                                                                                                 |
 | itemid        | string   | ID'et på et item.                                                                                                                                                                                                                                                       |
-| crs           | string   | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832` <br>Angiver hvilket koordinatsystem returneret geometrier i JSON response objektet skal returneres i. Se [Crs Extension](#Crs-Extension).</br> |
+| crs           | string   | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832` <br>Angiver hvilket koordinatsystem geometrier i JSON response skal returneres i. Se [Crs Extension](#Crs-Extension).</br> |
 
 _Output_: Feature (STAC Item) (GeoJSON)  
 _Eksempel_:
@@ -94,23 +94,23 @@ token: {DinToken}
 
 **Get/Post Search**: `/search`  
 
-Denne ressource tager imod diverse parametre og fremsøger en collection af STAC Items, der matcher de angivet parametre. `/search` kan søge på tværs af collectioner, samt i subset af collections som kan angives i `collections` parameteren. `datetime`, `bbox`, `ids` er basale søgekriterer på, hvilke `Items` der skal returneres. Post endpointet har samme funktionalitet, men parametre angives i body.
+Denne ressource tager imod diverse parametre og fremsøger en collection af STAC Items, der matcher de angivne parametre. `/search` kan søge på tværs af collections, samt i subset af collections, som kan angives i `collections` parameteren. `datetime`, `bbox`, `ids` er basale søgekriterer på hvilke `Items`, der skal returneres. Post endpointet har samme funktionalitet, men parametre angives i body.
 
 _Parametre_:
 
 | **Parameter** | **Type**  | **Description**                                                                                                                                                                                                                                                         |
 | ------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| crs           | string    | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832` <br>Angiver hvilket koordinatsystem returneret geometrier i json response objektet skal returneres i. Se [Crs Extension](#Crs-Extension).</br> |
-| limit         | integer   | Default: 10, maks: 10000 <br>Angiver maks antallet af `Item` objekter JSON response objektet indeholder (page size). Se [Context Extension](#Context-Extension).<br/>                                                                                                   |
+| crs           | string    | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832` <br>Angiver hvilket koordinatsystem geometrier i JSON response skal returneres i. Se [Crs Extension](#Crs-Extension).</br> |
+| limit         | integer   | Default: 10, maks: 10000 <br>Angiver maks antallet af `Item` objekter i JSON response (page size). Se [Context Extension](#Context-Extension).<br/>                                                                                                   |
 | pt            | string    | Page token. Angiver en bestemt side, der skal fremsøges i forhold til paging. Se [Context Extension](#Context-Extension).                                                                                                                                               |
 | ids           | \[string] | Array af `Item` ID'er.                                                                                                                                                                                                                                                  |
-| bbox          | \[number] | Array af 4 tal.                                                                                                                                                                                                                                                           |
+| bbox          | \[number] | Array af fire tal.                                                                                                                                                                                                                                                           |
 | bbox-crs      | string    | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`. <br>Angiver hvilket koordinatsystem geometrier i `bbox` er angivet i.</br>                                                                    |
-| datetime      | string    | Dato og tid formatteret efter [RFC 3339, sektion 5.6](https://tools.ietf.org/html/rfc3339#section-5.6). Kan være en enkelt dato og tid eller intavaller separert med `/`. Der kan bruge to punktummer `..` for en åben dato og tid. interval.                       |
-| filter        | string    | CQL-json udtryk til avanceret søgninger på specifikke `Item` properties. Se [Filter Extension](#Filter-Extension).                                                                                                                                                      |
-| filter-lang   | string    | Default: `cql-json` <br>Angiver hvilket query-sprog filteret er skrevet i. Se [Filter Extension](#Filter-Extension).</br>                                                                                                                                               |
+| datetime      | string    | Dato og tid formateret efter [RFC 3339, sektion 5.6](https://tools.ietf.org/html/rfc3339#section-5.6). Kan være en enkelt dato og tid eller intervaller separeret med `/`. Der kan bruges to punktummer `..` for et åbent dato- og tidsinterval.                       |
+| filter        | string    | `CQL-JSON` udtryk til avanceret søgninger på specifikke `Item` properties. Se [Filter Extension](#Filter-Extension).                                                                                                                                                      |
+| filter-lang   | string    | Default: `CQL-JSON` <br>Angiver hvilket query-sprog filteret er skrevet i. Se [Filter Extension](#Filter-Extension).</br>                                                                                                                                               |
 | filter-crs    | string    | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`. <br>Angiver hvilket koordinatsystem geometrier i `filter` er angivet i. Se [Filter Extension](#Filter-Extension).</br>                        |
-| collections   | \[string] | Default: Søgning over alle collectioner.                                                                                                                                                                                                                                |
+| collections   | \[string] | Default: Søgning over alle collections.                                                                                                                                                                                                                                |
 | sortby        | string    | Angiver en sorteringsorden resultatet returneres i. Se [Sort Extension](#Sort-Extension).                                                                                                                                                                               |
 
 _Output_: 
@@ -131,7 +131,7 @@ token: {DinToken}
 
 **Get Collections**: `/collections`  
 
-Denne ressource returnerer en liste af collectioner API'et udstiller.
+Denne ressource returnerer en liste af collections som API'et udstiller.
 
 _Parametre_:  
 _Output_: 
@@ -147,7 +147,7 @@ token: {DinToken}
 
 **Get Collection**: `/collections/{collectionid}`  
 
-Denne ressource tager imod et `collectionid` og returnerer én collection med beskrivelser og diverse link relationer.
+Denne ressource tager imod et `collectionid` og returnerer én collection med beskrivelser og diverse linkrelationer.
 
 _Parametre_:
 
@@ -168,22 +168,22 @@ token: {DinToken}
 
 **Get ItemCollection**: `/collections/{collectionid}/items`  
 
-Denne ressource tager imod et `collectionid` og laver en søgning magen til `/search` endpointet i den angivet collection.
+Denne ressource tager imod et `collectionid` og laver en søgning magen til `/search` endpointet i den angivne collection.
 
 _Parametre_:
 
 | **Parameter** | **Type**  | **Description**                                                                                                                                                                                                                                                         |
 | ------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | collectionid  | string    | ID'et på en collection.                                                                                                                                                                                                                                                 |
-| crs           | string    | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832` <br>Angiver hvilket koordinatsystem returneret geometrier i JSON response objektet skal returneres i. Se [Crs Extension](#Crs-Extension).</br> |
-| limit         | integer   | Default: 10, maks: 10000 <br>Angiver maks antallet af `Item` objekter JSON response objektet indeholder (page size). Se [Context Extension](#Context-Extension).<br/>                                                                                                   |
+| crs           | string    | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832` <br>Angiver hvilket koordinatsystem geometrier i JSON response skal returneres i. Se [Crs Extension](#Crs-Extension).</br> |
+| limit         | integer   | Default: 10, maks: 10000 <br>Angiver maks antallet af `Item` objekter i JSON response som objektet indeholder (page size). Se [Context Extension](#Context-Extension).<br/>                                                                                                   |
 | pt            | string    | Angiver en bestemt side, der skal fremsøges i forhold til paging. Se [Context Extension](#Context-Extension).                                                                                                                                                           |
 | ids           | \[string] | Array af `Item` ID'er.                                                                                                                                                                                                                                                  |
-| bbox          | \[number] | Array af 4 tal                                                                                                                                                                                                                                                            |
+| bbox          | \[number] | Array af fire tal                                                                                                                                                                                                                                                            |
 | bbox-crs      | string    | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`. <br>Angiver hvilket koordinatsystem geometrier i `bbox` er angivet i.</br>                                                                    |
-| datetime      | string    | Dato og tid formatteret efter [RFC 3339, sektion 5.6](https://tools.ietf.org/html/rfc3339#section-5.6). Kan være en enkelt dato og tid eller intavaller separert med `/`. Der kan bruge to punktummer `..` for en åben dato og tid interval.                        |
-| filter        | string    | CQL-json udtryk til avanceret søgninger på specifikke `Item` properties. Se [Filter Extension](#Filter-Extension).                                                                                                                                                      |
-| filter-lang   | string    | Default: `cql-json` <br>Angiver hvilket query-sprog filteret er skrevet i. Se [Filter Extension](#Filter-Extension).</br>                                                                                                                                               |
+| datetime      | string    | Dato og tid formateret efter [RFC 3339, sektion 5.6](https://tools.ietf.org/html/rfc3339#section-5.6). Kan være en enkelt dato og tid eller intervaller separeret med `/`. Der kan bruges to punktummer `..` for et åbent dato- og tidsinterval.                        |
+| filter        | string    | `CQL-JSON` udtryk til avanceret søgninger på specifikke `Item` properties. Se [Filter Extension](#Filter-Extension).                                                                                                                                                      |
+| filter-lang   | string    | Default: `CQL-JSON` <br>Angiver hvilket query-sprog filteret er skrevet i. Se [Filter Extension](#Filter-Extension).</br>                                                                                                                                               |
 | filter-crs    | string    | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`. <br>Angiver hvilket koordinatsystem geometrier `filter` er angivet i. Se [Filter Extension](#Filter-Extension).</br>                          |
 
 _Output_: 
@@ -199,12 +199,12 @@ token: {DinToken}
 
 **Get Queryables**: `/queryables`  
 
-Denne ressource returnerer en samling af properties, der kan indgå i et filter udtryk på tværs af alle collections. Dvs. at properties som kun kan indgå i et filter udtryk for én collection medtages ikke her.
+Denne ressource returnerer en samling af properties, der kan indgå i et filter udtryk på tværs af alle collections. Dvs. at properties, som kun kan indgå i et filterudtryk for én collection, ikke medtages her.
 
 _Paramtre_:  
 _Output_: 
 
-Array af STAC Item properties der kan bruges over alle collection i filter udtryk (JSON)  
+Array af STAC Item properties, der kan bruges over alle collections i filter udtryk (JSON)  
 
 _Eksempel_:
 
@@ -215,7 +215,7 @@ token: {DinToken}
 
 **Get Collection Queryables**: `/collections/{collectionid}/queryables`  
 
-Denne ressource returnerer alle properties der kan indgå i et filter udtryk for den angivet collection.
+Denne ressource returnerer alle properties, der kan indgå i et filterudtryk for den angivne collection.
 
 _Parametre_:
 
@@ -225,7 +225,7 @@ _Parametre_:
 
 _Output_: 
 
-Array af STAC Item properties for den givne collection, som kan bruges i filter udtryk (JSON)  
+Array af STAC Item properties for den givne collection, som kan bruges i filterudtryk (JSON)  
 
 _Eksempel_:
 
@@ -236,22 +236,22 @@ token: {DinToken}
 
 ## Extensions
 
-Ud over de nævnte fire core komponenter indeholder servicen en række extensions som udbyder ekstra funktionalitet:
+Ud over de nævnte fire core-komponenter, indeholder servicen også en række extensions, som udbyder ekstra funktionaliteter:
 
 - Context Extension
-- Crs Extension
+- CRS Extension
 - Filter Extension
 - Sort Extension
 
 ### Context Extension
 
-Context extensionen tilføjer ekstra information omkring en returneret `FeatureCollection` hentet via `/search` eller `/collections/{collectionid}/items`. Den returnerer følgende tre attributter sammen med `FeatureCollectionen`:
+Context extension tilføjer ekstra information omkring en returneret `FeatureCollection` hentet via `/search` eller `/collections/{collectionid}/items`. Den returnerer følgende tre attributter sammen med `FeatureCollection`:
 
 - Returned: Antallet af features returneret af resultatet
 - Limit: Det maksimale antal resultater returneret
-- Matched: Det totale antal resultater der matcher søge forespørgslen
+- Matched: Det totale antal resultater, der matcher søgeforespørgslen
 
-Hvis `matched` er større end `limit` kan links relationerne `next`/`previous` bruges til at navigere frem og tilbage i det totale antal matchede søgeresultater ved hjælpe af paging. Paramteren `limit` bestemmer, hvor mange `Item` objekter, der fremgår i det returneret JSON response. `limit`har en max på 10.000 resultater af gangen. Paging fungerer ved hjælp af en "paging token" `pt`. Denne token er autogenereret, og skal altid følge paging-resultatet. Ved ændring af denne kan resultatet ikke fremfindes. Et eksempel på paged resultat:
+Hvis `matched` er større end `limit` kan linkrelationerne `next`/`previous` bruges til at navigere frem og tilbage i det totale antal matchede søgeresultater ved hjælp af paging. Paramteren `limit` bestemmer, hvor mange `Item` objekter, der fremgår i det returneret JSON response. `limit`har et max på 10.000 resultater ad gangen. Paging fungerer ved hjælp af en "paging token" `pt`. Denne token er autogenereret, og skal altid følge paging-resultatet. Ved ændring af denne kan resultatet ikke fremfindes. Et eksempel på paged resultat:
 
 ```json
 ...
@@ -280,15 +280,15 @@ Hvis `matched` er større end `limit` kan links relationerne `next`/`previous` b
 
 Nærmere beskrivelse af Context extension: https://github.com/radiantearth/stac-api-spec/tree/master/fragments/context
 
-### Crs Extension
+### CRS Extension
 
-Tilføjer funktionalitet til håndtering af koordinatsystemer. [GeoJSON standarden](https://datatracker.ietf.org/doc/html/rfc7946#section-4) understøtter som sådan ikke andre koordinatsystemer end WGS84, men tillader at gøre brug af andre koordinatsystemer, hvorom alle parter er informeret om formatet. Parameteren `crs` i `/search` og `/collections/{collectionid/items}` bruges hvis man ønsker retursvar i et andet koordinatsystem. `crs` angives med CRS's URI, så for `WGS84` er det `http://www.opengis.net/def/crs/OGC/1.3/CRS84` (default) og for `EPSG:25832` er det `http://www.opengis.net/def/crs/EPSG/0/25832`. Desuden kan parameterne `bbox-crs` og `filter-crs` bruges til at angive hvilket koordinatsystem geometrier i parameterne `bbox` og `filter` er angivet i, og følger samme fremgangsmåde som `crs`. Dette er for at følge standarden beskrevet i [OGC API - Features Part 2](https://docs.opengeospatial.org/is/18-058/18-058.html). Understøttede CRS parametre kan ses på hver enkel _Collection_. Desuden angiver parameteren `storageCrs` på `collectionen`, hvilket koordinatsystem data er lagret i.
+Tilføjer funktionalitet til håndtering af koordinatsystemer. [GeoJSON standarden](https://datatracker.ietf.org/doc/html/rfc7946#section-4) understøtter som sådan ikke andre koordinatsystemer end WGS84, men tillader at gøre brug af andre koordinatsystemer, hvor alle parter er informeret om formatet. Parameteren `crs` i `/search` og `/collections/{collectionid/items}` bruges hvis man ønsker retursvar i et andet koordinatsystem. `crs` angives med CRS's URI, så for `WGS84` er det `http://www.opengis.net/def/crs/OGC/1.3/CRS84` (default) og for `EPSG:25832` er det `http://www.opengis.net/def/crs/EPSG/0/25832`. Desuden kan parametrene `bbox-crs` og `filter-crs` bruges til at angive hvilket koordinatsystem geometrier i parametrene `bbox` og `filter` er angivet i, og følger samme fremgangsmåde som `crs`. Dette er for at følge standarden beskrevet i [OGC API - Features Part 2](https://docs.opengeospatial.org/is/18-058/18-058.html). Understøttede CRS-parametre kan ses på hver enkel _Collection_. Desuden angiver parameteren `storageCrs` på `collection`, hvilket koordinatsystem data er lagret i.
 
-Eksempler på brug af `crs`, `bbox-crs`, og `filter-crs` parametre:
+Eksempler på brug af parametrene `crs`, `bbox-crs`, og `filter-crs`:
 
-1. `GET /search?crs=http://www.opengis.net/def/crs/EPSG/0/25832` - Returner geometrier i EPSG:25832
+1. `GET /search?crs=http://www.opengis.net/def/crs/EPSG/0/25832` - Returnerer geometrier i EPSG:25832
 2. `GET /search?bbox=492283,6195600,493583,6196470&bbox-crs=http://www.opengis.net/def/crs/EPSG/0/25832` - Input `bbox` er angivet i EPSG:25832
-3. `POST /search` - Hent features der overlapper (intersects) med geometri angivet i EPSG:25832, resultater returneres i WGS84
+3. `POST /search` - Hent features, der overlapper (intersects) med geometri angivet i EPSG:25832, resultater returneres i WGS84
 
 ```json
 {
@@ -313,11 +313,11 @@ Eksempler på brug af `crs`, `bbox-crs`, og `filter-crs` parametre:
 
 ### Filter Extension
 
-Filter extensionen tilføjer særlig funktionalitet til at søge ved hjælp af forespørgsler i CQL (Common Query Language). Extensionen implementerer specifikationer beskrevet i [OGC Api Features - Part 3: Filtering and the Common Query Language (CQL)](https://portal.ogc.org/files/96288). Den tilføjer desuden to ekstra endpoints `/queryables` og `/collections/{collectionid}/queryables`. Queryables beskriver hvilke properties der kan indgå i filter forespørgsler. Alle filter properties valideres mod queryables, og der returneres en validation fejl, hvis der bruges en ugyldig property.
-`filter` er et CQL-json udtryk, som kan bruges til at lave avanceret søgninger på specifikke `Item` properties (Se [Filter Extension](#Filter-Extension)). `filter-lang` angiver hvilket query-sprog filteret er skrevet i. Post endpointet har samme funktionalitet, men parametre angives i body.
+Filter extension tilføjer særlig funktionalitet til at søge ved hjælp af forespørgsler i CQL (Common Query Language). Denne extension implementerer specifikationer beskrevet i [OGC Api Features - Part 3: Filtering and the Common Query Language (CQL)](https://portal.ogc.org/files/96288). Den tilføjer desuden to ekstra endpoints `/queryables` og `/collections/{collectionid}/queryables`.`/queryables` beskriver hvilke properties, der kan indgå i filter-forespørgsler. Alle filter-properties valideres mod `/queryables`, og der returneres en validation-fejl hvis der bruges en ugyldig property.
+`filter` er et CQL-JSON udtryk, som kan bruges til at lave avancerede søgninger på specifikke `Item` properties (Se [Filter Extension](#Filter-Extension)). `filter-lang` angiver hvilket query-sprog filteret er skrevet i. Post endpointet har samme funktionalitet, men parametre angives i body.
 
 Eksempler på brug af filter parameter:  
-1. `POST /search` - Hent features, hvis geometri overlapper (intersects) med input geometri
+1. `POST /search` - Hent features hvis geometri overlapper (intersects) med input geometri
 ```json
 {
     "filter-lang": "cql-json",
@@ -353,13 +353,13 @@ Nærmere beskrivelse af Filter extension: https://github.com/radiantearth/stac-a
 
 ### Sort Extension
 
-Sort extensionen tilføjer funktionalitet til at sortere resultater hentet via `/search` endpointet. Der kan sorteres på samtlige `Item` attributter såsom `id`, `collection`, `datetime`, samt diverse properties attributter. Der kan angives om sorteringsretningen skal være _ascending_ eller _descending_. I et GET `/search` request kan der bruges en forsimplet syntaks; `+` for _ascending_ og `-` for _descending_. Hvis intet er angivet er default _ascending_.  
+Sort extension tilføjer funktionalitet til at sortere resultater hentet via `/search` endpointet. Der kan sorteres på samtlige `Item` attributter såsom `id`, `collection`, `datetime`, samt diverse properties attributter. Der kan angives om sorteringsretningen skal være _ascending_ eller _descending_. I et GET `/search` request kan der bruges en forsimplet syntaks; `+` for _ascending_ og `-` for _descending_. Hvis intet er angivet er default _ascending_.  
 
 Eksempler på brug af sortBy parameter:
 
-1. `GET /search?sortby=+properties.datetime` - Sorter på properties.datetime ascending
-2. `GET /search?sortby=properties.datetime,-id` - Sorter på properties.datetime ascending og id descending
-3. `POST /search` - Sorter på collection descending
+1. `GET /search?sortby=+properties.datetime` - Sortér på properties.datetime ascending
+2. `GET /search?sortby=properties.datetime,-id` - Sortér på properties.datetime ascending og id descending
+3. `POST /search` - Sortér på collection descending
 
 ```json
   {
