@@ -21,8 +21,9 @@ Du skal være oprettet som bruger på `Dataforsyningen` samt være logget ind, f
 
 1. Som header parameteren `token` (dette er den anbefalet metode, da den yder den højeste sikkerhed.)
 
-`GET https://api.dataforsyningen.dk/{servicenavnet på tjenesten}
-token: {DinToken}`
+`GET https://api.dataforsyningen.dk/{servicenavnet på tjenesten}`
+
+`token: {DinToken}`
 
 2. Som queryparameter `token` i URL'en
 
@@ -52,8 +53,9 @@ I URL'en angives `{collectionid}` i path, hvilken collection man ønsker at frem
 
 _URL_:
 
-`GET https://api.dataforsyningen.dk/skraafotoapi_test/collections/{collectionid}/items
-token: {DinToken}`
+`GET https://api.dataforsyningen.dk/skraafotoapi_test/collections/{collectionid}/items`
+
+`token: {DinToken}`
 
 _Parametre_:
 
@@ -651,8 +653,9 @@ _Response_:
 
 _URL_:
 
-`GET https://api.dataforsyningen.dk/skraafotoapi_test/search
-token: {DinToken}`
+`GET https://api.dataforsyningen.dk/skraafotoapi_test/search`
+
+`token: {DinToken}`
 
 _Parametre_:
 
