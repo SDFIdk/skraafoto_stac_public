@@ -29,6 +29,8 @@ Du skal være oprettet som bruger på `Dataforsyningen` samt være logget ind, f
 
 `GET https://api.dataforsyningen.dk/{servicenavnet på tjenesten}?token={DinToken}`
 
+Nedstående eksempler bruger første metode, men hvis du bruger metode to, skal du tilføje queryparameteren `token` på eksemplerne.
+
 Alle kald til `Dataforsyningens` API'er og webservices skal bruge HTTPS, da der ikke understøttes HTTP, og `token` skal være angivet (undtagen alle DAWA og Inspire OGC-tjenester). Kald uden `token`, eller med ugyldig `token`, vil fejle.
 
 ## Sammenspillet mellem de tre API'er
@@ -82,10 +84,6 @@ _Eksempel_:
 ```http
 GET https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/items?limit=3&bbox=10.3285,55.3556,10.4536,55.4132&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84
 token: {DinToken}
-```
-
-```http
-GET https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/items?limit=3&bbox=10.3285,55.3556,10.4536,55.4132&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84&token={DinToken}
 ```
 
 I dette tilfælde er det `skraafotos2019` collection. Dernæst angives query parameterne. Her er det parameteren `bbox` med værdierne `10.3285,55.3556,10.4536,55.4132`, som beskriver hvilket geografisk område, der ønskes metadata om billederne fra. I dette eksempel er `bbox` i projektion `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, hvilket bliver angivet i `bbox-crs` parameteren. Limit er sat til 3, så hvis der er et match mellem den koordinaterne for den angivne `bbox` og metadata for skåfotos, vil JSON response indeholde tre `Items` objekter. I `context` objektet er attributterne `Returned`, `Limit` og `Matched`, der kan læses mere om på [dokumentation](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#context-extension), hvor det også er forklaret hvordan paging fungerer.
@@ -683,10 +681,6 @@ _Eksempel_:
 ```http
 GET https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=3&bbox=10.3285,55.3556,10.4536,55.4132&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84
 token: {DinToken}
-```
-
-```http
-GET https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=3&bbox=10.3285,55.3556,10.4536,55.4132&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84&token={DinToken}
 ```
 
 Angiver query parameterne. Her er det parameteren `bbox` med værdierne `10.3285,55.3556,10.4536,55.4132`, som beskriver hvilket geografisk område, man ønsker metadata om billederne fra. I dette eksempel er bbox i projektion `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, hvilket bliver angivet i `bbox-crs` parameteren. Limit er sat til 3, så hvis der er et match mellem den angivet `bboxs` koordinater og metadata for skåfotos, vil JSON response indeholde tre `items` objekter. I `context` objektet er attributterne `Returned`, `Limit` og `Matched`, der kan læses mere om på [dokumentation](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#context-extension), hvor det også er forklaret hvordan paging fungerer.
