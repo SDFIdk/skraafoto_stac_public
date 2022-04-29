@@ -21,24 +21,20 @@ Du skal være oprettet som bruger på `Dataforsyningen` samt være logget ind, f
 
 1. Som header parameteren `token` (dette er den anbefalet metode, da den yder den højeste sikkerhed.)
 
-```http
-GET https://api.dataforsyningen.dk/{servicenavnet på tjenesten}
-token: {DinToken}
-```
+`GET https://api.dataforsyningen.dk/{servicenavnet på tjenesten}
+token: {DinToken}`
 
 2. Som queryparameter `token` i URL'en
 
-```http
-GET https://api.dataforsyningen.dk/{servicenavnet på tjenesten}?token={DinToken}
-```
+`GET https://api.dataforsyningen.dk/{servicenavnet på tjenesten}?token={DinToken}`
 
 Alle kald til `Dataforsyningens` API'er og webservices skal bruge HTTPS, da der ikke understøttes HTTP, og `token` skal være angivet (undtagen alle DAWA og Inspire OGC-tjenester). Kald uden `token`, eller med ugyldig `token`, vil fejle.
 
 ## Sammenspillet mellem de tre API'er
 (Lav en henvisning til den tekst der skal skrives, som beskriver sammenspillet mellem de tre API'er).
-- **Skåfoto STAC API** leverer metadata om skråfotos. https://api.dataforsyningen.dk/skraafotoapi_test
-- **Skåfoto Server** leverer skråfotos som [Cloud Optimized Geotiff](https://www.cogeo.org) (`COG`), hvor der kan bruges range request. https://api.dataforsyningen.dk/skraafoto_server_test`
-- **Skråfoto Cogtiler** oversætter COG-formatet til andre formater for de klienter, der ikke understøtter COG (undersøg hvad det er for nogle formater). https://api.dataforsyningen.dk/skraafoto_cogtiler_test
+- **Skåfoto STAC API** leverer metadata om skråfotos. Dens URL starter med `https://api.dataforsyningen.dk/skraafotoapi_test`, men for at bruge URL'en er det et krav, at der bliver specificeret paths og queryparameters.
+- **Skåfoto Server** leverer skråfotos som [Cloud Optimized Geotiff](https://www.cogeo.org) (`COG`), hvor der kan bruges range request. Dens URL starter med `https://api.dataforsyningen.dk/skraafoto_server_test`, men for at bruge URL'en er det et krav, at der bliver specificeret paths og queryparameters.
+- **Skråfoto Cogtiler** oversætter COG-formatet til andre formater for de klienter, der ikke understøtter COG (undersøg hvad det er for nogle formater). Dens URL starter med `https://api.dataforsyningen.dk/skraafoto_cogtiler_test`, men for at bruge URL'en er det et krav, at der bliver specificeret paths og queryparameters.
 
 ## Håndtering af collections
 
@@ -47,16 +43,17 @@ Alle kald til `Dataforsyningens` API'er og webservices skal bruge HTTPS, da der 
 Hvis der kun ønskes billeder af det samme sted fra samme årgang, så anbefales det at benytte `/collections/{collectionid}/items` endpoint i stedet for `/search` endpoint, da `/search` kræver flere resourcer at udføre.
 Hvis der ønskes billeder af det samme sted, på tværs af collections skal der bruges `/search`.
 
+**STAC Item**
+Hvert skråfoto har et `Item` objekt tilknyttet, som indeholder metadata for det. Mere om STAC Item kan læses [her](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#stac-item).
+
 ### Samme årgang
 
 I URL'en angives `{collectionid}` i path, hvilken collection man ønsker at fremsøge billeder fra.
 
 _URL_:
 
-```http
-GET https://api.dataforsyningen.dk/skraafotoapi_test/collections/{collectionid}/items
-token: {DinToken}
-```
+`GET https://api.dataforsyningen.dk/skraafotoapi_test/collections/{collectionid}/items
+token: {DinToken}`
 
 _Parametre_:
 
@@ -83,6 +80,10 @@ _Eksempel_:
 ```http
 GET https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/items?limit=3&bbox=10.3285,55.3556,10.4536,55.4132&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84
 token: {DinToken}
+```
+
+```http
+GET https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/items?limit=3&bbox=10.3285,55.3556,10.4536,55.4132&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84&token={DinToken}
 ```
 
 I dette tilfælde er det `skraafotos2019` collection. Dernæst angives query parameterne. Her er det parameteren `bbox` med værdierne `10.3285,55.3556,10.4536,55.4132`, som beskriver hvilket geografisk område, der ønskes metadata om billederne fra. I dette eksempel er `bbox` i projektion `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, hvilket bliver angivet i `bbox-crs` parameteren. Limit er sat til 3, så hvis der er et match mellem den koordinaterne for den angivne `bbox` og metadata for skåfotos, vil JSON response indeholde tre `Items` objekter. I `context` objektet er attributterne `Returned`, `Limit` og `Matched`, der kan læses mere om på [dokumentation](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#context-extension), hvor det også er forklaret hvordan paging fungerer.
@@ -650,10 +651,8 @@ _Response_:
 
 _URL_:
 
-```http
-GET https://api.dataforsyningen.dk/skraafotoapi_test/search
-token: {DinToken}
-```
+`GET https://api.dataforsyningen.dk/skraafotoapi_test/search
+token: {DinToken}`
 
 _Parametre_:
 
@@ -681,6 +680,10 @@ _Eksempel_:
 ```http
 GET https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=3&bbox=10.3285,55.3556,10.4536,55.4132&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84
 token: {DinToken}
+```
+
+```http
+GET https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=3&bbox=10.3285,55.3556,10.4536,55.4132&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84&token={DinToken}
 ```
 
 Angiver query parameterne. Her er det parameteren `bbox` med værdierne `10.3285,55.3556,10.4536,55.4132`, som beskriver hvilket geografisk område, man ønsker metadata om billederne fra. I dette eksempel er bbox i projektion `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, hvilket bliver angivet i `bbox-crs` parameteren. Limit er sat til 3, så hvis der er et match mellem den angivet `bboxs` koordinater og metadata for skåfotos, vil JSON response indeholde tre `items` objekter. I `context` objektet er attributterne `Returned`, `Limit` og `Matched`, der kan læses mere om på [dokumentation](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#context-extension), hvor det også er forklaret hvordan paging fungerer.
