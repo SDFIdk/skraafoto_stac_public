@@ -39,6 +39,7 @@ COGTILER_BASEPATH=https://skraafotodistribution-tile-api.k8s-test-121.septima.dk
 ### Running with docker compose
 
 To run it simply add your configuration in an `.env` file as described above and use:
+`docker compose build`
 `docker compose up`
 
 Now you can look at the api at http://localhost:8081/.
