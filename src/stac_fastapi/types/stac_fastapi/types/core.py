@@ -19,8 +19,6 @@ from stac_fastapi.types import stac as stac_types
 from stac_fastapi.types.conformance import BASE_CONFORMANCE_CLASSES
 from stac_fastapi.types.extension import ApiExtension
 from stac_fastapi.types.stac import Conformance
-import pygeofilter.backends.sqlalchemy as pgf
-
 
 from stac_fastapi.sqlalchemy.session import Session
 from stac_fastapi.sqlalchemy.models.database import Collection

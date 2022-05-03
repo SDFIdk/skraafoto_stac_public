@@ -41,7 +41,9 @@ ROUTES_REQUIRING_TOKEN = [
     {"path": "/_mgmt/ping", "method": "GET"},
 ]
 
-settings = SqlalchemySettings()
+settings = SqlalchemySettings(connect_args={
+    "options": "-c statement=10000"
+})
 
 if settings.debug:
     logging.basicConfig(level="DEBUG")

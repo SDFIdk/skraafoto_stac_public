@@ -40,7 +40,6 @@ def test_core_router(api_client):
 
 def test_app_search_response(load_test_data, app_client, postgres_transactions):
     item = load_test_data("test_item.json")
-    postgres_transactions.create_item(item, request=MockStarletteRequest)
 
     resp = app_client.get("/search", params={"collections": [TEST_COLLECTION_ID]})
     assert resp.status_code == 200
@@ -54,8 +53,7 @@ def test_app_search_response(load_test_data, app_client, postgres_transactions):
 
 def test_app_context_extension(load_test_data, app_client, postgres_transactions):
     item = load_test_data("test_item.json")
-    postgres_transactions.create_item(item, request=MockStarletteRequest)
-
+ 
     resp = app_client.get("/search", params={"collections": [TEST_COLLECTION_ID]})
     assert resp.status_code == 200
     resp_json = resp.json()
@@ -69,7 +67,6 @@ def test_app_context_extension(load_test_data, app_client, postgres_transactions
 @pytest.mark.skip(reason="FieldExtension switched off")
 def test_app_fields_extension(load_test_data, app_client, postgres_transactions):
     item = load_test_data("test_item.json")
-    postgres_transactions.create_item(item, request=MockStarletteRequest)
 
     resp = app_client.get(
         "/search", params={"collections": [TEST_COLLECTION_ID], "fields": ""}
@@ -81,7 +78,7 @@ def test_app_fields_extension(load_test_data, app_client, postgres_transactions)
 
 def test_app_filter_extension_gt(load_test_data, app_client, postgres_transactions):
     test_item = load_test_data("test_item.json")
-    postgres_transactions.create_item(test_item, request=MockStarletteRequest)
+
     params = {
         "filter-lang": "cql-json",
         "filter": {
@@ -96,7 +93,7 @@ def test_app_filter_extension_gt(load_test_data, app_client, postgres_transactio
 
 def test_app_filter_extension_gte(load_test_data, app_client, postgres_transactions):
     test_item = load_test_data("test_item.json")
-    postgres_transactions.create_item(test_item, request=MockStarletteRequest)
+    
     params = {
         "filter-lang": "cql-json",
         "filter": {
@@ -113,7 +110,7 @@ def test_app_filter_extension_limit_lt0(
     load_test_data, app_client, postgres_transactions
 ):
     item = load_test_data("test_item.json")
-    postgres_transactions.create_item(item, request=MockStarletteRequest)
+    
 
     params = {"limit": -1}
     resp = app_client.post("/search", json=params)
@@ -124,8 +121,7 @@ def test_app_filter_extension_limit_gt10000(
     load_test_data, app_client, postgres_transactions
 ):
     item = load_test_data("test_item.json")
-    postgres_transactions.create_item(item, request=MockStarletteRequest)
-
+   
     params = {"limit": 10001}
     resp = app_client.post("/search", json=params)
     assert resp.status_code == 400
@@ -135,7 +131,7 @@ def test_app_filter_extension_limit_10000(
     load_test_data, app_client, postgres_transactions
 ):
     item = load_test_data("test_item.json")
-    postgres_transactions.create_item(item, request=MockStarletteRequest)
+
 
     params = {"limit": 10000}
     resp = app_client.post("/search", json=params)
@@ -150,7 +146,6 @@ def test_app_sort_extension(load_test_data, app_client, postgres_transactions):
     item_date = datetime.strptime(
         first_item["properties"]["datetime"], "%Y-%m-%dT%H:%M:%SZ"
     )
-    postgres_transactions.create_item(first_item, request=MockStarletteRequest)
 
     second_item = load_test_data("test_item.json")
     second_item["id"] = "another-item"
@@ -173,7 +168,6 @@ def test_app_sort_extension(load_test_data, app_client, postgres_transactions):
 
 def test_search_invalid_date(load_test_data, app_client, postgres_transactions):
     item = load_test_data("test_item.json")
-    postgres_transactions.create_item(item, request=MockStarletteRequest)
 
     params = {
         "datetime": "2020-XX-01/2020-10-30",
@@ -186,7 +180,6 @@ def test_search_invalid_date(load_test_data, app_client, postgres_transactions):
 
 def test_search_point_intersects(load_test_data, app_client, postgres_transactions):
     item = load_test_data("test_item.json")
-    postgres_transactions.create_item(item, request=MockStarletteRequest)
 
     point = [8.4570, 56.24298]
     intersects = {"type": "Point", "coordinates": point}
@@ -203,7 +196,6 @@ def test_search_point_intersects(load_test_data, app_client, postgres_transactio
 
 def test_datetime_non_interval(load_test_data, app_client, postgres_transactions):
     item = load_test_data("test_item.json")
-    postgres_transactions.create_item(item, request=MockStarletteRequest)
 
     alternate_formats = [
         "2017-05-27T09:04:49+00:00",
@@ -227,8 +219,6 @@ def test_datetime_non_interval(load_test_data, app_client, postgres_transactions
 
 def test_bbox_3d(load_test_data, app_client, postgres_transactions):
     item = load_test_data("test_item.json")
-    postgres_transactions.create_item(item, request=MockStarletteRequest)
-
     danish_bbox = [
         6.24,
         52.17,

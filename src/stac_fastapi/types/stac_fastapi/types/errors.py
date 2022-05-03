@@ -30,6 +30,11 @@ class DatabaseError(StacApiError):
 
     pass
 
+class TimeoutError(StacApiError):
+    """Generic database timeout error."""
+
+    pass
+
 
 class InvalidQueryParameter(StacApiError):
     """Error for unknown or invalid query parameters.

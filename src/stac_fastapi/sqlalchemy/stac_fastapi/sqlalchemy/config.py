@@ -17,9 +17,7 @@ class SqlalchemySettings(ApiSettings):
     postgres_port: str
     postgres_dbname: str
     postgres_application_name: str = "stac-fastapi"
-
     cogtiler_basepath: str
-
     trusted_hosts: str = "127.0.0.1"
 
     # Fields which are defined by STAC but not included in the database model
@@ -27,12 +25,17 @@ class SqlalchemySettings(ApiSettings):
 
     # Fields which are item properties but indexed as distinct fields in the database model
     indexed_fields: Set[str] = {"datetime"}
-
+    connect_args: dict
+    
     @property
     def connection_string(self):
         """Create psql connection string."""
         return f"postgresql://{self.postgres_user}:{self.postgres_pass}@{self.postgres_host}:{self.postgres_port}/{self.postgres_dbname}?application_name={self.postgres_application_name}"
 
+    #@property
+    #def connect_args(self):
+    #    """SQLalchemy create_engine connect_args"""
+    #    return self._connect_args
 
 class BaseQueryables(str, AutoValueEnum):
     """Queryable fields.
