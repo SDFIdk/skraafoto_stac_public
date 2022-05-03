@@ -1,0 +1,229 @@
+GET
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=1000
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=1000&collections=skraafotots2017,skraafotos2019,skraafotos2021
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=1000&crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84&collections=skraafotots2017,skraafotos2019,skraafotos2021
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=1000&crs=http://www.opengis.net/def/crs/EPSG/0/25832&collections=skraafotots2017,skraafotos2019,skraafotos2021
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=1000&bbox=368909.12, 5985372.99, 864215.66, 6333402.99&bbox-crs=http://www.opengis.net/def/crs/EPSG/0/25832&collections=skraafotots2017,skraafotos2019,skraafotos2021
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=1000&crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84&bbox=368909.12, 5985372.99, 864215.66, 6333402.99&bbox-crs=http://www.opengis.net/def/crs/EPSG/0/25832&collections=skraafotots2017,skraafotos2019,skraafotos2021
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=1000&crs=http://www.opengis.net/def/crs/EPSG/0/25832&bbox=368909.12, 5985372.99, 864215.66, 6333402.99&bbox-crs=http://www.opengis.net/def/crs/EPSG/0/25832&collections=skraafotots2017,skraafotos2019,skraafotos2021
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=1000&crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84&bbox=368909.12, 5985372.99, 864215.66, 6333402.99&bbox-crs=http://www.opengis.net/def/crs/EPSG/0/25832
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=1000&crs=http://www.opengis.net/def/crs/EPSG/0/25832&bbox=368909.12, 5985372.99, 864215.66, 6333402.99&bbox-crs=http://www.opengis.net/def/crs/EPSG/0/25832
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=1000&bbox=10.3285,55.3556,10.4536,55.4132&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=1000&crs=http://www.opengis.net/def/crs/EPSG/0/25832
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=1000&crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84&collections=skraafotots2017,skraafotos2019,skraafotos2021
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=1000&crs=http://www.opengis.net/def/crs/EPSG/0/25832&collections=skraafotots2017,skraafotos2019,skraafotos2021
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=1000&crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84&bbox=10.3285,55.3556,10.4536,55.4132&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=1000&crs=http://www.opengis.net/def/crs/EPSG/0/25832&bbox=10.3285,55.3556,10.4536,55.4132&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=1000&crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84&collections=skraafotots2017,skraafotos2019,skraafotos2021&bbox=10.3285,55.3556,10.4536,55.4132&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=1000&crs=http://www.opengis.net/def/crs/EPSG/0/25832&collections=skraafotots2017,skraafotos2019,skraafotos2021&bbox=10.3285,55.3556,10.4536,55.4132&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=1000&crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84&collections=skraafotots2017,skraafotos2019,skraafotos2021&bbox=10.3285,55.3556,10.4536,55.4132&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=1000&crs=http://www.opengis.net/def/crs/EPSG/0/25832&bbox=9.4679,54.9746,12.2989,56.0423&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=1000&crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84&bbox=10.3285,55.3556,10.4536,55.4132&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=1000&crs=http://www.opengis.net/def/crs/EPSG/0/25832&collections=skraafotots2017,skraafotos2019,skraafotos2021&bbox=9.4679,54.9746,12.2989,56.0423&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=1000&crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84&collections=skraafotots2017,skraafotos2019,skraafotos2021&bbox=9.4679,54.9746,12.2989,56.0423&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=1000&crs=http://www.opengis.net/def/crs/EPSG/0/25832&bbox=8,54,15,57&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=1000&crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84&bbox=9.4679,54.9746,12.2989,56.0423&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=1000&crs=http://www.opengis.net/def/crs/EPSG/0/25832&collections=skraafotots2017,skraafotos2019,skraafotos2021&bbox=8,54,15,57&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=1000&crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84&bbox=9.4679,54.9746,12.2989,56.0423&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=1000&crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84&collections=skraafotots2017,skraafotos2019,skraafotos2021&bbox=8,54,15,57&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84
+
+https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2017/items?bbox=7,54,15,57&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84&limit=1000
+
+https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/items?bbox=7,54,15,57&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84&limit=1000
+
+https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021/items?bbox=7,54,15,57&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84&limit=1000
+
+
+POST
+https://api.dataforsyningen.dk/skraafotoapi_test/search
+
+{
+    "filter-lang": "cql-json",
+    "filter": { 
+        "intersects": [
+            { "property": "geometry" },
+            {
+                "type": "Polygon",
+                "coordinates": [[
+                [10.256902168437476, 55.31540683597307],
+                [10.254352853154417, 55.325498148133846],
+                [10.274061541671555, 55.32520434258585],
+                [10.270493845560978, 55.31517636484912],
+                [10.256902168437476, 55.31540683597307]
+                ]]
+            }
+        ]
+    },
+  "filter-crs": "http://www.opengis.net/def/crs/EPSG/0/25832",
+  "crs": "http://www.opengis.net/def/crs/EPSG/0/25832"     
+}
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search
+
+{
+    "filter-lang": "cql-json",
+    "filter": { 
+        "intersects": [
+            { "property": "geometry" },
+            {
+                "type": "Polygon",
+                "coordinates": [[
+                [10.256902168437476, 55.31540683597307],
+                [10.254352853154417, 55.325498148133846],
+                [10.274061541671555, 55.32520434258585],
+                [10.270493845560978, 55.31517636484912],
+                [10.256902168437476, 55.31540683597307]
+                ]]
+            }
+        ]
+    },
+  "filter-crs": "http://www.opengis.net/def/crs/OGC/1.3/CRS84",
+  "crs": "http://www.opengis.net/def/crs/OGC/1.3/CRS84"     
+}
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search
+
+{
+    "filter-lang": "cql-json",
+    "filter": { 
+        "intersects": [
+            { "property": "geometry" },
+            {
+                "type": "Polygon",
+                "coordinates": [[
+                [580036.7433516774, 6130923.626380744],
+                [581761.5402266774, 6131109.971107306],
+                [581757.8859298024, 6129953.48795301],
+                [580032.5578048025, 6130159.7291639475],
+                [580036.7433516774, 6130923.626380744]
+                ]]
+            }
+        ]
+    },
+  "filter-crs": "http://www.opengis.net/def/crs/EPSG/0/25832",
+  "crs": "http://www.opengis.net/def/crs/EPSG/0/25832"     
+}
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search
+
+{
+  "filter": {
+    "and": [
+        { "isNull": { "property": "gsd"} },
+        { "isNull": { "property": "view:azimuth"} }
+    ]
+  }
+}
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search
+
+{
+  "filter": {
+    "or": [
+      { "gte": [ { "property": "gsd" }, 0.5] },
+      { "gte": [ { "property": "view:azimuth"}, 50] },
+      {
+        "and": [
+          { "isNull": { "property": "gsd"} },
+          { "isNull": { "property": "view:azimuth"} }
+        ]
+      }
+    ]
+  }
+}
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search
+
+{
+    "filter-lang": "cql-json",
+    "filter": { 
+        "intersects": [
+            { "property": "geometry" },
+            {
+                "type": "Polygon",
+                "coordinates": [[
+                [578632,6134373],
+                [593512,6130393],
+                [598911,6134754],
+                [598495,6142643],
+                [584757,6145066]
+                ]]
+            }
+        ]
+    },
+    "filter-crs": "http://www.opengis.net/def/crs/EPSG/0/25832",
+    "crs": "http://www.opengis.net/def/crs/EPSG/0/25832",
+    "limit": 3
+}
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search
+
+{
+    "filter-lang": "cql-json",
+    "filter": { 
+        "intersects": [
+            { "property": "geometry" },
+            {
+                "type": "Polygon",
+                "coordinates": [[
+                [721250.0000012278, 6190390.000002561], [721244.0000012267, 6191220.000002562],
+                [722491.0000012581, 6191080.000002566], [722493.0000012588, 6190540.000002567],
+                [721250.0000012278, 6190390.000002561]
+                ]]
+            }
+        ]
+    },
+  "filter-crs": "http://www.opengis.net/def/crs/EPSG/0/25832",
+  "crs": "http://www.opengis.net/def/crs/EPSG/0/25832"     
+}
+
+https://api.dataforsyningen.dk/skraafotoapi_test/search
+
+{
+    "filter-lang": "cql-json",
+    "filter": { 
+        "intersects": [
+            { "property": "geometry" },
+            {
+                "type": "Polygon",
+                "coordinates": [[
+                [10.2113,55.3226],
+                [10.4106,55.2783],
+                [10.5213,55.3580],
+                [10.4040,55.4466],
+                [10.2888,55.4267]
+                ]]
+            }
+        ]
+    },
+  "filter-crs": "http://www.opengis.net/def/crs/OGC/1.3/CRS84",
+  "crs": "http://www.opengis.net/def/crs/OGC/1.3/CRS84",
+  "limit": 3
+}
