@@ -42,7 +42,7 @@ ROUTES_REQUIRING_TOKEN = [
 ]
 
 settings = SqlalchemySettings(connect_args={
-    "options": "-c statement=10000"
+    "options": "-c statement_timeout=10000"
 })
 
 if settings.debug:
