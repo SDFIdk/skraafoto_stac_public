@@ -77,8 +77,8 @@ class Session:
     def create_from_env(cls):
         """Create from environment."""
         return cls(
-            conn_string=os.environ["CONN_STRING"],
-            connect_args=os.environ["CONNECT_ARGS"]
+            conn_string=os.environ.get("CONN_STRING"),
+            connect_args=os.environ.get("CONNECT_ARGS")
         )
 
     @classmethod
