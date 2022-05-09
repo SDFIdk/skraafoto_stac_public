@@ -5,6 +5,7 @@ import json
 from typing import Optional
 
 import geoalchemy2 as ga
+from geoalchemy2 import Geometry
 import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.declarative import declarative_base
@@ -86,7 +87,7 @@ class ImageView(BaseModel):
     end_datetime = sa.Column(sa.TIMESTAMP(timezone=True), nullable=False)
     footprint = query_expression(
         default_expr=sa.Column(
-            GeojsonGeometry("POLYGON", srid=4326, spatial_index=True)
+            Geometry("POLYGON", srid=4326, spatial_index=True)
         )
     )
     bbox = query_expression(
