@@ -14,6 +14,7 @@ from stac_fastapi.types.errors import (
     DatabaseError,
     ForeignKeyError,
     InvalidQueryParameter,
+    TimeoutError,
     NotFoundError,
 )
 
@@ -26,6 +27,7 @@ DEFAULT_STATUS_CODES = {
     ForeignKeyError: status.HTTP_422_UNPROCESSABLE_ENTITY,
     DatabaseError: status.HTTP_424_FAILED_DEPENDENCY,
     Exception: status.HTTP_500_INTERNAL_SERVER_ERROR,
+    TimeoutError: status.HTTP_504_GATEWAY_TIMEOUT,
     InvalidQueryParameter: status.HTTP_400_BAD_REQUEST,
 }
 
@@ -43,7 +45,7 @@ def exception_handler_factory(status_code: int) -> Callable:
     def handler(request: Request, exc: Exception):
         """I handle exceptions!!."""
         logger.error(exc, exc_info=True)
-        return JSONResponse(content={"detail": str(exc)}, status_code=status_code)
+        return JSONResponse(status_code=status_code, content={"detail": str(exc)})
 
     return handler
 
