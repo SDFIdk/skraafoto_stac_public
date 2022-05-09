@@ -44,6 +44,9 @@ To run it simply add your configuration in an `.env` file as described above and
 
 Now you can look at the api at http://localhost:8081/.
 
+### Running with docker compose
+Remember to attach debugger Python: Remote Attach
+
 ### Debugging with docker
 
 Using vscode install the [Docker](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker) extension.
@@ -179,3 +182,4 @@ folder `C:\Users\YOURUSER\{Anaconda3 or Miniconda3}\envs\skraafoto-stac-api\DLLs
 SKRAAFOTO_STAC_PUBLIC requires a database, populated with data, to run the tests against. To run a completely self-contained test, a docker-compose file named `docker-compose.test.yml` is made available.
 
 Run the test compose file `docker-compose -f .\docker-compose.test.yml up`. The docker compose file spins up a database, and populates it with data using an alembic migration file. The tests are then run using pytest against the API and a report is generated at `/app/report` in the root directory and is mounted out to `./docker/reports`. Any changes made to the database, has to be mirrored by creating a new alembic version. For more information see https://alembic.sqlalchemy.org/en/latest/tutorial.html
+
