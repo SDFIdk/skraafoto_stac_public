@@ -16,7 +16,10 @@ from stac_fastapi.sqlalchemy.core import CoreCrudClient, CoreFiltersClient
 from stac_fastapi.sqlalchemy.session import Session
 from stac_fastapi.sqlalchemy.types.search import STACSearch
 from stac_fastapi.sqlalchemy.middlewares.proxy_headers import ProxyHeadersMiddleware
-
+from sqlalchemy import event
+from sqlalchemy.engine import Engine
+import time
+import logging
 
 def token_query_param(
     token: str = Depends(security.api_key.APIKeyQuery(name="token", auto_error=False)),
@@ -46,9 +49,23 @@ settings = SqlalchemySettings(connect_args={
 })
 
 if settings.debug:
-    logging.basicConfig(level="DEBUG")
+    logging.basicConfig(level="DEBUG",
+                        format='%(asctime)s %(levelname)-8s %(message)s',
+                        datefmt='%Y-%m-%d %H:%M:%S')
     logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
+    @event.listens_for(Engine, "before_cursor_execute")
+    def before_cursor_execute(conn, cursor, statement,
+                            parameters, context, executemany):
+        conn.info.setdefault('query_start_time', []).append(time.time())
+        logging.debug("Start Query: %s", statement)
 
+    @event.listens_for(Engine, "after_cursor_execute")
+    def after_cursor_execute(conn, cursor, statement,
+                            parameters, context, executemany):
+        total = time.time() - conn.info['query_start_time'].pop(-1)
+        logging.debug("Query Complete!")
+        logging.debug("Total Time: %f", total)
+        
 session = Session.create_from_settings(settings)
 api = StacApi(
     title="Dataforsyningen FlyfotoAPI",
@@ -74,6 +91,8 @@ app = api.app
 # Set 'host', 'root_path' and 'protocol' from x-forwarded-xxx headers
 app.add_middleware(ProxyHeadersMiddleware, trusted_hosts=settings.trusted_hosts)
 
+#if settings.debug:
+#    add_timing_middleware(app, record=logging.debug, prefix="app", exclude="untimed")
 
 if settings.debug:
     from fastapi import Request
