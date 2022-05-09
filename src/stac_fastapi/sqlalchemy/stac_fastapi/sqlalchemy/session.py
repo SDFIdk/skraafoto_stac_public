@@ -43,13 +43,13 @@ class FastAPISessionMaker(_FastAPISessionMaker):
             yield from self.get_db()
         except sa.exc.StatementError as e:
             if isinstance(e.orig, psycopg2.errors.UniqueViolation):
-                raise errors.ConflictError("resource already exists") from e
+                raise errors.ConflictError("Resource already exists") from e
             elif isinstance(e.orig, psycopg2.errors.ForeignKeyViolation):
-                raise errors.ForeignKeyError("collection does not exist") from e
+                raise errors.ForeignKeyError("Collection does not exist") from e
             elif isinstance(e.orig, psycopg2.errors.QueryCanceled):
-                raise errors.TimeoutError("the request took longer than the allowed amount of time, and timed out.")
+                raise errors.TimeoutError("The request took longer than the allowed amount of time, and timed out.")
             logger.error(e, exc_info=True)
-            raise errors.DatabaseError("unhandled database error")
+            raise errors.DatabaseError("Unhandled database error")
     
     def get_new_engine(self) -> sa.engine.Engine:
         """
