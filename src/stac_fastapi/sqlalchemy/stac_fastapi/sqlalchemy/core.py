@@ -46,7 +46,24 @@ from pygeoif.geometry import as_shape
 
 NumType = Union[float, int]
 
+import cProfile
+import io
+import pstats
+import contextlib
 
+@contextlib.contextmanager
+def profiled():
+    pr = cProfile.Profile()
+    pr.enable()
+    yield
+    pr.disable()
+    s = io.StringIO()
+    ps = pstats.Stats(pr, stream=s).sort_stats('tottime')
+    ps.print_stats()
+    # uncomment this to see who's calling what
+    # ps.print_callers()
+    print(s.getvalue())
+    
 def monkeypatch_parse_geometry(geom):
     wkt = as_shape(geom).to_wkt()
     crs = geom["crs"] if "crs" in geom.keys() else 4326
@@ -445,8 +462,8 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
             pagination_token = (
                 self.from_token(search_request.pt) if search_request.pt else False
             )
-            query = session.query(self.item_table)
 
+            query = session.query(self.item_table)
             # Make sure output is in correct srids
             if (
                 hasattr(search_request, "crs")
@@ -681,15 +698,16 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                         },
                     }
                 )
-
-            response_features = []
+            response_features = []  
             filter_kwargs = {}
-
-            for item in page:
-                response_features.append(
-                    self.item_serializer.db_to_stac(item, hrefbuilder)
-                )
-
+            
+            # rewritten as a list-comprehension to speedup creation of the list
+            # Enumerations should be faster than looping and appending
+            crs_obj = {"crs": {"type": "name",
+                "properties": {"name": f"{output_crs}"}},
+            }  
+            response_features = [self.item_serializer.db_to_stac(item,hrefbuilder) for i,item in enumerate(page)]
+                    
             # Use pydantic includes/excludes syntax to implement fields extension
             if (
                 self.extension_is_enabled("FieldsExtension")
@@ -714,9 +732,16 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                 # of datetime
                 response_features = [
                     json.loads(stac_pydantic.Item(**feat).json(**filter_kwargs))
-                    for feat in response_features
+                    for feat,_ in enumerate(response_features)
                 ]
-
+                
+        for _,feat in enumerate(response_features):
+            crs_obj = {
+                "type": "name",
+                "properties": {"name": f"{output_crs}"},
+            }
+            feat["crs"] = crs_obj
+            
         context_obj = None
         if self.extension_is_enabled("ContextExtension"):
             context_obj = {
@@ -725,13 +750,8 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                 "matched": count,
             }
 
-        for feat in response_features:
-            crs_obj = {
-                "type": "name",
-                "properties": {"name": f"{output_crs}"},
-            }
-            feat["crs"] = crs_obj
-
+     
+        
         return ItemCollection(
             type="FeatureCollection",
             features=response_features,
