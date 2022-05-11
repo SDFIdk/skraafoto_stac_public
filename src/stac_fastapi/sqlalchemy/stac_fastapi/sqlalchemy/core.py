@@ -703,8 +703,8 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
             
             # rewritten as a list-comprehension to speedup creation of the list
             # Enumerations should be faster than looping and appending
-            crs_obj = {"crs": {"type": "name",
-                "properties": {"name": f"{output_crs}"}},
+            crs_obj =  {"type": "name",
+                "properties": {"name": f"{output_crs}"},
             }  
             response_features = [self.item_serializer.db_to_stac(item,hrefbuilder) for i,item in enumerate(page)]
                     
