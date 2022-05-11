@@ -63,7 +63,7 @@ def profiled():
     # uncomment this to see who's calling what
     # ps.print_callers()
     print(s.getvalue())
-    
+
 def monkeypatch_parse_geometry(geom):
     wkt = as_shape(geom).to_wkt()
     crs = geom["crs"] if "crs" in geom.keys() else 4326
@@ -736,10 +736,6 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                 ]
                 
         for _,feat in enumerate(response_features):
-            crs_obj = {
-                "type": "name",
-                "properties": {"name": f"{output_crs}"},
-            }
             feat["crs"] = crs_obj
             
         context_obj = None
