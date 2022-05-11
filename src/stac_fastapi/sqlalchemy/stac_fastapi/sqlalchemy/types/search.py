@@ -179,7 +179,7 @@ class STACSearch(BaseModel):
     crs: Optional[str] = None
     bbox_crs: Optional[str] = Field(alias="bbox-crs")
     pt: Optional[str] = None
-    limit: Optional[conint(gt=0, le=10000)] = 10
+    limit: Optional[conint(gt=0, le=1000)] = 10
     filter_crs: Optional[str] = Field(
         "http://www.opengis.net/def/crs/OGC/1.3/CRS84", alias="filter-crs"
     )

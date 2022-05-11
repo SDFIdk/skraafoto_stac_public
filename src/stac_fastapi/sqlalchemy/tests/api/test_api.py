@@ -117,23 +117,23 @@ def test_app_filter_extension_limit_lt0(
     assert resp.status_code == 400
 
 
-def test_app_filter_extension_limit_gt10000(
+def test_app_filter_extension_limit_gt1000(
     load_test_data, app_client, postgres_transactions
 ):
     item = load_test_data("test_item.json")
    
-    params = {"limit": 10001}
+    params = {"limit": 1001}
     resp = app_client.post("/search", json=params)
     assert resp.status_code == 400
 
 
-def test_app_filter_extension_limit_10000(
+def test_app_filter_extension_limit_1000(
     load_test_data, app_client, postgres_transactions
 ):
     item = load_test_data("test_item.json")
 
 
-    params = {"limit": 10000}
+    params = {"limit": 1000}
     resp = app_client.post("/search", json=params)
     assert resp.status_code == 200
 
