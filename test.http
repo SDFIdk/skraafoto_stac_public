@@ -1,4 +1,4 @@
-@host=http://localhost:8000
+@host=http://load201.kmsext.dk:4444
 
 @collection=skraafotos2019
 
@@ -116,7 +116,7 @@ POST {{host}}/search
 Content-Type: application/json
 
 {
-  "limit" : "50",
+  "limit" : "1000",
   "filter_lang": "cql-json",
   "filter": {
     "after": [{ "property": "datetime" }, "2019-06-24T07:41:13Z"] 
@@ -128,10 +128,35 @@ POST {{host}}/search
 Content-Type: application/json
 
 {
-  "limit" : "50",
+  "limit" : "1000",
   "filter_lang": "cql-json",
   "filter": {
     "meets": [{ "property": "datetime" }, ["2019-06-24T07:41:13Z", "2019-06-24T07:41:15Z"]]
+  }
+}
+
+###
+POST {{host}}/search
+Content-Type: application/json
+
+{
+  "limit" : "1000",
+  "filter_lang": "cql-json",
+  "filter": {
+    "meets": [{ "property": "datetime" }, ["../2019-06-24T07:41:13Z"]]
+  }
+}
+
+
+###
+POST {{host}}/search
+Content-Type: application/json
+
+{
+  "limit" : "1000",
+  "filter_lang": "cql-json",
+  "filter": {
+    "after": [{ "property": "datetime" }, "../2019-06-24T07:41:13Z"] 
   }
 }
 
