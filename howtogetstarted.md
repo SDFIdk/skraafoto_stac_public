@@ -31,6 +31,8 @@ Du skal være oprettet som bruger på `Dataforsyningen` samt være logget ind, f
 
 Nedstående eksempler bruger første metode, men hvis du bruger metode to, skal du tilføje queryparameteren `token` på eksemplerne.
 
+Vær opmærksom på at et response med et genereret URL, hvor man har angivet `token` som query parameter, så vil den genereret URL indeholder den pågældende token og skal fjernes, hvis response skal deles med andre.
+
 Alle kald til `Dataforsyningens` API'er og webservices skal bruge HTTPS, da der ikke understøttes HTTP, og `token` skal være angivet (undtagen alle DAWA og Inspire OGC-tjenester). Kald uden `token`, eller med ugyldig `token`, vil fejle.
 
 ## Sammenspillet mellem de tre API'er
@@ -38,6 +40,18 @@ Alle kald til `Dataforsyningens` API'er og webservices skal bruge HTTPS, da der 
 - **Skåfoto STAC API** leverer metadata om skråfotos. Dens URL starter med `https://api.dataforsyningen.dk/skraafotoapi_test`, men for at bruge URL'en er det et krav, at der bliver specificeret paths og queryparameters.
 - **Skåfoto Server** leverer skråfotos som [Cloud Optimized Geotiff](https://www.cogeo.org) (`COG`), hvor der kan bruges range request. Dens URL starter med `https://api.dataforsyningen.dk/skraafoto_server_test`, men for at bruge URL'en er det et krav, at der bliver specificeret paths og queryparameters.
 - **Skråfoto Cogtiler** oversætter COG-formatet til andre formater for de klienter, der ikke understøtter COG (undersøg hvad det er for nogle formater). Dens URL starter med `https://api.dataforsyningen.dk/skraafoto_cogtiler_test`, men for at bruge URL'en er det et krav, at der bliver specificeret paths og queryparameters.
+
+<table class="center" style="width:100%">
+  <tr>
+     <th>For klienter med understøttelse af COGs</th>
+     <th>Klienter UDEN COG support</th>
+  </tr>
+  <tr>
+    <td><img src="media/Skråfotodistribution-HTTPServer.svg" alt="For klienter med understøttelse af COGs" style="max-width: 70%; max-height: 70%;"></td>
+    <td><img src="media/Skråfotodistribution-TileServer.svg" alt="Klienter UDEN COG support" style="max-width: 100%; max-height: 100%;"></td>
+  </tr>
+ </table>
+
 
 ## Håndtering af collections
 
