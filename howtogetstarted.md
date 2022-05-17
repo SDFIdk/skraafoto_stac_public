@@ -52,6 +52,51 @@ Alle kald til `Dataforsyningens` API'er og webservices skal bruge HTTPS, da der 
   </tr>
  </table>
 
+ ### Eksempel på at hente metadata om et bestemt skråfoto, for så at få vist selve billedet ved brug af Skråfoto STAC API og Skråfoto Cogtiler
+
+```html
+<!DOCTYPE html>
+<html>
+  <body>
+    <img id="jpgImage" src="">
+    <script>
+      let responseData;
+      let responseImage;
+      fetch('https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021/items/2021_83_36_4_0008_00004522?token=4adf32524ae6d6998565f638a1090ba1', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      })
+      .then((response) => {
+        if (!response.ok){
+          throw new Error('Network response was not OK');
+        }
+        responseData = response.json();
+        console.log(responseData);
+        return responseData;
+      })
+      .then((data) => {
+          
+          fetch(data.assets.thumbnail.href, {
+            method: 'GET',
+          })
+          .then((response) => {
+            if (!response.ok){
+              throw new Error('Network response was not OK');
+            }
+            responseImage = response;
+
+            let image = document.getElementById('jpgImage');
+            image.src = response.url;
+            console.log(response);
+          })          
+        });
+
+    </script>
+  </body>
+</html>
+```
 
 ## Håndtering af collections
 
