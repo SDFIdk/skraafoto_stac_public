@@ -52,7 +52,56 @@ Alle kald til `Dataforsyningens` API'er og webservices skal bruge HTTPS, da der 
   </tr>
  </table>
 
- ### Eksempel på at hente metadata om et bestemt skråfoto, for så at få vist selve billedet ved brug af Skråfoto STAC API og Skråfoto Cogtiler
+### Eksempel på at hente en COG fra Skåfoto Server, og vise billedet med Open Layer
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.14.1/build/ol.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.14.1/css/ol.css">
+</head>
+<style>
+  .map {
+    height: 800px;
+    width: 100%;
+  }
+</style>
+  <body>
+    <p>Trying out instructions from <a href="https://openlayers.org/en/latest/examples/cog.html">OpenLayers</a></p>
+
+    <div id="map" class="map"></div>
+    <script>
+        var cogUrl = "https://api.dataforsyningen.dk/skraafoto_server_test/COG_oblique_2021/10km_613_58/1km_6132_583/2021_83_37_2_0025_00001961.tif?token={}";
+
+        // HACK to avoid bug looking up meters per unit for 'pixels' (https://github.com/openlayers/openlayers/issues/13564)
+        const projection = new ol.proj.Projection({
+            code: 'custom',
+            units: 'pixels',
+            metersPerUnit: 1, 
+        });
+        const source = new ol.source.GeoTIFF({
+            convertToRGB: true,
+            sources: [{ url: cogUrl }],
+        });
+
+        const layer = new ol.layer.WebGLTile({ source });
+
+        // when the view resolves view properties, the map view will be updated with the HACKish projection override
+        const map = new ol.Map({
+            target: 'map',
+            layers: [layer],
+            view: source.getView().then(options => ({
+                ...options,
+                projection: projection
+            }))
+        });
+    </script>
+  </body>
+</html>
+``` 
+
+### Eksempel på at hente metadata om et bestemt skråfoto, for så at få vist selve billedet ved brug af Skråfoto STAC API og Skråfoto Cogtiler
 
 ```html
 <!DOCTYPE html>
