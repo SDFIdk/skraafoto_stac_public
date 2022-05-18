@@ -116,7 +116,7 @@ class ItemSerializer(Serializer):
 
         token_param = {"token": hrefbuilder.token} if hrefbuilder.token else {}
         cog_url = _add_query_params(db_model.data_path, token_param)
-        tiler_params = {"url": cog_url, **token_param}
+        tiler_params = {"url": db_model.data_path, **token_param}
 
         add_links = [
             {
