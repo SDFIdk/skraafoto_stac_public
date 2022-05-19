@@ -209,7 +209,7 @@ Samt i de benyttede udvidelser til STAC:
 - [View Geometry](https://github.com/stac-extensions/view)
 - [Projection](https://github.com/stac-extensions/projection)
 
-Se afsnittet [Kobling mellem metadata og data](#Kobling-mellem-metadata-og-data) for en beskrivelse af, hvordan det faktiske flyfoto kan hentes og bruges ud fra de metadata, som APIet returnerer.
+Se afsnittet [Download og visning af billeder](#Download-og-visning-af-billeder) for en beskrivelse af, hvordan det faktiske flyfoto kan hentes og bruges ud fra de metadata, som APIet returnerer.
 
 ### STAC Collection
 
@@ -643,16 +643,76 @@ Eksempler på brug af sortBy parameter:
 Nærmere beskrivelse af Sort Extension: https://github.com/radiantearth/stac-api-spec/tree/master/fragments/sort.
 
 
-## Kobling mellem metadata og data
+## Download og visning af billeder
 Der er flere muligheder for at gå fra de returnerede metadata (se [STAC Item](#stac-item)) til det beskrevne billede.
 
-### Download
+Relevante links findes i sektionen `links` hhv `assets`:
+```json
+[...]
+"links": [
+    [...]
+    {
+        "rel": "alternate",
+        "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/viewer.html?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_614_59%2F1km_6145_592%2F2021_83_36_1_0020_00003045.tif",
+        "type": "text/html; charset=UTF-8",
+        "title": "Interactive image viewer"
+    }
+],
+"assets": {
+    "data": {
+        "href": "https://api.dataforsyningen.dk/skraafoto_server_test/COG_oblique_2021/10km_614_59/1km_6145_592/2021_83_36_1_0020_00003045.tif",
+        "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+        "roles": [
+            "data"
+        ],
+        "title": "Raw tiff file"
+    },
+    "thumbnail": {
+        "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_614_59%2F1km_6145_592%2F2021_83_36_1_0020_00003045.tif",
+        "type": "image/jpeg",
+        "roles": [
+            "thumbnail"
+        ],
+        "title": "Thumbnail"
+    }
+}
+[...]
+```
 
-### Thumbnail
+**Bemærk** at alle links til dataforsyningen kræver angivelsen af `token` enten som query parameter eller som header. 
 
-### Cloud Optimized Geotiff
 
-### Viewer
+**Download**
+Det originale flyfoto i fuld opløsning kan downloades på den URL, der findes i metadata under `/assets/data/href`. Formatet er kompatibelt med almindelige TIFF-læsere og det downloadede billede kan dermed åbnes af de fleste gængse billedprogrammer.
+
+**Thumbnail**
+En thumbnail af flyfotoet kan hentes på den URL, der findes i metadata under `/assets/thumbnail/href`.
+
+Der gives ingen garantier vedrørende dimensionerne af thumbnails. Pt er alle thumbnails mindre end 512px.
+
+**Cloud Optimized Geotiff**
+Det originale flyfoto, hvis URL findes under  `/assets/data/href`, er i "Cloud Optimized GeoTIFF" format og kan dermed tilgås meget effektivt direkte på http-serveren.
+
+Læs mere på [www.cogeo.org](https://www.cogeo.org/).
+
+**Viewer**
+Dataforsyningen udstiller en online-viewer til meget enkel visning af et flyfoto i en browser. URLen til denne viewer findes i metadata under `/links/` med `rel=alternate` og `type=text/html; charset=UTF-8`.
+
+**jpeg tiles**
+Dataforsyningen udstiller en service, der kan udstille et flyfoto som en pyramide af jpeg-tiles. Disse kan anvendes, såfremt klienten ikke er i stand til at anvende den "Cloud Optimized GeoTIFF" direkte, som beskrevet ovenfor.
+
+URL til denne service er ikke inkluderet i metadata, men må i stedet konstrueres. Pt kan URLen konstrueres som 
+
+```
+https://api.dataforsyningen.dk/skraafoto_cogtiler_test/tiles/{z}/{x}/{y}.jpg?url={DOWNLOAD_URL}
+```
+
+Tile-koordinaterne z, x, og y er i en lokal tile-pyramide.
+
+Basal info om tile-pyramiden kan fås på endpointet 
+```
+https://api.dataforsyningen.dk/skraafoto_cogtiler_test/info?url={DOWNLOAD_URL}
+```
 
 ## Georeferering
 Haves en 3D koordinat `(X, Y, Z)` på et punkt i landskabet, er det muligt at beregne, hvilken pixel `(xa, ya)` i flyfotoet dette punkt vil blive afbilledet i.
