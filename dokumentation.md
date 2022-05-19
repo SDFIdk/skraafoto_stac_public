@@ -21,6 +21,7 @@ Grundstenen, der udgør et enkelt aktiv i API'et. Hvert item beskriver således 
 
 _Eksempel_:
 <details>
+
 ```json
 {
     "type": "Feature",
@@ -163,7 +164,7 @@ _Eksempel_:
         {
             "rel": "root",
             "type": "application/json",
-            "href": "https://api.dataforsyningen.dk/skraafotoapi_test/
+            "href": "https://api.dataforsyningen.dk/skraafotoapi_test/"
         },
         {
             "rel": "license",
@@ -214,6 +215,7 @@ Samt i de benyttede udvidelser til STAC:
 
 _Eksempel_:
 <details>
+
 ```json
 {
     "type": "Collection",
