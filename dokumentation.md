@@ -5,33 +5,296 @@
 Skraafoto-stac-api bygger på API-specifikationen STAC (Spatio Temporal Asset Catalog), en nyere API-standard med formål at forene dynamisk søgning og forespørgsler af geospatielt data.
 API'et følger specifikationen angivet i [stac-api-spec](https://github.com/radiantearth/stac-api-spec), som er udarbejdet på baggrund af [OGC API - Features](https://ogcapi.ogc.org/features/), tidligere kaldt WFS3. Det vil sige, at de fleste OGC API klienter også vil kunne læse et STAC API, hvis det er konfigureret efter standarden.
 
-STAC API'ets core består af fire komponenter:
+STAC API'ets core består af tre komponenter:
 
-- [Items](#STAC-Item)
-- [Catalogs](#STAC-Catalog)
-- [Collections](#STAC-Collection)
 - [STAC API](#STAC-API)
-
-### STAC Item
-
-Grundstenen, der udgør et enkelt asset i API'et. Det er formateret som GeoJSON suppleret med ekstra metadata (id, type, geometry, bbox, datetime, properties, mm.), som muliggør det for en klient at søge eller gennemløbe kataloger af spatio temporale aktiver. Ekstra data er tilføjet som pkt. 6 i [GeoJSON standarden](https://datatracker.ietf.org/doc/html/rfc7946#section-6) "Foreign Members".
-Et spatio temporalt aktiv udgør et bestemt geografisk område på et bestemt tidspunkt. Alle aktiver, der opfylder `Item` specifikationen er valid STAC [stac-api-spec-item](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md).
-
-### STAC Catalog
-
-Udgangspunktet for navigering af STAC. Det består af links til items og andre catalogs. Det kan forstås som en mappe i en klassisk filstruktur - den er selv en "beholder" til items, men kan også indeholde andre "beholdere" (foldere/catalogs).
-
-### STAC Collection
-
-Collection kan ses som en årgang, der indholder metadata om hvert eneste `Item` for den collection. `Item` i en collection deler de samme attributter og metadata på tværs af collections.
-
-En udvidelse til catalog, som indeholder yderligere metadata. Metadataene beskriver en samling af items, som er defineret med samme attributter og deler samme metadata. STAC Collections er kompatibel med `Collection` termet, specificeret i [OGC API - Features](https://ogcapi.ogc.org/features/), men er udvidet med yderligere felter. En liste af felter er angivet i [STAC Collection Specificationen](https://github.com/radiantearth/stac-spec/blob/master/collection-spec/collection-spec.md)
+- [Items](#STAC-Item)
+- [Collections](#STAC-Collection)
 
 ### STAC API
 
-RESTful API specification er til dynamisk at forespørge STAC catalogs. Det er designet med et standard set af endpoints til at søge i catalogs, collections, og items.
+Selve APIet, der udstiller metadata i form af [STAC Items](#STAC-Item) organiseret i [STAC Collections](#STAC-Collection). En nærmere beskrivelse af STAC-spec core kan læses [her](https://github.com/radiantearth/stac-api-spec/blob/master/stac-spec/overview.md).
 
-En nærmere beskrivelse af STAC-spec core kan læses [her](https://github.com/radiantearth/stac-api-spec/blob/master/stac-spec/overview.md).
+### STAC Item
+
+Grundstenen, der udgør et enkelt aktiv i API'et. Hvert item beskriver således egenskaberne for ét flyfoto.
+
+_Eksempel_:
+<details>
+```json
+{
+    "type": "Feature",
+    "stac_version": "1.0.0",
+    "stac_extensions": [
+        "https://stac-extensions.github.io/view/v1.0.0/schema.json",
+        "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
+        "https://raw.githubusercontent.com/stac-extensions/perspective-imagery/main/json-schema/schema.json"
+    ],
+    "id": "2021_82_24_5_0024_00005660",
+    "collection": "skraafotos2021",
+    "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+            [
+                [
+                    10.206847701831686,
+                    56.15615993575451
+                ],
+                [
+                    10.207381952922963,
+                    56.162100222097045
+                ],
+                [
+                    10.223102119197074,
+                    56.16069236402555
+                ],
+                [
+                    10.222782336078522,
+                    56.15678486408621
+                ],
+                [
+                    10.206847701831686,
+                    56.15615993575451
+                ]
+            ]
+        ]
+    },
+    "bbox": [
+        10.2068477018317,
+        56.1561599357545,
+        10.2231021191971,
+        56.162100222097
+    ],
+    "properties": {
+        "datetime": "2021-04-03T14:19:56Z",
+        "gsd": 0.1,
+        "license": "various",
+        "platform": "Fixed-wing aircraft",
+        "instruments": [
+            "Osprey-80316002-f120_Rev07.00_10cm_C106"
+        ],
+        "providers": [
+            {
+                "name": "Terratec",
+                "roles": [
+                    "producer",
+                    "processor"
+                ]
+            },
+            {
+                "url": "https://sdfe.dk/",
+                "name": "SDFE",
+                "roles": [
+                    "licensor",
+                    "host"
+                ]
+            }
+        ],
+        "proj:epsg": null,
+        "proj:shape": [
+            7725,
+            5775
+        ],
+        "direction": "west",
+        "estimated_accuracy": 0.13,
+        "pers:omega": 1.4611,
+        "pers:phi": 45.1329,
+        "pers:kappa": 87.808,
+        "pers:perspective_center": [
+            576647.679,
+            6224403.701,
+            1203.014
+        ],
+        "pers:crs": 25832,
+        "pers:vertical_crs": 5799,
+        "pers:rotation_matrix": [
+            0.0269828157255729,
+            0.99963458505038,
+            -0.00161988477158235,
+            -0.704948504076337,
+            0.0201773206919654,
+            0.70897142560912,
+            0.708745041785869,
+            -0.0179881099854046,
+            0.705235346280303
+        ],
+        "pers:interior_orientation": {
+            "camera_id": "Osprey-80316002-f120_Rev07.00_10cm_C106",
+            "focal_length": 122.982,
+            "pixel_spacing": [
+                0.0069333,
+                0.0069333
+            ],
+            "calibration_date": "2020-05-18",
+            "principal_point_offset": [
+                -0.028,
+                6.788
+            ],
+            "sensor_array_dimensions": [
+                5775,
+                7725
+            ]
+        },
+        "asset:data": "https://api.dataforsyningen.dk/skraafoto_server_test/COG_oblique_2021/10km_614_59/1km_6145_592/2021_83_36_1_0020_00003045.tif",
+        "asset:thumbnail": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_614_59%2F1km_6145_592%2F2021_83_36_1_0020_00003045.tif",
+        "crs": {
+            "type": "name",
+            "properties": {
+                "name": "http://www.opengis.net/def/crs/OGC/1.3/CRS84"
+            }
+        }
+    },
+    "links": [
+        {
+            "rel": "self",
+            "type": "application/geo+json",
+            "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021/items/2021_82_24_5_0024_00005660"
+        },
+        {
+            "rel": "parent",
+            "type": "application/json",
+            "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021"
+        },
+        {
+            "rel": "collection",
+            "type": "application/json",
+            "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021"
+        },
+        {
+            "rel": "root",
+            "type": "application/json",
+            "href": "https://api.dataforsyningen.dk/skraafotoapi_test/
+        },
+        {
+            "rel": "license",
+            "href": "https://sdfe.dk/om-os/vilkaar-og-priser",
+            "type": "text/html; charset=UTF-8",
+            "title": "SDFE license terms"
+        },
+        {
+            "rel": "alternate",
+            "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/viewer.html?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_614_59%2F1km_6145_592%2F2021_83_36_1_0020_00003045.tif",
+            "type": "text/html; charset=UTF-8",
+            "title": "Interactive image viewer"
+        }
+    ],
+    "assets": {
+        "data": {
+            "href": "https://api.dataforsyningen.dk/skraafoto_server_test/COG_oblique_2021/10km_614_59/1km_6145_592/2021_83_36_1_0020_00003045.tif",
+            "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+            "roles": [
+                "data"
+            ],
+            "title": "Raw tiff file"
+        },
+        "thumbnail": {
+            "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_614_59%2F1km_6145_592%2F2021_83_36_1_0020_00003045.tif",
+            "type": "image/jpeg",
+            "roles": [
+                "thumbnail"
+            ],
+            "title": "Thumbnail"
+        }
+    }
+}
+```
+</details>
+
+De enkelte dataelementer i et STAC Item returneret fra dette API er beskrevet i
+- [stac-api-spec-item](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md)
+
+Samt i de benyttede udvidelser til STAC:
+- [Perspective Imagery](https://github.com/stac-extensions/perspective-imagery)
+- [View Geometry](https://github.com/stac-extensions/view)
+- [Projection](https://github.com/stac-extensions/projection)
+
+### STAC Collection
+
+`Items` er inddelt i `Collections`, således at en `Collection` består af logisk beslægtede `Items`. For eksempel er skråfotos inddelt i en `Collection` per årgang.
+
+_Eksempel_:
+<details>
+```json
+{
+    "type": "Collection",
+    "id": "skraafotos2021",
+    "stac_extensions": [],
+    "stac_version": "1.0.0",
+    "title": "Skråfotos 2021",
+    "description": "Skråfotoflyvning i år 2021. Mere beskrivelse.....",
+    "keywords": [],
+    "storageCrs": "http://www.opengis.net/def/crs/OGC/1.3/CRS84",
+    "crs": [
+        "http://www.opengis.net/def/crs/OGC/1.3/CRS84",
+        "http://www.opengis.net/def/crs/EPSG/0/25832"
+    ],
+    "license": "various",
+    "providers": [
+        {
+            "url": "https://www.sdfe.dk",
+            "name": "SDFE",
+            "roles": [
+                "host",
+                "licensor"
+            ]
+        }
+    ],
+    "summaries": {},
+    "extent": {
+        "spatial": {
+            "bbox": [
+                [
+                    8.015616423010679,
+                    54.524553169133014,
+                    15.254239014661186,
+                    57.650387661266926
+                ]
+            ]
+        },
+        "temporal": {
+            "interval": [
+                [
+                    "2021-03-10 08:12:40Z",
+                    "2021-11-22 10:03:41Z"
+                ]
+            ]
+        }
+    },
+    "links": [
+        {
+            "rel": "self",
+            "type": "application/json",
+            "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021"
+        },
+        {
+            "rel": "parent",
+            "type": "application/json",
+            "href": "https://api.dataforsyningen.dk/skraafotoapi_test/"
+        },
+        {
+            "rel": "items",
+            "type": "application/geo+json",
+            "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021/items"
+        },
+        {
+            "rel": "root",
+            "type": "application/json",
+            "href": "https://api.dataforsyningen.dk/skraafotoapi_test/"
+        },
+        {
+            "rel": "license",
+            "href": "https://sdfe.dk/om-os/vilkaar-og-priser",
+            "type": "text/html; charset=UTF-8",
+            "title": "SDFE license terms"
+        }
+    ]
+}
+```
+</details>
+
+Bemærk, at en `Collection` blandt andet indeholder aggregeret spatiel og tidslig udstrækning for `Items` hørende til denne `Collection`.
+
+Dataelementerne returneret i en `Collection` er beskrevet i [STAC Collection Specificationen](https://github.com/radiantearth/stac-spec/blob/master/collection-spec/collection-spec.md)
 
 ## Endpoints og outputs
 
