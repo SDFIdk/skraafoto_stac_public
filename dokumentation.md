@@ -3,7 +3,7 @@
 ## Introduktion
 
 Skraafoto-stac-api bygger på API-specifikationen STAC (Spatio Temporal Asset Catalog), en nyere API-standard med formål at forene dynamisk søgning og forespørgsler af geospatielt data.
-API'et følger specifikationen angivet i [stac-api-spec](https://github.com/radiantearth/stac-api-spec), som er udarbejdet på baggrund af [OGC API - Features](https://ogcapi.ogc.org/features/), tidligere kaldt WFS3. Det vil sige, at de fleste OGC API klienter også vil kunne læse et STAC API, hvis det er konfigureret efter standarden.
+API'et følger specifikationen angivet i [stac-api-spec](https://github.com/radiantearth/stac-api-spec) og [OGC API - Features](https://ogcapi.ogc.org/features/), tidligere kaldt WFS3.
 
 STAC API'ets core består af tre komponenter:
 
@@ -208,6 +208,8 @@ Samt i de benyttede udvidelser til STAC:
 - [Perspective Imagery](https://github.com/stac-extensions/perspective-imagery)
 - [View Geometry](https://github.com/stac-extensions/view)
 - [Projection](https://github.com/stac-extensions/projection)
+
+Se afsnittet [Kobling mellem metadata og data](#Kobling-mellem-metadata-og-data) for en beskrivelse af, hvordan det faktiske flyfoto kan hentes og bruges ud fra de metadata, som APIet returnerer.
 
 ### STAC Collection
 
@@ -637,3 +639,60 @@ Eksempler på brug af sortBy parameter:
 }
 ```
 Nærmere beskrivelse af Sort Extension: https://github.com/radiantearth/stac-api-spec/tree/master/fragments/sort.
+
+
+## Kobling mellem metadata og data
+Der er flere muligheder for at gå fra de returnerede metadata (se [STAC Item](#stac-item)) til det beskrevne billede.
+
+### Download
+
+### Thumbnail
+
+### Cloud Optimized Geotiff
+
+### Viewer
+
+## Georeferering
+Haves en 3D koordinat `(X, Y, Z)` på et punkt i landskabet, er det muligt at beregne, hvilken pixel `(xa, ya)` i flyfotoet dette punkt vil blive afbilledet i.
+
+**Forudsætningen er**, at koordinaten er i samme koordinatreferencesystem, som billedet er georefereret i. Dette er beskrevet i egenskaberne `pers:crs` og `pers:vertical_crs`. Det kan således være nødvendigt først at konvertere koordinaten til det rette koordinatreferencesystem.
+
+Først etableres en række variable ud fra flyfotoets metadata:
+```python
+props = item["properties"]
+m11, m12, m13, m21, m22, m23, m31, m32, m33 = props["pers:rotation_matrix"]
+Xc, Yc, Zc = props["pers:perspective_center"]
+f_mm = props["pers:interior_orientation"]["focal_length"]
+ppo_x, ppo_y = props["pers:interior_orientation"]["principal_point_offset"]
+pixel_size = props["pers:interior_orientation"]["pixel_spacing"][0]
+sensor_cols, sensor_rows = props["pers:interior_orientation"]["sensor_array_dimensions"]
+
+# Calculated values. In pixels. Origo in image lower left.
+f = f_mm / pixel_size
+x0 = sensor_cols * 0.5 + ppo_x / pixel_size
+y0 = sensor_rows * 0.5 + ppo_y / pixel_size 
+```
+
+Dernæst kan (x<sub>a</sub>, y<sub>a</sub>) beregnes på en af to måder.
+
+Den klassiske fotogrammetriske form:
+```
+dX = (X-Xc)
+dY = (Y-Yc)
+dZ = (Z-Zc)
+n = (m31 * dX + m32 * dY + m33 * dZ)
+xa = x0 - f * (m11 * dX + m12 * dY + m13 * dZ) / n
+ya = y0 - f * (m21 * dX + m22 * dY + m23 * dZ) / n
+```
+
+Eller formuleret på matrixform:
+
+![K](./media/formula_K.gif)
+
+![R](./media/formula_R.gif)
+
+![T](./media/formula_T.gif)
+
+![XYc](./media/formula_xyc.gif)
+
+![XYa](./media/formula_xya.gif)
