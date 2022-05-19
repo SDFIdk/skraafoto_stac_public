@@ -657,7 +657,7 @@ Haves en 3D koordinat `(X, Y, Z)` på et punkt i landskabet, er det muligt at be
 
 **Forudsætningen er**, at koordinaten er i samme koordinatreferencesystem, som billedet er georefereret i. Dette er beskrevet i egenskaberne `pers:crs` og `pers:vertical_crs`. Det kan således være nødvendigt først at konvertere koordinaten til det rette koordinatreferencesystem.
 
-Først etableres en række variable ud fra flyfotoets metadata:
+Først etableres en række variable ud fra flyfotoets metadata (Se [STAC Item](#stac-item)):
 ```python
 props = item["properties"]
 m11, m12, m13, m21, m22, m23, m31, m32, m33 = props["pers:rotation_matrix"]
@@ -673,7 +673,7 @@ x0 = sensor_cols * 0.5 + ppo_x / pixel_size
 y0 = sensor_rows * 0.5 + ppo_y / pixel_size 
 ```
 
-Dernæst kan (x<sub>a</sub>, y<sub>a</sub>) beregnes på en af to måder.
+Dernæst kan `(xa, ya)` beregnes på en af to måder. Bemærk i øvrigt, at pixelkoordinaterne `(xa, ya)` har origo i billedets nederste venstre hjørne med x-aksen positiv mod højre og y-aksen positiv op.
 
 Den klassiske fotogrammetriske form:
 ```
@@ -696,3 +696,4 @@ Eller formuleret på matrixform:
 ![XYc](./media/formula_xyc.gif)
 
 ![XYa](./media/formula_xya.gif)
+
