@@ -72,7 +72,7 @@ Alle kald til `Dataforsyningens` API'er og webservices skal bruge HTTPS, da der 
 
     <div id="map" class="map"></div>
     <script>
-        var cogUrl = "https://api.dataforsyningen.dk/skraafoto_server_test/COG_oblique_2021/10km_613_58/1km_6132_583/2021_83_37_2_0025_00001961.tif?token={}";
+        var cogUrl = "https://api.dataforsyningen.dk/skraafoto_server_test/COG_oblique_2021/10km_613_58/1km_6132_583/2021_83_37_2_0025_00001961.tif";
 
         // HACK to avoid bug looking up meters per unit for 'pixels' (https://github.com/openlayers/openlayers/issues/13564)
         const projection = new ol.proj.Projection({
@@ -83,6 +83,7 @@ Alle kald til `Dataforsyningens` API'er og webservices skal bruge HTTPS, da der 
         const source = new ol.source.GeoTIFF({
             convertToRGB: true,
             sources: [{ url: cogUrl }],
+            sourceOptions: {headers: {'token':'{}'}}
         });
 
         const layer = new ol.layer.WebGLTile({ source });
@@ -109,34 +110,51 @@ Alle kald til `Dataforsyningens` API'er og webservices skal bruge HTTPS, da der 
   <body>
     <img id="jpgImage" src="">
     <script>
-      // Get metadata about a specific item using Skråfoto STAC API
-      fetch('https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021/items/2021_83_36_4_0008_00004522?token={}', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-      })
-      .then((response) => {
-        if (!response.ok){
-          throw new Error('Network response was not OK');
-        }
-        responseJSON = response.json();
-        return responseJSON;
-      })
-      .then((jsonData) => {
-          // Get the thumbnail image from the item using Skråfoto Cogtiler
-          fetch(jsonData.assets.thumbnail.href, {
+      const fetchMetadaPromise = new Promise((resolve, reject) => {
+        // Get metadata about a specific item using Skråfoto STAC API
+        fetch('https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021/items/2021_83_36_4_0008_00004522', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'token': '{}'
+          }
+        })
+          .then((response) => {
+            if (!response.ok){
+              throw new Error('Network response was not OK');
+            }
+            // If response is empty then return empty json
+            resolve(response?.json() || {});
+          })
+        });
+      
+      const fetchThumbnailPromise = new Promise((resolve, reject) => {
+        fetchMetadaPromise.then((jsonData) => {
+        // Get the thumbnail image from the item using Skråfoto Cogtiler
+        fetch(jsonData.assets.thumbnail.href, {
             method: 'GET',
+            headers: {
+              'token': '{}'
+            }
           })
           .then((response) => {
             if (!response.ok){
               throw new Error('Network response was not OK');
             }
-
-            let image = document.getElementById('jpgImage');
-            image.src = response.url;
-          })          
+            // Blob is raw data
+            resolve(response.blob());
+          })
         });
+      });
+
+      // Be sure that the DOM has loaded before the image get populated
+      window.addEventListener('DOMContentLoaded', () => {
+        fetchThumbnailPromise.then((imageSrc) => {
+        const objectURL = URL.createObjectURL(imageSrc);
+        let image = document.querySelector("#jpgImage");
+        image.src = objectURL;
+        });
+      });
     </script>
   </body>
 </html>
