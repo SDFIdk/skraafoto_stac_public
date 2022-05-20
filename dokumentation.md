@@ -749,13 +749,29 @@ ya = y0 - f * (m21 * dX + m22 * dY + m23 * dZ) / n
 
 Eller formuleret på matrixform:
 
-![K](./media/formula_K.gif)
 
-![R](./media/formula_R.gif)
+$$
+K = \begin{bmatrix} -f & 0 & x0 \\  0 & -f & y0 \\ 0 & 0 & 1 \end{bmatrix}
+$$
 
-![T](./media/formula_T.gif)
 
-![XYc](./media/formula_xyc.gif)
+$$
+R = \begin{bmatrix} m11 & m12 & m13 \\ m21 & m22 & m23 \\ m31 & m32 & m33 \end{bmatrix} 
+$$
 
-![XYa](./media/formula_xya.gif)
+
+$$
+T = \begin{bmatrix} 1 & 0 & 0 & -Xc \\  0 & 1 & 0 & -Yc \\ 0 & 0 & 1 & - Zc \end{bmatrix}
+$$
+
+
+
+$$
+\begin{bmatrix}xc \\ yc \\ zc \end{bmatrix} = KRT \begin{bmatrix} X \\ Y \\ Z \\ 1 \end{bmatrix}
+$$
+
+
+$$
+(xa, ya) = (xc / zc, yc / zc)
+$$
 
