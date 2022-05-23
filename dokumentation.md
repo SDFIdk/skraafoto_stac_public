@@ -13,7 +13,7 @@ STAC API'ets core består af tre komponenter:
 
 Der opereres med collections, som indeholder en samling af items.
 
- ![Relationship between collection with items](media/Skråfotodistribution-HTTPServer.svg)
+ ![Relationship between collection with items](media/Skråfoto-STAC-API.svg)
 
 ### STAC API
 
