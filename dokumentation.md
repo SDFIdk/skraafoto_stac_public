@@ -8,16 +8,111 @@ API'et følger specifikationen angivet i [stac-api-spec](https://github.com/radi
 STAC API'ets core består af tre komponenter:
 
 - [STAC API](#STAC-API)
-- [Items](#STAC-Item)
 - [Collections](#STAC-Collection)
+- [Items](#STAC-Item)
+
+Der opereres med collections, som indeholder en samling af items.
+
+ ![Relationship between collection with items](media/Skråfotodistribution-HTTPServer.svg)
 
 ### STAC API
 
 Selve APIet, der udstiller metadata i form af [STAC Items](#STAC-Item) organiseret i [STAC Collections](#STAC-Collection). En nærmere beskrivelse af STAC-spec core kan læses [her](https://github.com/radiantearth/stac-api-spec/blob/master/stac-spec/overview.md).
 
+### STAC Collection
+
+`Items` er inddelt i `Collections`, således at en `Collection` består af logisk beslægtede `Items`. For eksempel er skråfotos inddelt i en `Collection` per årgang.
+
+_Eksempel_:
+<details>
+
+```json
+{
+    "type": "Collection",
+    "id": "skraafotos2021",
+    "stac_extensions": [],
+    "stac_version": "1.0.0",
+    "title": "Skråfotos 2021",
+    "description": "Skråfotoflyvning i år 2021. Mere beskrivelse.....",
+    "keywords": [],
+    "storageCrs": "http://www.opengis.net/def/crs/OGC/1.3/CRS84",
+    "crs": [
+        "http://www.opengis.net/def/crs/OGC/1.3/CRS84",
+        "http://www.opengis.net/def/crs/EPSG/0/25832"
+    ],
+    "license": "various",
+    "providers": [
+        {
+            "url": "https://www.sdfe.dk",
+            "name": "SDFE",
+            "roles": [
+                "host",
+                "licensor"
+            ]
+        }
+    ],
+    "summaries": {},
+    "extent": {
+        "spatial": {
+            "bbox": [
+                [
+                    8.015616423010679,
+                    54.524553169133014,
+                    15.254239014661186,
+                    57.650387661266926
+                ]
+            ]
+        },
+        "temporal": {
+            "interval": [
+                [
+                    "2021-03-10 08:12:40Z",
+                    "2021-11-22 10:03:41Z"
+                ]
+            ]
+        }
+    },
+    "links": [
+        {
+            "rel": "self",
+            "type": "application/json",
+            "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021"
+        },
+        {
+            "rel": "parent",
+            "type": "application/json",
+            "href": "https://api.dataforsyningen.dk/skraafotoapi_test/"
+        },
+        {
+            "rel": "items",
+            "type": "application/geo+json",
+            "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021/items"
+        },
+        {
+            "rel": "root",
+            "type": "application/json",
+            "href": "https://api.dataforsyningen.dk/skraafotoapi_test/"
+        },
+        {
+            "rel": "license",
+            "href": "https://sdfe.dk/om-os/vilkaar-og-priser",
+            "type": "text/html; charset=UTF-8",
+            "title": "SDFE license terms"
+        }
+    ]
+}
+```
+</details>
+
+Bemærk, at en `Collection` blandt andet indeholder aggregeret spatiel og tidslig udstrækning for `Items` hørende til denne `Collection`.
+
+Dataelementerne returneret i en `Collection` er beskrevet i [STAC Collection Specificationen](https://github.com/radiantearth/stac-spec/blob/master/collection-spec/collection-spec.md)
+
 ### STAC Item
 
-Grundstenen, der udgør et enkelt aktiv i API'et. Hvert item beskriver således egenskaberne for ét flyfoto.
+Grundstenen, der udgør et enkelt aktiv i API'et. Hvert item beskriver således egenskaberne for ét flyfoto, altså metadata om det billede.
+
+Foto = metadata om 
 
 _Eksempel_:
 <details>
@@ -210,95 +305,6 @@ Samt i de benyttede udvidelser til STAC:
 - [Projection](https://github.com/stac-extensions/projection)
 
 Se afsnittet [Download og visning af billeder](#Download-og-visning-af-billeder) for en beskrivelse af, hvordan det faktiske flyfoto kan hentes og bruges ud fra de metadata, som APIet returnerer.
-
-### STAC Collection
-
-`Items` er inddelt i `Collections`, således at en `Collection` består af logisk beslægtede `Items`. For eksempel er skråfotos inddelt i en `Collection` per årgang.
-
-_Eksempel_:
-<details>
-
-```json
-{
-    "type": "Collection",
-    "id": "skraafotos2021",
-    "stac_extensions": [],
-    "stac_version": "1.0.0",
-    "title": "Skråfotos 2021",
-    "description": "Skråfotoflyvning i år 2021. Mere beskrivelse.....",
-    "keywords": [],
-    "storageCrs": "http://www.opengis.net/def/crs/OGC/1.3/CRS84",
-    "crs": [
-        "http://www.opengis.net/def/crs/OGC/1.3/CRS84",
-        "http://www.opengis.net/def/crs/EPSG/0/25832"
-    ],
-    "license": "various",
-    "providers": [
-        {
-            "url": "https://www.sdfe.dk",
-            "name": "SDFE",
-            "roles": [
-                "host",
-                "licensor"
-            ]
-        }
-    ],
-    "summaries": {},
-    "extent": {
-        "spatial": {
-            "bbox": [
-                [
-                    8.015616423010679,
-                    54.524553169133014,
-                    15.254239014661186,
-                    57.650387661266926
-                ]
-            ]
-        },
-        "temporal": {
-            "interval": [
-                [
-                    "2021-03-10 08:12:40Z",
-                    "2021-11-22 10:03:41Z"
-                ]
-            ]
-        }
-    },
-    "links": [
-        {
-            "rel": "self",
-            "type": "application/json",
-            "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021"
-        },
-        {
-            "rel": "parent",
-            "type": "application/json",
-            "href": "https://api.dataforsyningen.dk/skraafotoapi_test/"
-        },
-        {
-            "rel": "items",
-            "type": "application/geo+json",
-            "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021/items"
-        },
-        {
-            "rel": "root",
-            "type": "application/json",
-            "href": "https://api.dataforsyningen.dk/skraafotoapi_test/"
-        },
-        {
-            "rel": "license",
-            "href": "https://sdfe.dk/om-os/vilkaar-og-priser",
-            "type": "text/html; charset=UTF-8",
-            "title": "SDFE license terms"
-        }
-    ]
-}
-```
-</details>
-
-Bemærk, at en `Collection` blandt andet indeholder aggregeret spatiel og tidslig udstrækning for `Items` hørende til denne `Collection`.
-
-Dataelementerne returneret i en `Collection` er beskrevet i [STAC Collection Specificationen](https://github.com/radiantearth/stac-spec/blob/master/collection-spec/collection-spec.md)
 
 ## Endpoints og outputs
 
