@@ -7,6 +7,7 @@ import attr
 from fastapi import Body, Path, Query, Response
 from pydantic import BaseModel, create_model
 from pydantic.fields import UndefinedType
+from . import descriptions
 
 NumType = Union[int, float]
 
@@ -57,7 +58,7 @@ class APIRequest(abc.ABC):
 class CollectionUri(APIRequest):
     """Delete collection."""
 
-    collectionId: str = attr.ib(default=Path(..., description="Collection ID"))
+    collectionId: str = attr.ib(default=Path(..., description=descriptions.COLLECTION_ID))
 
     def kwargs(self) -> Dict:
         """kwargs."""
@@ -68,8 +69,8 @@ class CollectionUri(APIRequest):
 class ItemUri(CollectionUri):
     """Delete item."""
 
-    itemId: str = attr.ib(default=Path(..., description="Item ID"))
-    crs: Optional[str] = attr.ib(default=None)
+    itemId: str = attr.ib(default=Path(..., description=descriptions.ITEM_ID))
+    crs: Optional[str] = attr.ib(default=Query(None, description=descriptions.CRS))
 
     def kwargs(self) -> Dict:
         """kwargs."""
@@ -91,18 +92,18 @@ class EmptyRequest(APIRequest):
 
 @attr.s
 class FilterableRequest:
-    crs: Optional[str] = attr.ib(default=None)
-    limit: int = attr.ib(default=10)
-    pt: Optional[str] = attr.ib(default=None)
-    ids: Optional[str] = attr.ib(default=None)
-    bbox: Optional[str] = attr.ib(default=None)
-    bbox_crs: Optional[str] = attr.ib(default=Query(default=None, alias="bbox-crs"))
-    datetime: Optional[str] = attr.ib(default=None)  # TODO: fix types
-    filter: Optional[str] = attr.ib(default=None)
+    crs: Optional[str] = attr.ib(default=Query(None, description=descriptions.CRS))
+    limit: int = attr.ib(default=Query(10, description=descriptions.LIMIT))
+    pt: Optional[str] = attr.ib(default=Query(None, description=descriptions.PAGING_TOKEN))
+    ids: Optional[str] = attr.ib(default=Query(None, description=descriptions.IDS))
+    bbox: Optional[str] = attr.ib(default=Query(None, description=descriptions.BBOX))
+    bbox_crs: Optional[str] = attr.ib(default=Query(default=None, alias="bbox-crs", description=descriptions.BBOX_CRS))
+    datetime: Optional[str] = attr.ib(default=Query(None, description=descriptions.DATETIME))  # TODO: fix types
+    filter: Optional[str] = attr.ib(default=Query(None, description=descriptions.FILTER))
     filter_lang: Optional[str] = attr.ib(
-        default=Query(default=None, alias="filter-lang")
+        default=Query(default=None, alias="filter-lang", description=descriptions.FILTER_LANG)
     )
-    filter_crs: Optional[str] = attr.ib(default=Query(default=None, alias="filter-crs"))
+    filter_crs: Optional[str] = attr.ib(default=Query(default=None, alias="filter-crs", description=descriptions.FILTER_CRS))
 
 
 @attr.s
@@ -130,9 +131,9 @@ class ItemCollectionUri(CollectionUri, FilterableRequest):
 class SearchGetRequest(APIRequest, FilterableRequest):
     """GET search request."""
 
-    collections: Optional[str] = attr.ib(default=None)
+    collections: Optional[str] = attr.ib(default=Query(None, description=descriptions.COLLECTIONS))
     # fields: Optional[str] = attr.ib(default=None)
-    sortby: Optional[str] = attr.ib(default=None)
+    sortby: Optional[str] = attr.ib(default=Query(None, description=descriptions.SORTBY))
 
     def kwargs(self) -> Dict:
         """kwargs."""
