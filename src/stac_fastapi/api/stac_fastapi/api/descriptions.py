@@ -57,3 +57,16 @@ SORTBY="""An array of property names, prefixed by either "+" for ascending or "-
 
 Example: `-gsd,-datetime`
 """
+
+# ENDPOINTS
+LANDING_PAGE="The landing page provides links to the API definition, the conformance statements and to the item collections in this dataset."
+CONFORMANCECLASSES="A list of all conformance classes specified in the standards that the server conforms to."
+GET_COLLECTIONS="The collections in the service."
+GET_COLLECTION="The collection with id `collectionId`"
+GET_ITEM_COLLECTION="Items of the collection with id `collectionId`."
+GET_ITEM="The item with id `itemId` in the collection with id `collectionId`."
+GET_SEARCH="Query items matching across collections. It is recommended to use the `POST` endpoint instead."
+POST_SEARCH="Query items matching across collections.."
+
+QUERYABLES="Global item properties (\"queryables\") that may be used to construct a filter expression."
+COLLECTION_QUERYABLES="Item properties (\"queryables\") that may be used to construct a filter expression for items of the collection with id `collectionId`."
