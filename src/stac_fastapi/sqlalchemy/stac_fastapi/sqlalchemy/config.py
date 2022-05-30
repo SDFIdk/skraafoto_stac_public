@@ -26,6 +26,8 @@ class SqlalchemySettings(ApiSettings):
     # Fields which are item properties but indexed as distinct fields in the database model
     indexed_fields: Set[str] = {"datetime"}
     connect_args: dict = {}
+
+    enable_response_models: bool = True
     
     @property
     def connection_string(self):

@@ -11,6 +11,7 @@ from stac_fastapi.api.models import APIRequest, CollectionUri, EmptyRequest
 from stac_fastapi.api.routes import create_async_endpoint, create_sync_endpoint
 from stac_fastapi.types.core import AsyncBaseFiltersClient, BaseFiltersClient
 from stac_fastapi.types.extension import ApiExtension
+from stac_fastapi.api import descriptions
 
 
 class FilterConformanceClasses(str, Enum):
@@ -118,12 +119,14 @@ class FilterExtension(ApiExtension):
             path="/queryables",
             methods=["GET"],
             endpoint=self._create_endpoint(self.client.get_queryables, EmptyRequest),
+            description=descriptions.QUERYABLES
         )
         self.router.add_api_route(
             name="Collection Queryables",
             path="/collections/{collectionId}/queryables",
             methods=["GET"],
             endpoint=self._create_endpoint(self.client.get_queryables, CollectionUri),
+            description=descriptions.COLLECTION_QUERYABLES
         )
 
         app.include_router(self.router, tags=["Filter Extension"])

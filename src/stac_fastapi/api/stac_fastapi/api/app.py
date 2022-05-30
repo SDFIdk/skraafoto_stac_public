@@ -21,7 +21,7 @@ from stac_pydantic.version import STAC_VERSION
 from starlette.requests import Request
 from starlette.responses import HTMLResponse, JSONResponse, Response
 
-
+from stac_fastapi.api import descriptions
 from stac_fastapi.api.errors import DEFAULT_STATUS_CODES, add_exception_handlers
 from stac_fastapi.api.models import (
     APIRequest,
@@ -145,6 +145,7 @@ class StacApi:
             response_model_exclude_none=True,
             methods=["GET"],
             endpoint=self._create_endpoint(self.client.landing_page, EmptyRequest),
+            description=descriptions.LANDING_PAGE
         )
 
     def register_conformance_classes(self):
@@ -164,6 +165,7 @@ class StacApi:
             response_model_exclude_none=True,
             methods=["GET"],
             endpoint=self._create_endpoint(self.client.conformance, EmptyRequest),
+            description=descriptions.CONFORMANCECLASSES
         )
 
     def register_get_item(self):
@@ -181,6 +183,7 @@ class StacApi:
             response_model_exclude_none=True,
             methods=["GET"],
             endpoint=self._create_endpoint(self.client.get_item, ItemUri),
+            description=descriptions.GET_ITEM
         )
 
     def register_post_search(self):
@@ -204,6 +207,7 @@ class StacApi:
             endpoint=self._create_endpoint(
                 self.client.post_search, search_request_model
             ),
+            description=descriptions.POST_SEARCH
         )
 
     def register_get_search(self):
@@ -224,6 +228,7 @@ class StacApi:
             response_model_exclude_none=True,
             methods=["GET"],
             endpoint=self._create_endpoint(self.client.get_search, SearchGetRequest),
+            description=descriptions.GET_SEARCH
         )
 
     def register_get_collections(self):
@@ -243,6 +248,7 @@ class StacApi:
             response_model_exclude_none=True,
             methods=["GET"],
             endpoint=self._create_endpoint(self.client.all_collections, EmptyRequest),
+            description=descriptions.GET_COLLECTIONS
         )
 
     def register_get_collection(self):
@@ -260,6 +266,7 @@ class StacApi:
             response_model_exclude_none=True,
             methods=["GET"],
             endpoint=self._create_endpoint(self.client.get_collection, CollectionUri),
+            description=descriptions.GET_COLLECTION
         )
 
     def register_get_item_collection(self):
@@ -281,6 +288,7 @@ class StacApi:
             endpoint=self._create_endpoint(
                 self.client.item_collection, ItemCollectionUri
             ),
+            description=descriptions.GET_ITEM_COLLECTION
         )
 
     def register_core(self):
