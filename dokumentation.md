@@ -24,6 +24,7 @@ Selve APIet, der udstiller metadata i form af [STAC Items](#STAC-Item) organiser
 `Items` er inddelt i `Collections`, således at en `Collection` består af logisk beslægtede `Items`. For eksempel er skråfotos inddelt i en `Collection` per årgang.
 
 _Eksempel_:
+
 <details>
 
 ```json
@@ -104,7 +105,7 @@ _Eksempel_:
 ```
 </details>
 
-Bemærk, at en `Collection` blandt andet indeholder aggregeret spatiel og tidslig udstrækning for `Items` hørende til denne `Collection`.
+> Bemærk, at en `Collection` blandt andet indeholder aggregeret spatiel og tidslig udstrækning for `Items` hørende til denne `Collection`.
 
 Dataelementerne returneret i en `Collection` er beskrevet i [STAC Collection Specificationen](https://github.com/radiantearth/stac-spec/blob/master/collection-spec/collection-spec.md)
 
@@ -115,6 +116,7 @@ Grundstenen, der udgør et enkelt aktiv i API'et. Hvert item beskriver således 
 Foto = metadata om 
 
 _Eksempel_:
+
 <details>
 
 ```json
@@ -308,18 +310,22 @@ Se afsnittet [Download og visning af billeder](#Download-og-visning-af-billeder)
 
 ## Endpoints og outputs
 
-Servicen udstillet af Dataforsyningen kræver gyldig token, som kan erhverves på https://dataforsyningen.dk/.
+> **Bemærk** at Dataforsyningens service kræver gyldig token, som kan erhverves på https://dataforsyningen.dk/.
 
 Servicen returnerer GeoJSON/JSON, medmindre en forespørgsel er ugyldig pga. uautoriseret token, i så fald returneres text.
-Hvis token er autoriseret, men ens request har en ugyldig parameter, returneres en JSON fejlmeddelelse.
+Hvis token er autoriseret, men requesten har en ugyldig parameter, returneres en JSON fejlmeddelelse.
 
-API'et udstiller endpoints:  
+API'et udstiller følgende endpoints ...
+
 **Landing Page**: `/`  
 
-Denne ressource er roden af API'et, som beskriver hvilke funktionaliteter, der er udstillet via et `ConformsTo` array samt URIs af andre ressourcer via link relationer.
+Denne ressource er roden af API'et, som beskriver de funktionaliteter, der er udstillet, via et `ConformsTo` array samt URIs af andre ressourcer via link relationer.
 
-_Parametre_:  
-_Output_: 
+_Parametre_:
+
+Ingen
+
+_Output_:
 
 STAC Catalog (JSON)  
 
@@ -334,12 +340,16 @@ token: {DinToken}
 
 Denne ressource returnerer et array af links til conformance klasser. Selve links bruges ikke, men fungerer som et "universelt" ID til STAC klienter, som fortæller hvilke krav STAC og OGC-API-Features servicen understøtter og overholder.
 
-_Parametre_:  
+_Parametre_:
+
+Ingen
+
 _Output_: 
 
 Array af conformance klasser (JSON)  
 
 _Eksempel_:
+
 ```http
 GET https://api.dataforsyningen.dk/skraafotoapi_test/conformance
 token: {DinToken}
@@ -347,7 +357,7 @@ token: {DinToken}
 
 **Get Item**: `/collections/{collectionid}/items/{itemid}`  
 
-Denne ressource tager imod et `collectionid`, `itemid`, og en `crs` og returnerer ét STAC Item i en bestemt collection, som er et GeoJSON objekt.
+Denne ressource tager imod `collectionid`, `itemid` og `crs` parametre og returnerer ét STAC item i en bestemt collection, som er et GeoJSON objekt.
 
 _Parametre_: 
 
@@ -357,7 +367,10 @@ _Parametre_:
 | itemid        | string   | ID'et på et item.                                                                                                                                                                                                                                                       |
 | crs           | string   | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832` <br>Angiver hvilket koordinatsystem geometrier i JSON response skal returneres i. Se [Crs Extension](#Crs-Extension).</br> |
 
-_Output_: Feature (STAC Item) (GeoJSON)  
+_Output_: 
+
+Feature (STAC Item) (GeoJSON)  
+
 _Eksempel_:
 
 ```http
@@ -396,7 +409,6 @@ _Eksempel_:
 GET https://api.dataforsyningen.dk/skraafotoapi_test/search
 token: {DinToken}
 ```
-
 ```http
 POST https://api.dataforsyningen.dk/skraafotoapi_test/search
 token: {DinToken}
@@ -406,7 +418,10 @@ token: {DinToken}
 
 Denne ressource returnerer en liste af collections som API'et udstiller.
 
-_Parametre_:  
+_Parametre_:
+
+Ingen
+
 _Output_: 
 
 Collections (Array af STAC Collections) (JSON)  
@@ -474,7 +489,10 @@ token: {DinToken}
 
 Denne ressource returnerer en samling af properties, der kan indgå i et filter udtryk på tværs af alle collections. Dvs. at properties, som kun kan indgå i et filterudtryk for én collection, ikke medtages her.
 
-_Paramtre_:  
+_Paramtre_:
+
+Ingen
+
 _Output_: 
 
 Array af STAC Item properties, der kan bruges over alle collections i filter udtryk (JSON)  
@@ -511,10 +529,10 @@ token: {DinToken}
 
 Ud over de nævnte fire core-komponenter, indeholder servicen også en række extensions, som udbyder ekstra funktionaliteter:
 
-- Context Extension
-- CRS Extension
-- Filter Extension
-- Sort Extension
+- [Context Extension](#Context-Extension)
+- [CRS Extension](#CRS-Extension)
+- [Filter Extension](#Filter-Extension)
+- [Sort Extension](#Sort-Extension)
 
 ### Context Extension
 
@@ -524,11 +542,11 @@ Context extension tilføjer ekstra information omkring en returneret `FeatureCol
 - Limit: Det maksimale antal resultater returneret
 - Matched: Det totale antal resultater, der matcher søgeforespørgslen
 
-Hvis `matched` er større end `limit` kan linkrelationerne `next`/`previous` bruges til at navigere frem og tilbage i det totale antal matchede søgeresultater ved hjælp af paging. Paramteren `limit` bestemmer, hvor mange `Item` objekter, der fremgår i det returneret JSON response. `limit`har et max på 10.000 resultater ad gangen. Paging fungerer ved hjælp af en "paging token" `pt`. Denne token er autogenereret, og skal altid følge paging-resultatet. Ved ændring af denne kan resultatet ikke fremfindes. Et eksempel på paged resultat:
+Hvis `matched` er større end `limit` kan linkrelationerne `next`/`previous` bruges til at navigere frem og tilbage i det totale antal matchede søgeresultater ved hjælp af paging. Parameteren `limit` bestemmer hvor mange `Item` objekter, der fremgår i det returneret JSON response. `limit`har et max på 10.000 resultater ad gangen. Paging fungerer ved hjælp af en "paging token" `pt`. Denne token er autogenereret, og skal altid følge paging-resultatet. Ved ændring af denne kan resultatet ikke fremfindes. Et eksempel på paged resultat:
 
 ```json
 ...
-  "links": [
+"links": [
     {
         "rel": "self",
         "type": "application/geo+json",
@@ -587,11 +605,11 @@ Eksempler på brug af parametrene `crs`, `bbox-crs`, og `filter-crs`:
 ### Filter Extension
 
 Filter extension tilføjer særlig funktionalitet til at søge ved hjælp af forespørgsler i CQL (Common Query Language). Denne extension implementerer specifikationer beskrevet i [OGC Api Features - Part 3: Filtering and the Common Query Language (CQL)](https://portal.ogc.org/files/96288). Den tilføjer desuden to ekstra endpoints `/queryables` og `/collections/{collectionid}/queryables`.`/queryables` beskriver hvilke properties, der kan indgå i filter-forespørgsler. Alle filter-properties valideres mod `/queryables`, og der returneres en validation-fejl hvis der bruges en ugyldig property.
-`filter` er et CQL-JSON udtryk, som kan bruges til at lave avancerede søgninger på specifikke `Item` properties (Se [Filter Extension](#Filter-Extension)). `filter-lang` angiver hvilket query-sprog filteret er skrevet i. Post endpointet har samme funktionalitet, men parametre angives i body.
+`filter` er et CQL-JSON udtryk, som kan bruges til at lave avancerede søgninger på specifikke `Item` properties (Se [Filter Extension](#Filter-Extension)). `filter-lang` angiver hvilket query-sprog, filteret er skrevet i. Post endpointet har samme funktionalitet, men parametre angives i body.
 
 **Bemærk** at APIet har en begrænsning på, hvor lang tid en forespørgsel må tage at udføre. Hvis din forespørgsel er så kompliceret at den timer ud, så kan det i nogle tilfælde afhælpes ved at begrænse forespørgslen med `bbox` og/eller `datetime` parameteren (se ovenfor).
 
-Eksempler på brug af filter parameter:  
+Eksempler på brug af filter parameter: 
 1. `POST /search` - Hent features hvis geometri overlapper (intersects) med input geometri
 ```json
 {
@@ -637,7 +655,7 @@ Eksempler på brug af sortBy parameter:
 3. `POST /search` - Sortér på collection descending
 
 ```json
-  {
+{
     "sortby": [
         {
             "field": "collection",
@@ -650,6 +668,7 @@ Nærmere beskrivelse af Sort Extension: https://github.com/radiantearth/stac-api
 
 
 ## Download og visning af billeder
+
 Der er flere muligheder for at gå fra de returnerede metadata (se [STAC Item](#stac-item)) til det beskrevne billede.
 
 Relevante links findes i sektionen `links` hhv `assets`:
@@ -685,26 +704,30 @@ Relevante links findes i sektionen `links` hhv `assets`:
 [...]
 ```
 
-**Bemærk** at alle links til dataforsyningen kræver angivelsen af `token` enten som query parameter eller som header. 
-
+> **Bemærk** at alle links til dataforsyningen kræver angivelsen af `token` enten som query parameter eller som header. 
 
 **Download**
+
 Det originale flyfoto i fuld opløsning kan downloades på den URL, der findes i metadata under `/assets/data/href`. Formatet er kompatibelt med almindelige TIFF-læsere og det downloadede billede kan dermed åbnes af de fleste gængse billedprogrammer.
 
 **Thumbnail**
+
 En thumbnail af flyfotoet kan hentes på den URL, der findes i metadata under `/assets/thumbnail/href`.
 
 Der gives ingen garantier vedrørende dimensionerne af thumbnails. Pt er alle thumbnails mindre end 512px.
 
 **Cloud Optimized Geotiff**
+
 Det originale flyfoto, hvis URL findes under  `/assets/data/href`, er i "Cloud Optimized GeoTIFF" format og kan dermed tilgås meget effektivt direkte på http-serveren.
 
 Læs mere på [www.cogeo.org](https://www.cogeo.org/).
 
 **Viewer**
+
 Dataforsyningen udstiller en online-viewer til meget enkel visning af et flyfoto i en browser. URLen til denne viewer findes i metadata under `/links/` med `rel=alternate` og `type=text/html; charset=UTF-8`.
 
 **jpeg tiles**
+
 Dataforsyningen udstiller en service, der kan udstille et flyfoto som en pyramide af jpeg-tiles. Disse kan anvendes, såfremt klienten ikke er i stand til at anvende den "Cloud Optimized GeoTIFF" direkte, som beskrevet ovenfor.
 
 URL til denne service er ikke inkluderet i metadata, men må i stedet konstrueres. Pt kan URLen konstrueres som 
@@ -721,11 +744,13 @@ https://api.dataforsyningen.dk/skraafoto_cogtiler_test/info?url={DOWNLOAD_URL}
 ```
 
 ## Georeferering
-Haves en 3D koordinat `(X, Y, Z)` på et punkt i landskabet, er det muligt at beregne, hvilken pixel `(xa, ya)` i flyfotoet dette punkt vil blive afbilledet i.
 
-**Forudsætningen er**, at koordinaten er i samme koordinatreferencesystem, som billedet er georefereret i. Dette er beskrevet i egenskaberne `pers:crs` og `pers:vertical_crs`. Det kan således være nødvendigt først at konvertere koordinaten til det rette koordinatreferencesystem.
+Hvis man har et 3D koordinat `(X, Y, Z)` på et punkt i landskabet, er det muligt at beregne, hvilken pixel `(xa, ya)` i flyfotoet dette punkt vil blive afbilledet i.
+
+> **Det forudsættes**, at koordinaten er i samme koordinatreferencesystem, som billedet er georefereret i. Dette er beskrevet i egenskaberne `pers:crs` og `pers:vertical_crs`. Det kan således være nødvendigt først at konvertere koordinaten til det rette koordinatreferencesystem.
 
 Først etableres en række variable ud fra flyfotoets metadata (Se [STAC Item](#stac-item)):
+
 ```python
 props = item["properties"]
 m11, m12, m13, m21, m22, m23, m31, m32, m33 = props["pers:rotation_matrix"]
