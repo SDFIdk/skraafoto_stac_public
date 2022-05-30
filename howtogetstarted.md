@@ -31,12 +31,14 @@ Du skal være oprettet som bruger på `Dataforsyningen` samt være logget ind, f
 
 Nedstående eksempler bruger første metode, men hvis du bruger metode to, skal du tilføje queryparameteren `token` på eksemplerne.
 
-Vær opmærksom på at et response med et genereret URL, hvor man har angivet `token` som query parameter, så vil den genereret URL indeholder den pågældende token og skal fjernes, hvis response skal deles med andre.
+> Vær opmærksom på at ved et response med en genereret URL, hvor man har angivet `token` som query parameter, vil den genererede URL indeholde den pågældende token. Denne del af URLen skal fjernes, hvis response skal deles med andre.
 
-Alle kald til `Dataforsyningens` API'er og webservices skal bruge HTTPS, da der ikke understøttes HTTP, og `token` skal være angivet (undtagen alle DAWA og Inspire OGC-tjenester). Kald uden `token`, eller med ugyldig `token`, vil fejle.
+Alle kald til `Dataforsyningens` API'er og webservices skal bruge HTTPS, da HTTP ikke understøttes, og `token` skal være angivet (undtagen alle DAWA og Inspire OGC-tjenester). Kald med manglende eller ugyldig `token` vil fejle.
 
 ## Sammenspillet mellem de tre API'er
+
 (Lav en henvisning til den tekst der skal skrives, som beskriver sammenspillet mellem de tre API'er).
+
 - **Skåfoto STAC API** leverer metadata om skråfotos. Dens URL starter med `https://api.dataforsyningen.dk/skraafotoapi_test`, men for at bruge URL'en er det et krav, at der bliver specificeret paths og queryparameters.
 - **Skåfoto Server** leverer skråfotos som [Cloud Optimized Geotiff](https://www.cogeo.org) (`COG`), hvor der kan bruges range request. Dens URL starter med `https://api.dataforsyningen.dk/skraafoto_server_test`, men for at bruge URL'en er det et krav, at der bliver specificeret paths og queryparameters.
 - **Skråfoto Cogtiler** oversætter COG-formatet til andre formater for de klienter, der ikke understøtter COG (undersøg hvad det er for nogle formater). Dens URL starter med `https://api.dataforsyningen.dk/skraafoto_cogtiler_test`, men for at bruge URL'en er det et krav, at der bliver specificeret paths og queryparameters. Man kan se cogtilers openapi dokumentation her: `https://docs.dataforsyningen.dk/#skraafoto_cogtiler`
