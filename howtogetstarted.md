@@ -37,11 +37,9 @@ Alle kald til `Dataforsyningens` API'er og webservices skal bruge HTTPS, da HTTP
 
 ## Sammenspillet mellem de tre API'er
 
-(Lav en henvisning til den tekst der skal skrives, som beskriver sammenspillet mellem de tre API'er).
-
 - **Skåfoto STAC API** leverer metadata om skråfotos. Dens URL starter med `https://api.dataforsyningen.dk/skraafotoapi_test`, men for at bruge URL'en er det et krav, at der bliver specificeret paths og queryparameters.
 - **Skåfoto Server** leverer skråfotos som [Cloud Optimized Geotiff](https://www.cogeo.org) (`COG`), hvor der kan bruges range request. Dens URL starter med `https://api.dataforsyningen.dk/skraafoto_server_test`, men for at bruge URL'en er det et krav, at der bliver specificeret paths og queryparameters.
-- **Skråfoto Cogtiler** oversætter COG-formatet til andre formater for de klienter, der ikke understøtter COG (undersøg hvad det er for nogle formater). Dens URL starter med `https://api.dataforsyningen.dk/skraafoto_cogtiler_test`, men for at bruge URL'en er det et krav, at der bliver specificeret paths og queryparameters. Man kan se cogtilers openapi dokumentation her: `https://docs.dataforsyningen.dk/#skraafoto_cogtiler`.
+- **Skråfoto Cogtiler** oversætter COG-formatet til JPG, der ikke understøtter COG, se mere på dokumentation: `https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#download-og-visning-af-billeder`. Dens URL starter med `https://api.dataforsyningen.dk/skraafoto_cogtiler_test`, men for at bruge URL'en er det et krav, at der bliver specificeret paths og queryparameters. Man kan se cogtilers openapi dokumentation her: `https://docs.dataforsyningen.dk/#skraafoto_cogtiler`.
 
 <table class="center" style="width:100%">
   <tr>
