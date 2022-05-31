@@ -349,6 +349,7 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
         ids: Optional[List[str]] = None,
         bbox: Optional[List[NumType]] = None,
         bbox_crs: Optional[str] = None,
+        intersects: Optional[str] = None,
         datetime: Optional[Union[str, datetime]] = None,
         limit: Optional[int] = 10,
         filter: Optional[str] = None,
@@ -379,6 +380,8 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
             base_args["crs"] = crs
         if bbox_crs:
             base_args["bbox_crs"] = bbox_crs
+        if intersects:
+            base_args["intersects"] = json.loads(intersects)
         if datetime:
             base_args["datetime"] = datetime
         if sortby:

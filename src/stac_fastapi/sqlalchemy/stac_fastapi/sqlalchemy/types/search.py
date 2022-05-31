@@ -392,6 +392,9 @@ class STACSearch(BaseModel):
     # Override the bbox validator because it only works for WGS84
     @validator("bbox")
     def validate_bbox(cls, v: BBox, values, **kwargs):
+        if v and "intersects" in values and values["intersects"]:
+            raise ValueError("intersects and bbox parameters are mutually exclusive")
+
         if v:
             # Validate order
             if len(v) == 4:
@@ -548,7 +551,7 @@ class STACSearch(BaseModel):
     # from stac_pydantic.api.Search
     @validator("intersects")
     def validate_spatial(cls, v, values):
-        if v and values["bbox"]:
+        if v and "bbox" in values and values["bbox"]:
             raise ValueError("intersects and bbox parameters are mutually exclusive")
         return v
 

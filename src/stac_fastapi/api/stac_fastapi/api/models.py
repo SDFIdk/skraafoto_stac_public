@@ -134,6 +134,7 @@ class SearchGetRequest(APIRequest, FilterableRequest):
     collections: Optional[str] = attr.ib(default=Query(None, description=descriptions.COLLECTIONS))
     # fields: Optional[str] = attr.ib(default=None)
     sortby: Optional[str] = attr.ib(default=Query(None, description=descriptions.SORTBY))
+    intersects: Optional[str] = attr.ib(default=Query(None, description=descriptions.INTERSECTS))
 
     def kwargs(self) -> Dict:
         """kwargs."""
@@ -162,4 +163,5 @@ class SearchGetRequest(APIRequest, FilterableRequest):
             # "fields": fields,
             "crs": self.crs,
             "sortby": self.sortby.split(",") if self.sortby else self.sortby,
+            "intersects": self.intersects
         }
