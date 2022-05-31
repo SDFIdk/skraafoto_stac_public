@@ -728,7 +728,7 @@ Dataforsyningen udstiller en online-viewer til meget enkel visning af et flyfoto
 
 Dataforsyningen udstiller en service, der kan udstille et flyfoto som en pyramide af jpeg-tiles. Disse kan anvendes, såfremt klienten ikke er i stand til at anvende den "Cloud Optimized GeoTIFF" direkte, som beskrevet ovenfor.
 
-URL til denne service er ikke inkluderet i metadata, men må i stedet konstrueres. Pt kan URLen konstrueres som 
+URL til denne service er ikke inkluderet i metadata, men må i stedet konstrueres. URL'en skal konstrueres som 
 
 ```
 https://api.dataforsyningen.dk/skraafoto_cogtiler_test/tiles/{z}/{x}/{y}.jpg?url={DOWNLOAD_URL}
