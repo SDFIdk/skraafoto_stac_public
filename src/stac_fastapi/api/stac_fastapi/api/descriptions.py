@@ -15,7 +15,7 @@ PAGING_TOKEN="Token used for paging functionality. Only use tokens as returned b
 
 IDS = "Array of Item ids to return. All other filter parameters that further restrict the number of search results are ignored"
 
-BBOX="""Only return items intersecting this bounding box.
+BBOX="""Only return items intersecting this bounding box. Mutually exclusive with `intersects`.
 
 Example: `10.312385559082033,55.33392904334293,10.36388397216797,55.353452174893285`
 
@@ -25,6 +25,8 @@ See also `bbox-crs`.
 BBOX_CRS="""The coordinate reference system (CRS) used by `bbox` param. The specified CRS must be supported by the server.
 
 Default is `http://www.opengis.net/def/crs/OGC/1.3/CRS84`."""
+
+INTERSECTS="""Only return items intersecting this GeoJSON Geometry. Mutually exclusive with `bbox`."""
 
 DATETIME="""Only return items that have a temporal property that intersects this value.
 

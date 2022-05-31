@@ -194,6 +194,24 @@ def test_search_point_intersects(load_test_data, app_client, postgres_transactio
     assert len(resp_json["features"]) >= 1
 
 
+def test_search_intersects_and_bbox_raises(load_test_data, app_client, postgres_transactions):
+    """bbox and intersects are mutually exclusive"""
+    item = load_test_data("test_item.json")
+
+    point = [8.4570, 56.24298]
+    intersects = {"type": "Point", "coordinates": point}
+    bbox = [8.4570, 56.24298, 8.5570, 56.34298]
+    params = {
+        "intersects": intersects,
+        "collections": [item["collection"]],
+        "bbox": bbox
+    }
+    resp = app_client.post("/search", json=params)
+    assert resp.status_code != 200
+    resp_json = resp.json()
+    assert "mutually exclusive" in resp_json["detail"][0]["msg"]
+
+
 def test_datetime_non_interval(load_test_data, app_client, postgres_transactions):
     item = load_test_data("test_item.json")
 
