@@ -580,7 +580,12 @@ Eksempler på brug af parametrene `crs`, `bbox-crs`, og `filter-crs`:
 2. `GET /search?bbox=492283,6195600,493583,6196470&bbox-crs=http://www.opengis.net/def/crs/EPSG/0/25832` - Input `bbox` er angivet i EPSG:25832
 3. `POST /search` - Hent features, der overlapper (intersects) med geometri angivet i EPSG:25832, resultater returneres i WGS84
 
+
 ```json
+POST https://api.dataforsyningen.dk/skraafotoapi_test/search
+Content-Type: application/json
+token: {DinToken}
+
 {
     "filter-lang": "cql-json",
     "filter": {
@@ -611,6 +616,10 @@ Filter extension tilføjer særlig funktionalitet til at søge ved hjælp af for
 Eksempler på brug af filter parameter: 
 1. `POST /search` - Hent features hvis geometri overlapper (intersects) med input geometri
 ```json
+POST https://api.dataforsyningen.dk/skraafotoapi_test/search
+Content-Type: application/json
+token: {DinToken}
+
 {
     "filter-lang": "cql-json",
     "filter": { 
@@ -629,8 +638,13 @@ Eksempler på brug af filter parameter:
   "filter-crs": "http://www.opengis.net/def/crs/EPSG/0/25832",
 }
 ```
+
 2. `POST /search` - Hent features hvor `property.direction` er sat til øst og gsd er større end 0.101
 ```json
+POST https://api.dataforsyningen.dk/skraafotoapi_test/search
+Content-Type: application/json
+token: {DinToken}
+
 {
     "filter-lang": "cql-json",
     "filter": { 
@@ -654,6 +668,10 @@ Eksempler på brug af sortBy parameter:
 3. `POST /search` - Sortér på collection descending
 
 ```json
+POST https://api.dataforsyningen.dk/skraafotoapi_test/search
+Content-Type: application/json
+token: {DinToken}
+
 {
     "sortby": [
         {
