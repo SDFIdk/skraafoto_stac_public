@@ -1370,6 +1370,7 @@ _Eksempel_:
 
 ```http
 POST https://api.dataforsyningen.dk/skraafotoapi_test/search
+Content-Type: application/json
 token: {DinToken}
 
 {
