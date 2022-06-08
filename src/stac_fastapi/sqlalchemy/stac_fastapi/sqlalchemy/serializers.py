@@ -177,7 +177,7 @@ class ItemSerializer(Serializer):
         cls._add_if_not_none(properties, "platform", "Fixed-wing aircraft")
         cls._add_if_not_none(properties, "instruments", [instrument_id])
         properties["providers"] = [
-            {"name": db_model.producer, "roles": ["producer", "processor"]},
+            {"name": db_model.producer, "roles": ["producer"]},
             {"url": "https://sdfe.dk/", "name": "SDFE", "roles": ["licensor", "host"]},
         ]
 
