@@ -607,7 +607,7 @@ def test_item_search_get_filter_extension(app_client, load_test_data):
 def test_get_missing_item_collection(app_client):
     """Test reading a collection which does not exist"""
     resp = app_client.get("/collections/invalid-collection/items")
-    assert resp.status_code == 200
+    assert resp.status_code == 404
 
 
 # Det lader ikke til at listen af id's bliver ført med ved pagination, kun den sidste kommer med
