@@ -62,6 +62,10 @@ def test_collection_items_collectionid_not_found(app_client, load_test_data):
     test_collection = load_test_data("test_collection.json")
     test_item = load_test_data("test_item.json")
 
+    # Test that we get a 404 if the collectionId does not exist
+    resp = app_client.get(f"/collections/does-not-exist/items")
+    assert resp.status_code == 404
+
     # Test that we get a 404 if the itemId does not exist but the collectionId does
     resp = app_client.get(f"/collections/{test_collection['id']}/items/does-not-exist")
     assert resp.status_code == 404
