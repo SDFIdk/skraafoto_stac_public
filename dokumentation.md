@@ -305,7 +305,7 @@ Samt i de benyttede udvidelser til STAC:
 - [Projection](https://github.com/stac-extensions/projection)
 
 Herudover returneres yderlige to egenskaber:
-| Egenskb.             | Beskrivelse |
+| Egenskab             | Beskrivelse |
 |----------------------|-------------|
 | `direction`          | Overordnet beskrivelse af optageretningen. Har en af følgende værdier (null, `north`, `east`, `south`, `west`, `nadir`). |
 | `estimated_accuracy` | Estimeret nøjagtighed af billedets orientering [pixels] |
