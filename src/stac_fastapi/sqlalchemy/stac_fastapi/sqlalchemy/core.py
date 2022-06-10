@@ -107,7 +107,7 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
             _filter = table.id == id
         row = session.query(table).options(query_options).filter(_filter).first()
         if not row:
-            raise NotFoundError(f"{table.__name__} {id} not found")
+            raise NotFoundError("Not found")
         return row
 
     def _geometry_expression(self, to_srid: int):
@@ -270,6 +270,12 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
         except ValidationError:
             raise HTTPException(status_code=400, detail="Invalid parameters provided")
         resp = self.post_search(search_request, False, request=kwargs["request"])
+
+        # If we get 0 features it may be because the collection id does not exist. We should return 404
+        if len(resp["features"]) == 0:
+            # this raises a NotFound error if collection id does not exist
+            with self.session.session_maker.context_session() as session:
+                self._lookup_id(id, self.collection_table, session)
 
         # Pagination
         hrefbuilder = self.href_builder(**kwargs)
