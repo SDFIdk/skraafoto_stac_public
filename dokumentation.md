@@ -304,6 +304,12 @@ Samt i de benyttede udvidelser til STAC:
 - [View Geometry](https://github.com/stac-extensions/view)
 - [Projection](https://github.com/stac-extensions/projection)
 
+Herudover returneres yderlige to egenskaber:
+| Egenskb.             | Beskrivelse |
+|----------------------|-------------|
+| `direction`          | Overordnet beskrivelse af optageretningen. Har en af følgende værdier (null, `north`, `east`, `south`, `west`, `nadir`). |
+| `estimated_accuracy` | Estimeret nøjagtighed af billedets orientering [pixels] |
+
 Se afsnittet [Download og visning af billeder](#Download-og-visning-af-billeder) for en beskrivelse af, hvordan det faktiske flyfoto kan hentes og bruges ud fra de metadata, som APIet returnerer.
 
 ## Endpoints og outputs
