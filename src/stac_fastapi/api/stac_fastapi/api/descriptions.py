@@ -40,12 +40,14 @@ Examples:
 
 FILTER="""A CQL filter expression for filtering items.
 
-Supports `cql-json` as defined in https://portal.ogc.org/files/96288
+Supports `CQL-JSON` as defined in https://portal.ogc.org/files/96288
 
 Example:
 ```
 { "gt": [ { "property": "gsd" }, "0.1" ] }
 ```
+
+Remember to URL encode the CQL-JSON if using GET `/search` or `/collections/{collectionid}/items`.
 """
 
 FILTER_LANG="The CQL filter encoding that the 'filter' value uses. This server only supports the encoding `cql-json`"
