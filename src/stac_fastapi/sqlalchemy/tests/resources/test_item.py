@@ -610,8 +610,6 @@ def test_get_missing_item_collection(app_client):
     assert resp.status_code == 404
 
 
-# Det lader ikke til at listen af id's bliver ført med ved pagination, kun den sidste kommer med
-# TODO: Fix test / eller fix pagination ved liste af id's ( ved ikke helt hvad problemet er)
 def test_pagination_item_collection_get(app_client, load_test_data):
     """Test item collection pagination links (paging extension)"""
     test_item = load_test_data("test_item.json")
@@ -683,7 +681,6 @@ def test_pagination_post(app_client, load_test_data):
     assert not set(item_ids) - set(ids)
 
 
-# TODO: Page_data kommer ikke tilbage med links her, det er underligt
 def test_pagination_token_idempotent(app_client, load_test_data):
     """Test that pagination tokens are idempotent (paging extension)"""
     ids = [
@@ -1108,7 +1105,6 @@ def test_single_item_get_bbox_with_bbox_crs(app_client, load_test_data):
     assert resp.status_code == 200
 
     resp_json = resp.json()
-    # TODO rewrite assertion, but they should not be the same, when i ask in 25832
     assert resp_json["bbox"] != test_item["bbox"]
 
 
@@ -1133,7 +1129,7 @@ def test_collection_item_get_bbox_with_bbox_crs(app_client, load_test_data):
     assert (
         matching_feat[0]["crs"]["properties"]["name"]
         == "http://www.opengis.net/def/crs/EPSG/0/25832"
-    )  # TODO rewrite to uri
+    )
 
 
 def test_single_item_get_bbox_crs_with_crs(app_client, load_test_data):
@@ -1177,7 +1173,7 @@ def test_item_search_bbox_crs_with_crs(app_client, load_test_data):
     assert (
         matching_feat[0]["crs"]["properties"]["name"]
         == "http://www.opengis.net/def/crs/EPSG/0/25832"
-    )  # TODO rewrite to uri
+    )
 
 
 def test_item_post_bbox_with_bbox_crs(app_client, load_test_data):
@@ -1203,7 +1199,7 @@ def test_item_post_bbox_with_bbox_crs(app_client, load_test_data):
     assert (
         matching_feat[0]["crs"]["properties"]["name"]
         == "http://www.opengis.net/def/crs/OGC/1.3/CRS84"
-    )  # TODO rewrite to uri
+    )
 
 
 def test_item_post_bbox_with_crs(app_client, load_test_data):
@@ -1229,7 +1225,7 @@ def test_item_post_bbox_with_crs(app_client, load_test_data):
     assert (
         matching_feat[0]["crs"]["properties"]["name"]
         == "http://www.opengis.net/def/crs/EPSG/0/25832"
-    )  # TODO rewrite to uri
+    )
 
 
 def test_item_wrong_crs(app_client, load_test_data):

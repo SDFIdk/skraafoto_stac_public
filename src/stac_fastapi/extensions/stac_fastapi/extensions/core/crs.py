@@ -12,8 +12,6 @@ from stac_fastapi.types.extension import ApiExtension
 @attr.s
 class CrsExtension(ApiExtension):
     """Crs Extension.
-
-    #TODO: only supports opengis crs formats for now, expand this.
     """
 
     crs: List[str] = attr.ib(
@@ -22,7 +20,7 @@ class CrsExtension(ApiExtension):
             "http://www.opengis.net/def/crs/EPSG/0/25832",
         ]
     )
-    # TODO: service wide storage-crs ( will be overriden if defined in collection entry )
+    # Service wide storage-crs ( will be overriden if defined in collection entry )
     storageCrs: str = attr.ib(default="http://www.opengis.net/def/crs/OGC/1.3/CRS84")
     conformance_classes: List[str] = attr.ib(
         default=["http://www.opengis.net/spec/ogcapi-features-2/1.0/conf/crs"]

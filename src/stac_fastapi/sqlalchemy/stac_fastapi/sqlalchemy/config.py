@@ -46,8 +46,6 @@ class BaseQueryables(str, AutoValueEnum):
         1. So the caller knows which fields they can query by
         2. Because JSONB queries with sqlalchemy ORM require casting the type of the field at runtime
             (see ``QueryableInfo``)
-
-    # TODO: Let the user define these in a config file
     """
 
     id = auto()
