@@ -161,9 +161,6 @@ def test_app_sort_extension(load_test_data, app_client, postgres_transactions):
     }
     resp = app_client.post("/search", json=params)
     assert resp.status_code == 200
-    # resp_json = resp.json()
-    # assert resp_json["features"][0]["id"] == first_item["id"]
-    # assert resp_json["features"][1]["id"] == second_item["id"]
 
 
 def test_search_invalid_date(load_test_data, app_client, postgres_transactions):

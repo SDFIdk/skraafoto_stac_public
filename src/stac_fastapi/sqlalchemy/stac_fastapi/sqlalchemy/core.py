@@ -609,19 +609,6 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                     elif dts[1] not in ["..", ""]:
                         query = query.filter(self.item_table.datetime <= dts[1])
 
-                # Query is disabled for this implementation
-                # Query fields
-                # if search_request.query:
-                #     for (field_name, expr) in search_request.query.items():
-                #         field = self.item_table.get_field(field_name)
-                #         for (op, value) in expr.items():
-                #             if op == Operator.gte:
-                #                 query = query.filter(operator.ge(field, value))
-                #             elif op == Operator.lte:
-                #                 query = query.filter(operator.le(field, value))
-                #             else:
-                #                 query = query.filter(op.operator(field, value))
-
                 if search_request.filter:
                     pygeofilter.backends.sqlalchemy.filters.parse_geometry = monkeypatch_parse_geometry  # monkey patch parse_geometry from pygeofilter
                     sa_expr = to_filter(search_request.filter, self.FIELD_MAPPING)

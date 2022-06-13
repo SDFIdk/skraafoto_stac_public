@@ -20,121 +20,6 @@ from stac_fastapi.sqlalchemy.core import CoreCrudClient
 from stac_fastapi.types.core import LandingPageMixin
 
 
-# def test_create_and_delete_item(app_client, load_test_data):
-#    """Test creation and deletion of a single item (transactions extension)"""
-#    test_item = load_test_data("test_item.json")
-#    resp = app_client.post(
-#        f"/collections/{test_item['collection']}/items", json=test_item
-#    )
-#    assert resp.status_code == 200
-#
-#    resp = app_client.delete(
-#        f"/collections/{test_item['collection']}/items/{resp.json()['id']}"
-#    )
-#    assert resp.status_code == 200
-
-
-# def test_create_item_conflict(app_client, load_test_data):
-#    """Test creation of an item which already exists (transactions extension)"""
-#    test_item = load_test_data("test_item.json")
-#    resp = app_client.post(
-#        f"/collections/{test_item['collection']}/items", json=test_item
-#    )
-#    assert resp.status_code == 200
-#
-#    resp = app_client.post(
-#        f"/collections/{test_item['collection']}/items", json=test_item
-#    )
-#    assert resp.status_code == 409
-
-
-# def test_delete_missing_item(app_client, load_test_data):
-#    """Test deletion of an item which does not exist (transactions extension)"""
-#    test_item = load_test_data("test_item.json")
-#    resp = app_client.delete(f"/collections/{test_item['collection']}/items/hijosh")
-#    assert resp.status_code == 404
-
-
-# def test_create_item_missing_collection(app_client, load_test_data):
-#    """Test creation of an item without a parent collection (transactions extension)"""
-#    test_item = load_test_data("test_item.json")
-#    test_item["collection"] = "stac is cool"
-#    resp = app_client.post(
-#        f"/collections/{test_item['collection']}/items", json=test_item
-#    )
-#    assert resp.status_code == 422
-
-
-# def test_update_item_already_exists(app_client, load_test_data):
-#    """Test updating an item which already exists (transactions extension)"""
-#    test_item = load_test_data("test_item.json")
-#    resp = app_client.post(
-#        f"/collections/{test_item['collection']}/items", json=test_item
-#    )
-#    assert resp.status_code == 200
-#
-#    assert test_item["properties"]["gsd"] != 16
-#    test_item["properties"]["gsd"] = 16
-#    resp = app_client.put(
-#        f"/collections/{test_item['collection']}/items", json=test_item
-#    )
-#    updated_item = resp.json()
-#    assert updated_item["properties"]["gsd"] == 16
-
-
-# def test_update_new_item(app_client, load_test_data):
-#    """Test updating an item which does not exist (transactions extension)"""
-#    test_item = load_test_data("test_item.json")
-#    resp = app_client.put(
-#        f"/collections/{test_item['collection']}/items", json=test_item
-#    )
-#    assert resp.status_code == 404
-
-
-# def test_update_item_missing_collection(app_client, load_test_data):
-#    """Test updating an item without a parent collection (transactions extension)"""
-#    test_item = load_test_data("test_item.json")
-#
-#    # Create the item
-#    resp = app_client.post(
-#        f"/collections/{test_item['collection']}/items", json=test_item
-#    )
-#    assert resp.status_code == 200
-#
-#    # Try to update collection of the item
-#    test_item["collection"] = "stac is cool"
-#    resp = app_client.put(
-#        f"/collections/{test_item['collection']}/items", json=test_item
-#    )
-#    assert resp.status_code == 422
-
-
-# def test_update_item_geometry(app_client, load_test_data):
-#    test_item = load_test_data("test_item.json")
-#
-#    # Create the item
-#    resp = app_client.post(
-#        f"/collections/{test_item['collection']}/items", json=test_item
-#    )
-#    assert resp.status_code == 200
-#
-#    # Update the geometry of the item
-#    test_item["geometry"]["coordinates"] = [[[0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]]
-#    resp = app_client.put(
-#        f"/collections/{test_item['collection']}/items", json=test_item
-#    )
-#    assert resp.status_code == 200
-#
-#    # Fetch the updated item
-#    resp = app_client.get(
-#        f"/collections/{test_item['collection']}/items/{test_item['id']}"
-#    )
-#    assert resp.status_code == 200
-#    assert resp.json()["geometry"]["coordinates"] == [
-#        [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]
-#    ]
-
-
 def test_get_item(app_client, load_test_data):
     """Test read an item by id (core)"""
     test_item = load_test_data("test_item.json")
@@ -195,32 +80,6 @@ def test_pagination(app_client, load_test_data):
     assert resp.status_code == 200
     second_page = resp.json()
     assert second_page["context"]["returned"] == 3
-
-
-# def test_item_timestamps(app_client, load_test_data):
-#    """Test created and updated timestamps (common metadata)"""
-#    test_item = load_test_data("test_item.json")
-#    start_time = datetime.now(timezone.utc)
-#    time.sleep(2)
-#    # Confirm `created` timestamp
-#    resp = app_client.post(
-#        f"/collections/{test_item['collection']}/items", json=test_item
-#    )
-#    item = resp.json()
-#    created_dt = parse_datetime(item["properties"]["created"])
-#    assert resp.status_code == 200
-#    assert start_time < created_dt < datetime.now(timezone.utc)
-#
-#    time.sleep(2)
-#    # Confirm `updated` timestamp
-#    item["properties"]["proj:epsg"] = 4326
-#    resp = app_client.put(f"/collections/{test_item['collection']}/items", json=item)
-#    assert resp.status_code == 200
-#    updated_item = resp.json()
-#
-#    # Created shouldn't change on update
-#    assert item["properties"]["created"] == updated_item["properties"]["created"]
-#    assert parse_datetime(updated_item["properties"]["updated"]) > created_dt
 
 
 def test_item_search_by_id_post(app_client, load_test_data):
@@ -542,25 +401,6 @@ def test_item_search_post_without_collection(app_client, load_test_data):
     # Too many hits to determine this
     # assert resp_json["features"][0]["id"] == test_item["id"]
     assert len(resp_json["features"]) >= 1
-
-
-# We dont have JSONb anymore in the database so this test is obsolete
-# def test_item_search_properties_jsonb(app_client, load_test_data):
-#    """Test POST search with JSONB query (query extension)"""
-#    test_item = load_test_data("test_item.json")
-#
-#    # EPSG is a JSONB key
-#    # params = {"query": {"proj:epsg": {"gt": test_item["properties"]["proj:epsg"] + 1}}}
-#    params = {
-#        "filter-lang": "cql-json",
-#        "filter": {
-#            "gt": [{"property": "proj:epsg"}, test_item["properties"]["proj:epsg"] + 1]
-#        },
-#    }
-#    resp = app_client.post("/search", json=params)
-#    assert resp.status_code == 200
-#    resp_json = resp.json()
-#    assert len(resp_json["features"]) == 0
 
 
 def test_item_search_properties_field(app_client, load_test_data):
@@ -910,26 +750,6 @@ def test_search_bbox_errors(app_client):
     params = {"bbox": "100.0,0.0,0.0,105.0"}
     resp = app_client.get("/search", params=params)
     assert resp.status_code == 400
-
-
-# def test_filter_crs_bbox_with_crs(app_client, load_test_data):
-#     """Test filter with default bbox, result in supported crs (crsExtension)"""
-#     test_item = load_test_data("test_item.json")
-#     params = {
-#         "bbox": ",".join([str(coord) for coord in test_item["bbox"]]),
-#         "filter-crs": "http://www.opengis.net/def/crs/EPSG/0/25832",
-#         "ids": test_item["id"],
-#         "collections": test_item["collection"],
-#     }
-#     resp = app_client.get("/search", params=params)
-#     assert resp.status_code == 200
-
-#     resp_json = resp.json()
-#     assert resp_json["features"][0]["id"] == test_item["id"]
-#     assert (
-#         resp_json["features"][0]["crs"]["properties"]["name"]
-#         == "http://www.opengis.net/def/crs/EPSG/0/25832"
-#     )
 
 
 def test_crs_epsg25832(app_client):
