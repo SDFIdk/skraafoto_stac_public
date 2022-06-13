@@ -302,6 +302,12 @@ def test_filter_queryables_single_collection(app_client, load_test_data):
     resp = app_client.get(f"/collections/{test_item['collection']}/queryables")
     assert resp.status_code == 200
 
+    """Test read a collection which does not exist"""
+    resp = app_client.get("/collections/does-not-exist/queryables")
+    assert resp.status_code == 404
+    resp_json = resp.json()
+    assert resp_json["detail"] == ["Not found","Collection 'does-not-exist' doesn't exist"]
+
 
 def test_filter_queryables_all_collections(app_client, load_test_data):
     """Test GET queryables without collection parameter returns intersection of queryables of all registered collections"""
