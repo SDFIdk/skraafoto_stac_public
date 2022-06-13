@@ -785,6 +785,8 @@ def test_get_missing_item(app_client, load_test_data):
     test_coll = load_test_data("test_collection.json")
     resp = app_client.get(f"/collections/{test_coll['id']}/items/invalid-item")
     assert resp.status_code == 404
+    resp_json = resp.json()
+    assert resp_json["detail"] == "Not found"
 
 
 def test_search_invalid_filter_field(app_client):

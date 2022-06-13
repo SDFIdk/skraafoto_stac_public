@@ -798,8 +798,8 @@ class CoreFiltersClient(BaseFiltersClient):
                 self.validate_collection(collection_id)
             except ValueError as e:
                 raise HTTPException(
-                    status_code=400,
-                    detail=["Invalid parameters provided"] + str(e).split("\n"),
+                    status_code=404,
+                    detail=["Not found"] + str(e).split("\n"),
                 )
 
         # Check that collection exists

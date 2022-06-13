@@ -65,18 +65,26 @@ def test_collection_items_collectionid_not_found(app_client, load_test_data):
     # Test that we get a 404 if the collectionId does not exist
     resp = app_client.get(f"/collections/does-not-exist/items")
     assert resp.status_code == 404
+    resp_json = resp.json()
+    assert resp_json["detail"] == "Not found"
 
     # Test that we get a 404 if the itemId does not exist but the collectionId does
     resp = app_client.get(f"/collections/{test_collection['id']}/items/does-not-exist")
     assert resp.status_code == 404
+    resp_json = resp.json()
+    assert resp_json["detail"] == "Not found"
 
     # Test that we get a 404 if the collectionId does not exist but the itemId does
     resp = app_client.get(f"/collections/does-not-exist/items/{test_item['id']}")
     assert resp.status_code == 404
+    resp_json = resp.json()
+    assert resp_json["detail"] == "Not found"
 
     # Test that we get a 404 if neither the itemId or the collectionId exists
     resp = app_client.get(f"/collections/does-not-exist/items/also-does-not-exist")
     assert resp.status_code == 404
+    resp_json = resp.json()
+    assert resp_json["detail"] == "Not found"
 
     ## finally check that we get the item if both exists
     resp = app_client.get(
