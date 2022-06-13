@@ -321,7 +321,7 @@ Hvis token er autoriseret, men requesten har en ugyldig parameter, returneres en
 
 API'et udstiller følgende endpoints ...
 
-**Landing Page**: `/`  
+**Landing Page**: `/`
 
 Denne ressource er roden af API'et, som beskriver de funktionaliteter, der er udstillet, via et `ConformsTo` array samt URIs af andre ressourcer via link relationer.
 
@@ -331,7 +331,7 @@ Ingen
 
 _Output_:
 
-STAC Catalog (JSON)  
+STAC Catalog (JSON)
 
 _Eksempel_:
 
@@ -340,7 +340,7 @@ GET https://api.dataforsyningen.dk/skraafotoapi_test
 token: {DinToken}
 ```
 
-**Get Conformance Classes**: `/conformance`  
+**Get Conformance Classes**: `/conformance`
 
 Denne ressource returnerer et array af links til conformance klasser. Selve links bruges ikke, men fungerer som et "universelt" ID til STAC klienter, som fortæller hvilke krav STAC og OGC-API-Features servicen understøtter og overholder.
 
@@ -348,9 +348,9 @@ _Parametre_:
 
 Ingen
 
-_Output_: 
+_Output_:
 
-Array af conformance klasser (JSON)  
+Array af conformance klasser (JSON)
 
 _Eksempel_:
 
@@ -359,11 +359,11 @@ GET https://api.dataforsyningen.dk/skraafotoapi_test/conformance
 token: {DinToken}
 ```
 
-**Get Item**: `/collections/{collectionid}/items/{itemid}`  
+**Get Item**: `/collections/{collectionid}/items/{itemid}`
 
 Denne ressource tager imod `collectionid`, `itemid` og `crs` parametre og returnerer ét GeoJSON STAC item i en bestemt collection.
 
-_Parametre_: 
+_Parametre_:
 
 | **Parameter** | **Type** | **Description**                                                                                                                                                                                                                                                         |
 | ------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -371,9 +371,9 @@ _Parametre_:
 | itemid        | string   | ID'et på et item.                                                                                                                                                                                                                                                       |
 | crs           | string   | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832` <br>Angiver hvilket koordinatsystem geometrier i JSON response skal returneres i. Se [Crs Extension](#Crs-Extension).</br> |
 
-_Output_: 
+_Output_:
 
-Feature (STAC Item) (GeoJSON)  
+Feature (STAC Item) (GeoJSON)
 
 _Eksempel_:
 
@@ -382,7 +382,7 @@ GET https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/
 token: {DinToken}
 ```
 
-**Get/Post Search**: `/search`  
+**Get/Post Search**: `/search`
 
 Denne ressource tager imod diverse parametre og fremsøger en collection af STAC Items, der matcher de angivne parametre. `/search` kan søge på tværs af collections, samt i subset af collections, som kan angives i `collections` parameteren. `datetime`, `bbox`, `ids` er basale søgekriterer på hvilke `Items`, der skal returneres. Post endpointet har samme funktionalitet, men parametre angives i body.
 
@@ -398,15 +398,15 @@ _Parametre_:
 | bbox-crs      | string    | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`. <br>Angiver hvilket koordinatsystem geometrier i `bbox` er angivet i.</br>                                                                    |
 | intersects    | string    | GeoJSON geometri, se [Geometries](https://en.wikipedia.org/wiki/GeoJSON#Geometries) for typer. Returner kun items, der overlapper denne geometri. Kan ikke angives samtidig med `bbox`. |
 | datetime      | string    | Dato og tid formateret efter [RFC 3339, sektion 5.6](https://tools.ietf.org/html/rfc3339#section-5.6). Kan være en enkelt dato og tid eller intervaller separeret med `/`. Der kan bruges to punktummer `..` for et åbent dato- og tidsinterval.                       |
-| filter        | string    | `CQL-JSON` udtryk til avanceret søgninger på specifikke `Item` properties. Se [Filter Extension](#Filter-Extension).                                                                                                                                                      |
+| filter        | string    | `CQL-JSON` udtryk til avanceret søgninger på specifikke `Item` properties. Se [Filter Extension](#Filter-Extension). I forbindelse med en `GET search` denne parameter URL encodes. |
 | filter-lang   | string    | Default: `CQL-JSON` <br>Angiver hvilket query-sprog filteret er skrevet i. Se [Filter Extension](#Filter-Extension).</br>                                                                                                                                               |
 | filter-crs    | string    | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`. <br>Angiver hvilket koordinatsystem geometrier i `filter` er angivet i. Se [Filter Extension](#Filter-Extension).</br>                        |
 | collections   | \[string] | Default: Søgning over alle collections.                                                                                                                                                                                                                                |
 | sortby        | string    | Angiver en sorteringsorden resultatet returneres i. Se [Sort Extension](#Sort-Extension).                                                                                                                                                                               |
 
-_Output_: 
+_Output_:
 
-FeatureCollection (Array af STAC Items) (GeoJSON)  
+FeatureCollection (Array af STAC Items) (GeoJSON)
 
 _Eksempel_:
 
@@ -419,7 +419,7 @@ POST https://api.dataforsyningen.dk/skraafotoapi_test/search
 token: {DinToken}
 ```
 
-**Get Collections**: `/collections`  
+**Get Collections**: `/collections`
 
 Denne ressource returnerer en liste af collections som API'et udstiller.
 
@@ -427,9 +427,9 @@ _Parametre_:
 
 Ingen
 
-_Output_: 
+_Output_:
 
-Collections (Array af STAC Collections) (JSON)  
+Collections (Array af STAC Collections) (JSON)
 
 _Eksempel_:
 
@@ -438,7 +438,7 @@ GET https://api.dataforsyningen.dk/skraafotoapi_test/collections
 token: {DinToken}
 ```
 
-**Get Collection**: `/collections/{collectionid}`  
+**Get Collection**: `/collections/{collectionid}`
 
 Denne ressource tager imod et `collectionid` og returnerer én collection med beskrivelser og diverse linkrelationer.
 
@@ -448,9 +448,9 @@ _Parametre_:
 | ------------- | -------- | ----------------------- |
 | collectionid  | string   | ID'et på en collection. |
 
-_Output_: 
+_Output_:
 
-Collection (STAC Collection) (JSON)  
+Collection (STAC Collection) (JSON)
 
 _Eksempel_:
 
@@ -459,7 +459,7 @@ GET https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019
 token: {DinToken}
 ```
 
-**Get ItemCollection**: `/collections/{collectionid}/items`  
+**Get ItemCollection**: `/collections/{collectionid}/items`
 
 Denne ressource tager imod et `collectionid` og laver en søgning magen til `/search` endpointet i den angivne collection.
 
@@ -475,13 +475,13 @@ _Parametre_:
 | bbox          | \[number] | Array af fire tal                                                                                                                                                                                                                                                            |
 | bbox-crs      | string    | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`. <br>Angiver hvilket koordinatsystem geometrier i `bbox` er angivet i.</br>                                                                    |
 | datetime      | string    | Dato og tid formateret efter [RFC 3339, sektion 5.6](https://tools.ietf.org/html/rfc3339#section-5.6). Kan være en enkelt dato og tid eller intervaller separeret med `/`. Der kan bruges to punktummer `..` for et åbent dato- og tidsinterval.                        |
-| filter        | string    | `CQL-JSON` udtryk til avanceret søgninger på specifikke `Item` properties. Se [Filter Extension](#Filter-Extension).                                                                                                                                                      |
+| filter        | string    | `CQL-JSON` udtryk til avanceret søgninger på specifikke `Item` properties. Se [Filter Extension](#Filter-Extension). Denne parameter skal URL encodes. |
 | filter-lang   | string    | Default: `CQL-JSON` <br>Angiver hvilket query-sprog filteret er skrevet i. Se [Filter Extension](#Filter-Extension).</br>                                                                                                                                               |
 | filter-crs    | string    | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`. <br>Angiver hvilket koordinatsystem geometrier `filter` er angivet i. Se [Filter Extension](#Filter-Extension).</br>                          |
 
-_Output_: 
+_Output_:
 
-FeatureCollection (Array af STAC Items) (GeoJSON)  
+FeatureCollection (Array af STAC Items) (GeoJSON)
 
 _Eksempel_:
 
@@ -490,7 +490,7 @@ GET https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/
 token: {DinToken}
 ```
 
-**Get Queryables**: `/queryables`  
+**Get Queryables**: `/queryables`
 
 Denne ressource returnerer en samling af properties, der kan indgå i et filter udtryk på tværs af alle collections. Dvs. at properties, som kun kan indgå i et filterudtryk for én collection, ikke medtages her.
 
@@ -498,9 +498,9 @@ _Paramtre_:
 
 Ingen
 
-_Output_: 
+_Output_:
 
-Array af STAC Item properties, der kan bruges over alle collections i filter udtryk (JSON)  
+Array af STAC Item properties, der kan bruges over alle collections i filter udtryk (JSON)
 
 _Eksempel_:
 
@@ -509,7 +509,7 @@ GET https://api.dataforsyningen.dk/skraafotoapi_test/queryables
 token: {DinToken}
 ```
 
-**Get Collection Queryables**: `/collections/{collectionid}/queryables`  
+**Get Collection Queryables**: `/collections/{collectionid}/queryables`
 
 Denne ressource returnerer alle properties, der kan indgå i et filterudtryk for den angivne collection.
 
@@ -519,9 +519,9 @@ _Parametre_:
 | ------------- | -------- | ----------------------- |
 | collectionid  | string   | ID'et på en collection. |
 
-_Output_: 
+_Output_:
 
-Array af STAC Item properties for den givne collection, som kan bruges i filterudtryk (JSON)  
+Array af STAC Item properties for den givne collection, som kan bruges i filterudtryk (JSON)
 
 _Eksempel_:
 
@@ -619,7 +619,7 @@ Filter extension tilføjer særlig funktionalitet til at søge ved hjælp af for
 
 **Bemærk** at det SQL statement, som API'et udfører, maks må tage 10 sekunder. Hvis din forespørgsel er så kompliceret at den timer ud, så kan det i nogle tilfælde afhælpes ved at begrænse forespørgslen med `bbox` og/eller `datetime` parameteren (se ovenfor).
 
-Eksempler på brug af filter parameter: 
+Eksempler på brug af filter parameter:
 1. `POST /search` - Hent features hvis geometri overlapper (intersects) med input geometri
 ```json
 POST https://api.dataforsyningen.dk/skraafotoapi_test/search
@@ -628,7 +628,7 @@ token: {DinToken}
 
 {
     "filter-lang": "cql-json",
-    "filter": { 
+    "filter": {
         "intersects": [
             { "property": "geometry" },
             {
@@ -653,19 +653,19 @@ token: {DinToken}
 
 {
     "filter-lang": "cql-json",
-    "filter": { 
-        "and": [ 
-            {"eq": [ { "property": "direction" }, "east" ] }, 
-            {"gt": [ { "property": "gsd" }, 0.101 ] } 
+    "filter": {
+        "and": [
+            {"eq": [ { "property": "direction" }, "east" ] },
+            {"gt": [ { "property": "gsd" }, 0.101 ] }
         ]
     }
 }
-``` 
+```
 Nærmere beskrivelse af Filter extension: https://github.com/radiantearth/stac-api-spec/tree/master/fragments/filter.
 
 ### Sort Extension
 
-Sort extension tilføjer funktionalitet til at sortere resultater hentet via `/search` endpointet. Der kan sorteres på samtlige `Item` attributter såsom `id`, `collection`, `datetime`, samt diverse properties attributter. Der kan angives om sorteringsretningen skal være _ascending_ eller _descending_. I et GET `/search` request kan der bruges en forsimplet syntaks; `+` for _ascending_ og `-` for _descending_. Hvis intet er angivet er default _ascending_.  
+Sort extension tilføjer funktionalitet til at sortere resultater hentet via `/search` endpointet. Der kan sorteres på samtlige `Item` attributter såsom `id`, `collection`, `datetime`, samt diverse properties attributter. Der kan angives om sorteringsretningen skal være _ascending_ eller _descending_. I et GET `/search` request kan der bruges en forsimplet syntaks; `+` for _ascending_ og `-` for _descending_. Hvis intet er angivet er default _ascending_.
 
 Eksempler på brug af sortBy parameter:
 
@@ -727,7 +727,7 @@ Relevante links findes i sektionen `links` hhv `assets`:
 [...]
 ```
 
-> **Bemærk** at alle links til dataforsyningen kræver angivelsen af `token` enten som query parameter eller som header. 
+> **Bemærk** at alle links til dataforsyningen kræver angivelsen af `token` enten som query parameter eller som header.
 
 **Download**
 
@@ -753,7 +753,7 @@ Dataforsyningen udstiller en online-viewer til meget enkel visning af et flyfoto
 
 Dataforsyningen udstiller en service, der kan udstille et flyfoto som en pyramide af jpeg-tiles. Disse kan anvendes, såfremt klienten ikke er i stand til at anvende den "Cloud Optimized GeoTIFF" direkte, som beskrevet ovenfor.
 
-URL til denne service er ikke inkluderet i metadata, men må i stedet konstrueres. URL'en skal konstrueres som 
+URL til denne service er ikke inkluderet i metadata, men må i stedet konstrueres. URL'en skal konstrueres som
 
 ```
 https://api.dataforsyningen.dk/skraafoto_cogtiler_test/tiles/{z}/{x}/{y}.jpg?url={DOWNLOAD_URL}
@@ -761,7 +761,7 @@ https://api.dataforsyningen.dk/skraafoto_cogtiler_test/tiles/{z}/{x}/{y}.jpg?url
 
 Tile-koordinaterne z, x, og y er i en lokal tile-pyramide.
 
-Basal info om tile-pyramiden kan fås på endpointet 
+Basal info om tile-pyramiden kan fås på endpointet
 ```
 https://api.dataforsyningen.dk/skraafoto_cogtiler_test/info?url={DOWNLOAD_URL}
 ```
@@ -786,7 +786,7 @@ sensor_cols, sensor_rows = props["pers:interior_orientation"]["sensor_array_dime
 # Calculated values. In pixels. Origo in image lower left.
 f = f_mm / pixel_size
 x0 = sensor_cols * 0.5 + ppo_x / pixel_size
-y0 = sensor_rows * 0.5 + ppo_y / pixel_size 
+y0 = sensor_rows * 0.5 + ppo_y / pixel_size
 ```
 
 Dernæst kan `(xa, ya)` beregnes på en af to måder. Bemærk i øvrigt, at pixelkoordinaterne `(xa, ya)` har origo i billedets nederste venstre hjørne med x-aksen positiv mod højre og y-aksen positiv op.
@@ -809,7 +809,7 @@ $$
 
 
 $$
-R = \begin{bmatrix} m11 & m12 & m13 \\\\ m21 & m22 & m23 \\\\ m31 & m32 & m33 \end{bmatrix} 
+R = \begin{bmatrix} m11 & m12 & m13 \\\\ m21 & m22 & m23 \\\\ m31 & m32 & m33 \end{bmatrix}
 $$
 
 
