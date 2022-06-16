@@ -51,6 +51,7 @@ def test_app_get_search_response(load_test_data, app_client, postgres_transactio
     assert resp_json.get("stac_version") is None
     assert resp_json.get("stac_extensions") is None
 
+
 def test_app_post_search_response(load_test_data, app_client, postgres_transactions):
     item = load_test_data("test_item.json")
 
@@ -67,7 +68,7 @@ def test_app_post_search_response(load_test_data, app_client, postgres_transacti
 
 def test_app_context_extension(load_test_data, app_client, postgres_transactions):
     item = load_test_data("test_item.json")
- 
+
     resp = app_client.get("/search", params={"collections": [TEST_COLLECTION_ID]})
     assert resp.status_code == 200
     resp_json = resp.json()
@@ -107,7 +108,7 @@ def test_app_filter_extension_gt(load_test_data, app_client, postgres_transactio
 
 def test_app_filter_extension_gte(load_test_data, app_client, postgres_transactions):
     test_item = load_test_data("test_item.json")
-    
+
     params = {
         "filter-lang": "cql-json",
         "filter": {
@@ -124,7 +125,6 @@ def test_app_filter_extension_limit_lt0(
     load_test_data, app_client, postgres_transactions
 ):
     item = load_test_data("test_item.json")
-    
 
     params = {"limit": -1}
     resp = app_client.post("/search", json=params)
@@ -135,7 +135,7 @@ def test_app_filter_extension_limit_gt1000(
     load_test_data, app_client, postgres_transactions
 ):
     item = load_test_data("test_item.json")
-   
+
     params = {"limit": 1001}
     resp = app_client.post("/search", json=params)
     assert resp.status_code == 400
@@ -145,7 +145,6 @@ def test_app_filter_extension_limit_1000(
     load_test_data, app_client, postgres_transactions
 ):
     item = load_test_data("test_item.json")
-
 
     params = {"limit": 1000}
     resp = app_client.post("/search", json=params)
@@ -205,7 +204,9 @@ def test_search_point_intersects(load_test_data, app_client, postgres_transactio
     assert len(resp_json["features"]) >= 1
 
 
-def test_search_intersects_and_bbox_raises(load_test_data, app_client, postgres_transactions):
+def test_search_intersects_and_bbox_raises(
+    load_test_data, app_client, postgres_transactions
+):
     """bbox and intersects are mutually exclusive"""
     item = load_test_data("test_item.json")
 
@@ -215,7 +216,7 @@ def test_search_intersects_and_bbox_raises(load_test_data, app_client, postgres_
     params = {
         "intersects": intersects,
         "collections": [item["collection"]],
-        "bbox": bbox
+        "bbox": bbox,
     }
     resp = app_client.post("/search", json=params)
     assert resp.status_code != 200
@@ -317,7 +318,10 @@ def test_filter_queryables_single_collection(app_client, load_test_data):
     resp = app_client.get("/collections/does-not-exist/queryables")
     assert resp.status_code == 404
     resp_json = resp.json()
-    assert resp_json["detail"] == ["Not found","Collection 'does-not-exist' doesn't exist"]
+    assert resp_json["detail"] == [
+        "Not found",
+        "Collection 'does-not-exist' doesn't exist",
+    ]
 
 
 def test_filter_queryables_all_collections(app_client, load_test_data):
