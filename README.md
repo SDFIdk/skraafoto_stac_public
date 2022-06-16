@@ -2,18 +2,16 @@
 
 ## skraafotodistribution-stac-api
 
-SDFE implementation of STAC API.
+SDFI implementation of STAC API.
 
-Original:
-
+Original code:
+```
 MIT License
 Copyright (c) 2020 Arturo AI
+```
 
----
-
-**Documentation**: [https://stac-utils.github.io/stac-fastapi/](https://stac-utils.github.io/stac-fastapi/)
-
-**Source Code**: [https://github.com/stac-utils/stac-fastapi](https://github.com/stac-utils/stac-fastapi)
+# Dokumentation
+En lynintroduktion findes i [./howtogetstarted.md](./howtogetstarted.md). Mere uddybende dokumentation findes i [./dokumentation.md](./dokumentation.md)
 
 ---
 
