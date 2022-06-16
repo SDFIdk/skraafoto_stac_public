@@ -750,6 +750,26 @@ def test_search_bbox_errors(app_client):
     params = {"bbox": "100.0,0.0,0.0,105.0"}
     resp = app_client.get("/search", params=params)
     assert resp.status_code == 400
+    
+    
+def test_filter_crs_in_epsg25832_should_not_affect_bbox_in_epsg4326(app_client, load_test_data):
+    """Test that bbox is unaffected of filter-crs params if filter-params is specified and result is in http://www.opengis.net/def/crs/OGC/1.3/CRS84 (crsExtension)"""
+    test_item = load_test_data("test_item.json")
+    params = {
+        "bbox": ",".join([str(coord) for coord in test_item["bbox"]]),
+        "filter-crs": "http://www.opengis.net/def/crs/EPSG/0/25832",
+        "ids": test_item["id"],
+        "collections": test_item["collection"],
+    }
+    resp = app_client.get("/search", params=params)
+    assert resp.status_code == 200
+
+    resp_json = resp.json()
+    assert resp_json["features"][0]["id"] == test_item["id"]
+    assert (
+        resp_json["features"][0]["crs"]["properties"]["name"]
+       == "http://www.opengis.net/def/crs/OGC/1.3/CRS84"
+    )    
 
 
 def test_crs_epsg25832(app_client):
@@ -925,6 +945,7 @@ def test_single_item_get_bbox_with_bbox_crs(app_client, load_test_data):
     assert resp.status_code == 200
 
     resp_json = resp.json()
+    # TODO rewrite assertion. It could check if response json bbox actually is changed to the correct converted bbox
     assert resp_json["bbox"] != test_item["bbox"]
 
 
