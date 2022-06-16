@@ -295,7 +295,7 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                 link["href"] = hrefbuilder.build(
                     f"collections/{id}/items", query_params
                 )
-                link["body"] = False
+                link.pop("body", None) # body only relevant for POST
                 page_links.append(link)
             else:
                 page_links.append(link)
@@ -453,7 +453,7 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                     query_params.update(link["body"])
                 link["href"] = hrefbuilder.build(f"search", query_params)
                 link["method"] = "GET"
-                link["body"] = None
+                link.pop("body", None) # Body only used for POST
                 page_links.append(link)
             else:
                 page_links.append(link)
