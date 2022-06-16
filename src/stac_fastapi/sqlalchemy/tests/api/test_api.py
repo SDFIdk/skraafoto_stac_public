@@ -38,11 +38,25 @@ def test_core_router(api_client):
     assert not core_routes - api_routes
 
 
-def test_app_search_response(load_test_data, app_client, postgres_transactions):
+def test_app_get_search_response(load_test_data, app_client, postgres_transactions):
     item = load_test_data("test_item.json")
 
     resp = app_client.get("/search", params={"collections": [TEST_COLLECTION_ID]})
     assert resp.status_code == 200
+    assert resp.headers["content-type"] == "application/geo+json"
+    resp_json = resp.json()
+
+    assert resp_json.get("type") == "FeatureCollection"
+    # stac_version and stac_extensions were removed in v1.0.0-beta.3
+    assert resp_json.get("stac_version") is None
+    assert resp_json.get("stac_extensions") is None
+
+def test_app_post_search_response(load_test_data, app_client, postgres_transactions):
+    item = load_test_data("test_item.json")
+
+    resp = app_client.post("/search", json={"collections": [TEST_COLLECTION_ID]})
+    assert resp.status_code == 200
+    assert resp.headers["content-type"] == "application/geo+json"
     resp_json = resp.json()
 
     assert resp_json.get("type") == "FeatureCollection"
