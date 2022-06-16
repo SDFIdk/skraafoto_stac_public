@@ -159,16 +159,13 @@ class ItemSerializer(Serializer):
             },
         }
 
-        # The custom geometry we are using emits geojson if the geometry is bound to the database
-        # Otherwise it will return a geoalchemy2 WKBElement
-        # TODO: It's probably best to just remove the custom geometry type
         geometry = db_model.footprint
         if isinstance(geometry, ga.elements.WKBElement):
             geometry = ga.shape.to_shape(geometry).__geo_interface__
         elif isinstance(geometry, str):
             geometry = json.loads(geometry)
 
-        # Properties TODO: break into seperate method
+        # Properties
 
         # General props
         instrument_id = db_model.camera_id  # Used here and for pers:cam_id
@@ -183,7 +180,6 @@ class ItemSerializer(Serializer):
 
         # Proj: https://github.com/stac-extensions/projection
         properties["proj:epsg"] = None
-        # TODO: sensor_area_xxx seems to be a mix between pixels and mm
         properties["proj:shape"] = [
             db_model.sensor_rows,
             db_model.sensor_columns,

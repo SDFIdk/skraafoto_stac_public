@@ -166,7 +166,6 @@ class TestTransactionsClient(BaseTransactionsClient):
             stac_item = self.item_serializer.db_to_stac(db_model, self.hrefbuilder)
 
             return stac_item
-            # TODO: do some cheating
 
     def update_collection(
         self, model: stac_types.Collection, **kwargs
@@ -184,7 +183,6 @@ class TestTransactionsClient(BaseTransactionsClient):
             # query.update(self.collection_serializer.row_to_dict(db_model))
 
             return self.collection_serializer.db_to_stac(db_model, self.hrefbuilder)
-            # TODO: do some cheating on the object
 
     def delete_item(
         self, item_id: str, collection_id: str, **kwargs

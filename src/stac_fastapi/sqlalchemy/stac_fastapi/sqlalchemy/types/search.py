@@ -40,8 +40,6 @@ from pygeofilter.parsers.cql_json import parse as parse_json
 import pygeofilter.parsers.cql_json as pgf_cql_json
 from pygeofilter import ast
 
-
-# TODO: This is probably the wrong way to check for supported CRS, maybe a stac_pydantic thing needs to be made
 from stac_fastapi.extensions.core.crs import CrsExtension
 
 # Be careful: https://github.com/samuelcolvin/pydantic/issues/1423#issuecomment-642797287
@@ -335,7 +333,7 @@ class STACSearch(BaseModel):
     @validator("bbox_crs")
     def validate_bbox_crs(cls, bbox_crs):
         if bbox_crs:
-            crs_extension = CrsExtension()  # TODO, might be ugly to do it like this
+            crs_extension = CrsExtension()
             if bbox_crs in crs_extension.crs:
                 return bbox_crs
             else:
@@ -373,7 +371,7 @@ class STACSearch(BaseModel):
     @validator("filter_crs")
     def validate_filter_crs(cls, filter_crs):
         if filter_crs:
-            crs_extension = CrsExtension()  # TODO, might be ugly to do it like this
+            crs_extension = CrsExtension()
             if filter_crs in crs_extension.crs:
                 return filter_crs
             else:
@@ -443,7 +441,7 @@ class STACSearch(BaseModel):
 
             # Validate filter-crs
             if "filter_crs" in values and values["filter_crs"]:
-                crs_extension = CrsExtension()  # TODO, might be ugly to do it like this
+                crs_extension = CrsExtension()
                 if values["filter_crs"] in crs_extension.crs:
                     # Convert the URI crs to a SRID
                     values["filter_crs"] = crs_extension.epsg_from_crs(

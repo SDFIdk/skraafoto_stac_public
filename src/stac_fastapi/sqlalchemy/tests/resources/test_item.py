@@ -20,121 +20,6 @@ from stac_fastapi.sqlalchemy.core import CoreCrudClient
 from stac_fastapi.types.core import LandingPageMixin
 
 
-# def test_create_and_delete_item(app_client, load_test_data):
-#    """Test creation and deletion of a single item (transactions extension)"""
-#    test_item = load_test_data("test_item.json")
-#    resp = app_client.post(
-#        f"/collections/{test_item['collection']}/items", json=test_item
-#    )
-#    assert resp.status_code == 200
-#
-#    resp = app_client.delete(
-#        f"/collections/{test_item['collection']}/items/{resp.json()['id']}"
-#    )
-#    assert resp.status_code == 200
-
-
-# def test_create_item_conflict(app_client, load_test_data):
-#    """Test creation of an item which already exists (transactions extension)"""
-#    test_item = load_test_data("test_item.json")
-#    resp = app_client.post(
-#        f"/collections/{test_item['collection']}/items", json=test_item
-#    )
-#    assert resp.status_code == 200
-#
-#    resp = app_client.post(
-#        f"/collections/{test_item['collection']}/items", json=test_item
-#    )
-#    assert resp.status_code == 409
-
-
-# def test_delete_missing_item(app_client, load_test_data):
-#    """Test deletion of an item which does not exist (transactions extension)"""
-#    test_item = load_test_data("test_item.json")
-#    resp = app_client.delete(f"/collections/{test_item['collection']}/items/hijosh")
-#    assert resp.status_code == 404
-
-
-# def test_create_item_missing_collection(app_client, load_test_data):
-#    """Test creation of an item without a parent collection (transactions extension)"""
-#    test_item = load_test_data("test_item.json")
-#    test_item["collection"] = "stac is cool"
-#    resp = app_client.post(
-#        f"/collections/{test_item['collection']}/items", json=test_item
-#    )
-#    assert resp.status_code == 422
-
-
-# def test_update_item_already_exists(app_client, load_test_data):
-#    """Test updating an item which already exists (transactions extension)"""
-#    test_item = load_test_data("test_item.json")
-#    resp = app_client.post(
-#        f"/collections/{test_item['collection']}/items", json=test_item
-#    )
-#    assert resp.status_code == 200
-#
-#    assert test_item["properties"]["gsd"] != 16
-#    test_item["properties"]["gsd"] = 16
-#    resp = app_client.put(
-#        f"/collections/{test_item['collection']}/items", json=test_item
-#    )
-#    updated_item = resp.json()
-#    assert updated_item["properties"]["gsd"] == 16
-
-
-# def test_update_new_item(app_client, load_test_data):
-#    """Test updating an item which does not exist (transactions extension)"""
-#    test_item = load_test_data("test_item.json")
-#    resp = app_client.put(
-#        f"/collections/{test_item['collection']}/items", json=test_item
-#    )
-#    assert resp.status_code == 404
-
-
-# def test_update_item_missing_collection(app_client, load_test_data):
-#    """Test updating an item without a parent collection (transactions extension)"""
-#    test_item = load_test_data("test_item.json")
-#
-#    # Create the item
-#    resp = app_client.post(
-#        f"/collections/{test_item['collection']}/items", json=test_item
-#    )
-#    assert resp.status_code == 200
-#
-#    # Try to update collection of the item
-#    test_item["collection"] = "stac is cool"
-#    resp = app_client.put(
-#        f"/collections/{test_item['collection']}/items", json=test_item
-#    )
-#    assert resp.status_code == 422
-
-
-# def test_update_item_geometry(app_client, load_test_data):
-#    test_item = load_test_data("test_item.json")
-#
-#    # Create the item
-#    resp = app_client.post(
-#        f"/collections/{test_item['collection']}/items", json=test_item
-#    )
-#    assert resp.status_code == 200
-#
-#    # Update the geometry of the item
-#    test_item["geometry"]["coordinates"] = [[[0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]]
-#    resp = app_client.put(
-#        f"/collections/{test_item['collection']}/items", json=test_item
-#    )
-#    assert resp.status_code == 200
-#
-#    # Fetch the updated item
-#    resp = app_client.get(
-#        f"/collections/{test_item['collection']}/items/{test_item['id']}"
-#    )
-#    assert resp.status_code == 200
-#    assert resp.json()["geometry"]["coordinates"] == [
-#        [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]
-#    ]
-
-
 def test_get_item(app_client, load_test_data):
     """Test read an item by id (core)"""
     test_item = load_test_data("test_item.json")
@@ -195,32 +80,6 @@ def test_pagination(app_client, load_test_data):
     assert resp.status_code == 200
     second_page = resp.json()
     assert second_page["context"]["returned"] == 3
-
-
-# def test_item_timestamps(app_client, load_test_data):
-#    """Test created and updated timestamps (common metadata)"""
-#    test_item = load_test_data("test_item.json")
-#    start_time = datetime.now(timezone.utc)
-#    time.sleep(2)
-#    # Confirm `created` timestamp
-#    resp = app_client.post(
-#        f"/collections/{test_item['collection']}/items", json=test_item
-#    )
-#    item = resp.json()
-#    created_dt = parse_datetime(item["properties"]["created"])
-#    assert resp.status_code == 200
-#    assert start_time < created_dt < datetime.now(timezone.utc)
-#
-#    time.sleep(2)
-#    # Confirm `updated` timestamp
-#    item["properties"]["proj:epsg"] = 4326
-#    resp = app_client.put(f"/collections/{test_item['collection']}/items", json=item)
-#    assert resp.status_code == 200
-#    updated_item = resp.json()
-#
-#    # Created shouldn't change on update
-#    assert item["properties"]["created"] == updated_item["properties"]["created"]
-#    assert parse_datetime(updated_item["properties"]["updated"]) > created_dt
 
 
 def test_item_search_by_id_post(app_client, load_test_data):
@@ -544,25 +403,6 @@ def test_item_search_post_without_collection(app_client, load_test_data):
     assert len(resp_json["features"]) >= 1
 
 
-# We dont have JSONb anymore in the database so this test is obsolete
-# def test_item_search_properties_jsonb(app_client, load_test_data):
-#    """Test POST search with JSONB query (query extension)"""
-#    test_item = load_test_data("test_item.json")
-#
-#    # EPSG is a JSONB key
-#    # params = {"query": {"proj:epsg": {"gt": test_item["properties"]["proj:epsg"] + 1}}}
-#    params = {
-#        "filter-lang": "cql-json",
-#        "filter": {
-#            "gt": [{"property": "proj:epsg"}, test_item["properties"]["proj:epsg"] + 1]
-#        },
-#    }
-#    resp = app_client.post("/search", json=params)
-#    assert resp.status_code == 200
-#    resp_json = resp.json()
-#    assert len(resp_json["features"]) == 0
-
-
 def test_item_search_properties_field(app_client, load_test_data):
     """Test POST search indexed field with query (query extension)"""
     test_item = load_test_data("test_item.json")
@@ -610,8 +450,6 @@ def test_get_missing_item_collection(app_client):
     assert resp.status_code == 404
 
 
-# Det lader ikke til at listen af id's bliver ført med ved pagination, kun den sidste kommer med
-# TODO: Fix test / eller fix pagination ved liste af id's ( ved ikke helt hvad problemet er)
 def test_pagination_item_collection_get(app_client, load_test_data):
     """Test item collection pagination links (paging extension)"""
     test_item = load_test_data("test_item.json")
@@ -683,7 +521,6 @@ def test_pagination_post(app_client, load_test_data):
     assert not set(item_ids) - set(ids)
 
 
-# TODO: Page_data kommer ikke tilbage med links her, det er underligt
 def test_pagination_token_idempotent(app_client, load_test_data):
     """Test that pagination tokens are idempotent (paging extension)"""
     ids = [
@@ -915,26 +752,26 @@ def test_search_bbox_errors(app_client):
     params = {"bbox": "100.0,0.0,0.0,105.0"}
     resp = app_client.get("/search", params=params)
     assert resp.status_code == 400
+    
+    
+def test_filter_crs_in_epsg25832_should_not_affect_bbox_in_epsg4326(app_client, load_test_data):
+    """Test that bbox is unaffected of filter-crs params if filter-params is specified and result is in http://www.opengis.net/def/crs/OGC/1.3/CRS84 (crsExtension)"""
+    test_item = load_test_data("test_item.json")
+    params = {
+        "bbox": ",".join([str(coord) for coord in test_item["bbox"]]),
+        "filter-crs": "http://www.opengis.net/def/crs/EPSG/0/25832",
+        "ids": test_item["id"],
+        "collections": test_item["collection"],
+    }
+    resp = app_client.get("/search", params=params)
+    assert resp.status_code == 200
 
-
-# def test_filter_crs_bbox_with_crs(app_client, load_test_data):
-#     """Test filter with default bbox, result in supported crs (crsExtension)"""
-#     test_item = load_test_data("test_item.json")
-#     params = {
-#         "bbox": ",".join([str(coord) for coord in test_item["bbox"]]),
-#         "filter-crs": "http://www.opengis.net/def/crs/EPSG/0/25832",
-#         "ids": test_item["id"],
-#         "collections": test_item["collection"],
-#     }
-#     resp = app_client.get("/search", params=params)
-#     assert resp.status_code == 200
-
-#     resp_json = resp.json()
-#     assert resp_json["features"][0]["id"] == test_item["id"]
-#     assert (
-#         resp_json["features"][0]["crs"]["properties"]["name"]
-#         == "http://www.opengis.net/def/crs/EPSG/0/25832"
-#     )
+    resp_json = resp.json()
+    assert resp_json["features"][0]["id"] == test_item["id"]
+    assert (
+        resp_json["features"][0]["crs"]["properties"]["name"]
+       == "http://www.opengis.net/def/crs/OGC/1.3/CRS84"
+    )    
 
 
 def test_crs_epsg25832(app_client):
@@ -1110,7 +947,7 @@ def test_single_item_get_bbox_with_bbox_crs(app_client, load_test_data):
     assert resp.status_code == 200
 
     resp_json = resp.json()
-    # TODO rewrite assertion, but they should not be the same, when i ask in 25832
+    # TODO rewrite assertion. It could check if response json bbox actually is changed to the correct converted bbox
     assert resp_json["bbox"] != test_item["bbox"]
 
 
@@ -1135,7 +972,7 @@ def test_collection_item_get_bbox_with_bbox_crs(app_client, load_test_data):
     assert (
         matching_feat[0]["crs"]["properties"]["name"]
         == "http://www.opengis.net/def/crs/EPSG/0/25832"
-    )  # TODO rewrite to uri
+    )
 
 
 def test_single_item_get_bbox_crs_with_crs(app_client, load_test_data):
@@ -1179,7 +1016,7 @@ def test_item_search_bbox_crs_with_crs(app_client, load_test_data):
     assert (
         matching_feat[0]["crs"]["properties"]["name"]
         == "http://www.opengis.net/def/crs/EPSG/0/25832"
-    )  # TODO rewrite to uri
+    )
 
 
 def test_item_post_bbox_with_bbox_crs(app_client, load_test_data):
@@ -1205,7 +1042,7 @@ def test_item_post_bbox_with_bbox_crs(app_client, load_test_data):
     assert (
         matching_feat[0]["crs"]["properties"]["name"]
         == "http://www.opengis.net/def/crs/OGC/1.3/CRS84"
-    )  # TODO rewrite to uri
+    )
 
 
 def test_item_post_bbox_with_crs(app_client, load_test_data):
@@ -1231,7 +1068,7 @@ def test_item_post_bbox_with_crs(app_client, load_test_data):
     assert (
         matching_feat[0]["crs"]["properties"]["name"]
         == "http://www.opengis.net/def/crs/EPSG/0/25832"
-    )  # TODO rewrite to uri
+    )
 
 
 def test_item_wrong_crs(app_client, load_test_data):

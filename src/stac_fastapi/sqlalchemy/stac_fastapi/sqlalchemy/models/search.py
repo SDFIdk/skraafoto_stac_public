@@ -9,8 +9,6 @@ import sqlalchemy as sa
 class QueryableTypes:
     """Defines a set of queryable fields.
 
-    # TODO: Let the user define these in a config file
-    # TODO: There is a much better way of defining this field <> type mapping than two enums with same keys
     """
 
     orientation = sa.String
