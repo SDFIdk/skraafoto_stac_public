@@ -1,15 +1,6 @@
 import pystac
 
 
-def test_update_new_collection(app_client, load_test_data):
-    """Test updating a collection which does not exist (same as creation)"""
-    test_collection = load_test_data("test_collection.json")
-    test_collection["id"] = "new-test-collection"
-
-    resp = app_client.put("/collections", json=test_collection)
-    assert resp.status_code == 404
-
-
 def test_collection_not_found(app_client):
     """Test read a collection which does not exist"""
     resp = app_client.get("/collections/does-not-exist")
