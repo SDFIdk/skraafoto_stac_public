@@ -27,6 +27,7 @@ from stac_fastapi.api.models import (
     APIRequest,
     CollectionUri,
     EmptyRequest,
+    GeoJSONResponse,
     ItemCollectionUri,
     ItemUri,
     SearchGetRequest,
@@ -115,17 +116,16 @@ class StacApi:
         return None
 
     def _create_endpoint(
-        self, func: Callable, request_type: Union[Type[APIRequest], Type[BaseModel]]
+        self,
+        func: Callable,
+        request_type: Union[Type[APIRequest], Type[BaseModel]],
+        resp_class: Type[Response],
     ) -> Callable:
         """Create a FastAPI endpoint."""
         if isinstance(self.client, AsyncBaseCoreClient):
-            return create_async_endpoint(
-                func, request_type, response_class=self.response_class
-            )
+            return create_async_endpoint(func, request_type, response_class=resp_class)
         elif isinstance(self.client, BaseCoreClient):
-            return create_sync_endpoint(
-                func, request_type, response_class=self.response_class
-            )
+            return create_sync_endpoint(func, request_type, response_class=resp_class)
         raise NotImplementedError
 
     def register_landing_page(self):
@@ -144,7 +144,7 @@ class StacApi:
             response_model_exclude_unset=False,
             response_model_exclude_none=True,
             methods=["GET"],
-            endpoint=self._create_endpoint(self.client.landing_page, EmptyRequest),
+            endpoint=self._create_endpoint(self.client.landing_page, EmptyRequest, self.response_class),
             description=descriptions.LANDING_PAGE
         )
 
@@ -164,7 +164,7 @@ class StacApi:
             response_model_exclude_unset=True,
             response_model_exclude_none=True,
             methods=["GET"],
-            endpoint=self._create_endpoint(self.client.conformance, EmptyRequest),
+            endpoint=self._create_endpoint(self.client.conformance, EmptyRequest, self.response_class),
             description=descriptions.CONFORMANCECLASSES
         )
 
@@ -182,7 +182,7 @@ class StacApi:
             response_model_exclude_unset=True,
             response_model_exclude_none=True,
             methods=["GET"],
-            endpoint=self._create_endpoint(self.client.get_item, ItemUri),
+            endpoint=self._create_endpoint(self.client.get_item, ItemUri, self.response_class),
             description=descriptions.GET_ITEM
         )
 
@@ -200,12 +200,12 @@ class StacApi:
             response_model=(ItemCollection if not fields_ext else None)
             if self.settings.enable_response_models
             else None,
-            response_class=self.response_class,
+            response_class=GeoJSONResponse,
             response_model_exclude_unset=True,
             response_model_exclude_none=True,
             methods=["POST"],
             endpoint=self._create_endpoint(
-                self.client.post_search, search_request_model
+                self.client.post_search, search_request_model, GeoJSONResponse
             ),
             description=descriptions.POST_SEARCH
         )
@@ -223,11 +223,11 @@ class StacApi:
             response_model=(ItemCollection if not fields_ext else None)
             if self.settings.enable_response_models
             else None,
-            response_class=self.response_class,
+            response_class=GeoJSONResponse,
             response_model_exclude_unset=True,
             response_model_exclude_none=True,
             methods=["GET"],
-            endpoint=self._create_endpoint(self.client.get_search, SearchGetRequest),
+            endpoint=self._create_endpoint(self.client.get_search, SearchGetRequest, GeoJSONResponse),
             description=descriptions.GET_SEARCH
         )
 
@@ -247,7 +247,7 @@ class StacApi:
             response_model_exclude_unset=True,
             response_model_exclude_none=True,
             methods=["GET"],
-            endpoint=self._create_endpoint(self.client.all_collections, EmptyRequest),
+            endpoint=self._create_endpoint(self.client.all_collections, EmptyRequest, self.response_class),
             description=descriptions.GET_COLLECTIONS
         )
 
@@ -265,7 +265,7 @@ class StacApi:
             response_model_exclude_unset=True,
             response_model_exclude_none=True,
             methods=["GET"],
-            endpoint=self._create_endpoint(self.client.get_collection, CollectionUri),
+            endpoint=self._create_endpoint(self.client.get_collection, CollectionUri, self.response_class),
             description=descriptions.GET_COLLECTION
         )
 
@@ -286,7 +286,7 @@ class StacApi:
             response_model_exclude_none=True,
             methods=["GET"],
             endpoint=self._create_endpoint(
-                self.client.item_collection, ItemCollectionUri
+                self.client.item_collection, ItemCollectionUri, self.response_class
             ),
             description=descriptions.GET_ITEM_COLLECTION
         )

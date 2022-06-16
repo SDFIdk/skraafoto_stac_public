@@ -1,5 +1,6 @@
 """api request/response models."""
 
+import importlib.util
 import abc
 from typing import Dict, Optional, Type, Union, List
 from datetime import datetime
@@ -165,3 +166,20 @@ class SearchGetRequest(APIRequest, FilterableRequest):
             "sortby": self.sortby.split(",") if self.sortby else self.sortby,
             "intersects": self.intersects
         }
+
+# Test for ORJSON and use it rather than stdlib JSON where supported
+if importlib.util.find_spec("orjson") is not None:
+    from fastapi.responses import ORJSONResponse
+
+    class GeoJSONResponse(ORJSONResponse):
+        """JSON with custom, vendor content-type."""
+
+        media_type = "application/geo+json"
+
+else:
+    from starlette.responses import JSONResponse
+
+    class GeoJSONResponse(JSONResponse):
+        """JSON with custom, vendor content-type."""
+
+        media_type = "application/geo+json"
