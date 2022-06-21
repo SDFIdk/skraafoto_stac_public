@@ -6,8 +6,6 @@ RUN apt-get update \
     && apt-get install -y build-essential postgresql-client \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
-ARG install_dev_dependencies=true
-
 WORKDIR /app
 
 # Install stac_fastapi.types
