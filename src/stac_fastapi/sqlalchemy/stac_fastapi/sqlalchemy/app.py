@@ -68,7 +68,7 @@ if settings.debug:
         
 session = Session.create_from_settings(settings)
 api = StacApi(
-    title="Dataforsyningen FlyfotoAPI",
+    title="Skråfoto STAC API",
     description="API til udstilling af metadata for ikke-oprettede flyfotos.",
     settings=settings,
     extensions=[
