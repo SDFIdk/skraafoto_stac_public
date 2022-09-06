@@ -49,8 +49,11 @@ services:
     networks:
       - dev-stac-fastapi-network  
     command:  [
-          "pyton -m uvicorn stac_fastapi.sqlalchemy.app:app --reload
-          --host 0.0.0.0 --port 8081"          
+        "sh",
+        "-c",
+        "pip install debugpy && python -m debugpy --wait-for-client --listen
+          0.0.0.0:5678 -m uvicorn stac_fastapi.sqlalchemy.app:app --reload
+          --host 0.0.0.0 --port 8081"
       ]
 
   test-alembic-run-migration:
