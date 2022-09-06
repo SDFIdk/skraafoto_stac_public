@@ -92,10 +92,10 @@ class StacApi:
         )
     )
     router: APIRouter = attr.ib(default=attr.Factory(APIRouter))
-    title: str = attr.ib(default="stac-fastapi")
-    api_version: str = attr.ib(default="0.1")
+    title: str = attr.ib(default="Skråfoto STAC API")
+    api_version: str = attr.ib(default="1.0")
     stac_version: str = attr.ib(default=STAC_VERSION)
-    description: str = attr.ib(default="stac-fastapi")
+    description: str = attr.ib(default="API til udstilling af metadata for ikke-oprettede flyfotos.")
     search_request_model: Type[Search] = attr.ib(default=STACSearch)
     response_class: Type[Response] = attr.ib(default=JSONResponse)
     middlewares: List = attr.ib(default=attr.Factory(lambda: [BrotliMiddleware]))
@@ -323,7 +323,7 @@ class StacApi:
             return self.app.openapi_schema
 
         openapi_schema = get_openapi(
-            title=self.title, version=self.api_version, routes=self.app.routes
+            title=self.title, version=self.api_version, description=self.description, routes=self.app.routes
         )
 
         self.app.openapi_schema = openapi_schema
@@ -464,7 +464,7 @@ class StacApi:
         add_exception_handlers(self.app, status_codes=self.exceptions)
 
         # customize openapi
-        # self.app.openapi = self.customize_openapi
+        self.app.openapi = self.customize_openapi
 
         # add middlewares
         for middleware in self.middlewares:
