@@ -1,5 +1,6 @@
 """FastAPI application."""
 import logging
+from typing import Optional
 from fastapi import security
 from fastapi.params import Depends, Query
 from stac_fastapi.api.app import StacApi
@@ -21,8 +22,20 @@ from sqlalchemy.engine import Engine
 import time
 import logging
 
+def token_header_param(
+    header_token: Optional[str] = Depends(
+        security.api_key.APIKeyHeader(name="token", auto_error=False)
+    ),
+):
+    """This defines an api-key header param named 'token'"""
+    # Set auto_error to `True` to make `token `required.
+    pass
+
+
 def token_query_param(
-    token: str = Depends(security.api_key.APIKeyQuery(name="token", auto_error=False)),
+    query_token: Optional[str] = Depends(
+        security.api_key.APIKeyQuery(name="token", auto_error=False)
+    ),
 ):
     """This defines an api-key query param named 'token'"""
     # Set auto_error to `True` to make `token `required.
@@ -84,7 +97,7 @@ api = StacApi(
         landing_page_id="dataforsyningen-flyfotoapi",
     ),
     search_request_model=STACSearch,
-    route_dependencies=[(ROUTES_REQUIRING_TOKEN, [Depends(token_query_param)])],
+    route_dependencies=[(ROUTES_REQUIRING_TOKEN, [Depends(token_header_param), Depends(token_query_param)])],
 )
 app = api.app
 
