@@ -829,7 +829,7 @@ def test_filter_crs_epsg4326(app_client, load_test_data):
     matching_feat = [x for x in resp_json["features"] if x["id"] == test_item["id"]]
     assert len(matching_feat) == 1
     # Is the geometry "almost" the same. (Which is good enough for this assesment)
-    assert shape(matching_feat[0]["geometry"]).almost_equals(shape(test_item["geometry"]))
+    assert shape(matching_feat[0]["geometry"]).equals_exact(shape(test_item["geometry"]), 1e-6)
     assert (
         resp_json["features"][0]["crs"]["properties"]["name"]
         == "http://www.opengis.net/def/crs/OGC/1.3/CRS84"
