@@ -16,8 +16,8 @@ Guiden er en hurtig gennemgang af, hvordan man får skråfotos for et bestemt ge
      <th>Klienter UDEN COG support</th>
   </tr>
   <tr>
-    <td><img src="https://raw.githubusercontent.com/SDFIdk/skraafoto_stac_public/main/media/Skr%C3%A5fotodistribution-HTTPServer.svg" alt="For klienter med understøttelse af COGs" style="max-width: 70%; max-height: 70%;"></td>
-    <td><img src="https://raw.githubusercontent.com/SDFIdk/skraafoto_stac_public/main/media/Skr%C3%A5fotodistribution-TileServer.svg" alt="Klienter UDEN COG support" style="max-width: 100%; max-height: 100%;"></td>
+    <td><img src="https://raw.githubusercontent.com/SDFIdk/skraafoto_stac_public/main/media/Skr%C3%A5fotodistribution-HTTPServer.svg" alt="For klienter med understøttelse af COGs" width="300px"></td>
+    <td><img src="https://raw.githubusercontent.com/SDFIdk/skraafoto_stac_public/main/media/Skr%C3%A5fotodistribution-TileServer.svg" alt="Klienter UDEN COG support" width="300px"></td>
   </tr>
  </table>
 
