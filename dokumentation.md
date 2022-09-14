@@ -23,8 +23,6 @@ Selve APIet, der udstiller metadata i form af [STAC Items](#stac-item) organiser
 
 `Items` er inddelt i `Collections`, således at en `Collection` består af logisk beslægtede `Items`. For eksempel er skråfotos inddelt i en `Collection` per årgang.
 
-_Eksempel_
-
 ```json
 {
     "type": "Collection",
@@ -421,7 +419,7 @@ FeatureCollection (Array af STAC Items) (GeoJSON)
 GET https://api.dataforsyningen.dk/skraafoto_api/search
 HTTP/1.1
 Host: api.dataforsyningen.dk
-Accept: application/json
+Accept: application/geo+json
 ```
 
 > Code samples
@@ -660,54 +658,55 @@ Filter extension tilføjer særlig funktionalitet til at søge ved hjælp af for
 Eksempler på brug af filter parameter:
 1. `POST /search` - Hent features hvis geometri overlapper (intersects) med input geometri.
 
-    > Code samples
+> Code samples
 
-    ```http
-    POST https://api.dataforsyningen.dk/skraafoto_api/search
-    HTTP/1.1
-    Host: api.dataforsyningen.dk
-    Content-Type: application/json
-    Accept: application/geo+json
+```http
+POST https://api.dataforsyningen.dk/skraafoto_api/search
+HTTP/1.1
+Host: api.dataforsyningen.dk
+Content-Type: application/json
+Accept: application/geo+json
 
-    {
-        "filter-lang": "cql-json",
-        "filter": {
-            "intersects": [
-                { "property": "geometry" },
-                {
-                    "type": "Polygon",
-                    "coordinates": [[
-                    [721250.0000012278, 6190390.000002561], [721244.0000012267, 6191220.000002562],
-                    [722491.0000012581, 6191080.000002566], [722493.0000012588, 6190540.000002567],
-                    [721250.0000012278, 6190390.000002561]
-                    ]]
-                }
-            ]
-        },
-    "filter-crs": "http://www.opengis.net/def/crs/EPSG/0/25832",
-    }
-    ```
+{
+    "filter-lang": "cql-json",
+    "filter": {
+        "intersects": [
+            { "property": "geometry" },
+            {
+                "type": "Polygon",
+                "coordinates": [[
+                [721250.0000012278, 6190390.000002561], [721244.0000012267, 6191220.000002562],
+                [722491.0000012581, 6191080.000002566], [722493.0000012588, 6190540.000002567],
+                [721250.0000012278, 6190390.000002561]
+                ]]
+            }
+        ]
+    },
+"filter-crs": "http://www.opengis.net/def/crs/EPSG/0/25832",
+}
+```
 
 2. `POST /search` - Hent features hvor `property.direction` er sat til øst og gsd er større end 0.101.
-    > Code samples
 
-    ```http
-    POST https://api.dataforsyningen.dk/skraafoto_api/search
-    HTTP/1.1
-    Host: api.dataforsyningen.dk
-    Content-Type: application/json
-    Accept: application/geo+json
+> Code samples
 
-    {
-        "filter-lang": "cql-json",
-        "filter": {
-            "and": [
-                {"eq": [ { "property": "direction" }, "east" ] },
-                {"gt": [ { "property": "gsd" }, 0.101 ] }
-            ]
-        }
+```http
+POST https://api.dataforsyningen.dk/skraafoto_api/search
+HTTP/1.1
+Host: api.dataforsyningen.dk
+Content-Type: application/json
+Accept: application/geo+json
+
+{
+    "filter-lang": "cql-json",
+    "filter": {
+        "and": [
+            {"eq": [ { "property": "direction" }, "east" ] },
+            {"gt": [ { "property": "gsd" }, 0.101 ] }
+        ]
     }
-    ```
+}
+```
 
 Nærmere beskrivelse af [Filter extension](https://github.com/radiantearth/stac-api-spec/tree/master/fragments/filter).
 
@@ -717,27 +716,28 @@ Sort extension tilføjer funktionalitet til at sortere resultater hentet via `/s
 
 Eksempler på brug af sortBy parameter:
 
-1. `GET /search?sortby=+properties.datetime` - Sortér på properties.datetime ascending
-2. `GET /search?sortby=properties.datetime,-id` - Sortér på properties.datetime ascending og id descending
-3. `POST /search` - Sortér på collection descending
-    > Code samples
+1. `GET /search?sortby=+properties.datetime` - Sortér på properties.datetime ascending.
+2. `GET /search?sortby=properties.datetime,-id` - Sortér på properties.datetime ascending og id descending.
+3. `POST /search` - Sortér på collection descending.
 
-    ```http
-    POST https://api.dataforsyningen.dk/skraafoto_api/search
-    HTTP/1.1
-    Host: api.dataforsyningen.dk
-    Content-Type: application/json
-    Accept: application/geo+json
+> Code samples
 
-    {
-        "sortby": [
-            {
-                "field": "collection",
-                "direction": "desc"
-            }
-        ]
-    }
-    ```
+```http
+POST https://api.dataforsyningen.dk/skraafoto_api/search
+HTTP/1.1
+Host: api.dataforsyningen.dk
+Content-Type: application/json
+Accept: application/geo+json
+
+{
+    "sortby": [
+        {
+            "field": "collection",
+            "direction": "desc"
+        }
+    ]
+}
+```
 
 Nærmere beskrivelse af [Sort Extension](https://github.com/radiantearth/stac-api-spec/tree/master/fragments/sort).
 
@@ -749,9 +749,9 @@ Der er flere muligheder for at gå fra de returnerede metadata (se [STAC Item](#
 Relevante links findes i sektionen `links` hhv `assets`:
 
 ```json
-[...]
+...
 "links": [
-    [...]
+    ...
     {
         "rel": "alternate",
         "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/viewer.html?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_614_59%2F1km_6145_592%2F2021_83_36_1_0020_00003045.tif",
@@ -777,7 +777,7 @@ Relevante links findes i sektionen `links` hhv `assets`:
         "title": "Thumbnail"
     }
 }
-[...]
+...
 ```
 
 **Bemærk** at alle links til dataforsyningen kræver angivelsen af `token` enten som query parameter eller som header.
@@ -840,7 +840,8 @@ y0 = sensor_rows * 0.5 + ppo_y / pixel_size
 Dernæst kan `(xa, ya)` beregnes på en af to måder. Bemærk i øvrigt, at pixelkoordinaterne `(xa, ya)` har origo i billedets nederste venstre hjørne med x-aksen positiv mod højre og y-aksen positiv op.
 
 Den klassiske fotogrammetriske form:
-```
+
+```text
 dX = (X-Xc)
 dY = (Y-Yc)
 dZ = (Z-Zc)
