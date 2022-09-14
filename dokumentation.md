@@ -843,11 +843,11 @@ Eller formuleret på matrixform:
 
 ![matrix_form](https://raw.githubusercontent.com/SDFIdk/skraafoto_stac_public/main/media/matrix_form.svg)
 
-# How to get started
+## How to get started
 
 Guiden er en hurtig gennemgang af, hvordan man får skråfotos for et bestemt geografisk område ved hjælp af koordinater.
 
-## Sammenspillet mellem de tre API'er
+### Sammenspillet mellem de tre API'er
 
 - **Skåfoto STAC API** leverer metadata om skråfotos. Dens URL starter med `https://api.dataforsyningen.dk/skraafoto_api`, men for at bruge URL'en er det et krav, at der bliver specificeret paths og query parameters.
 - **Skåfoto Server** leverer skråfotos som [Cloud Optimized Geotiff](https://www.cogeo.org) (`COG`), hvor der kan bruges range request. Dens URL starter med `https://api.dataforsyningen.dk/skraafoto_server`, men for at bruge URL'en er det et krav, at der bliver specificeret paths og query parameters.
@@ -864,7 +864,7 @@ Guiden er en hurtig gennemgang af, hvordan man får skråfotos for et bestemt ge
   </tr>
  </table>
 
-### Eksempel 1
+#### Eksempel 1
 
 Hente en COG fra Skåfoto Server, og vise billedet med Open Layer
 
@@ -916,7 +916,7 @@ Hente en COG fra Skåfoto Server, og vise billedet med Open Layer
 </html>
 ```
 
-### Eksempel 2
+#### Eksempel 2
 
 Hente metadata om et bestemt skråfoto, for så at få vist selve billedet ved brug af Skråfoto STAC API og Skråfoto Cogtiler
 
@@ -976,7 +976,7 @@ Hente metadata om et bestemt skråfoto, for så at få vist selve billedet ved b
 </html>
 ```
 
-## Håndtering af collections
+### Håndtering af collections
 
 **Vigtig optimering af søgninger**
 
@@ -987,7 +987,7 @@ Hvis der ønskes billeder af det samme sted, på tværs af collections skal der 
 
 Hvert skråfoto har et `Item` objekt tilknyttet, som indeholder metadata for det. Mere om [STAC Item](#stac-item).
 
-### Samme årgang
+#### Samme årgang
 
 > Code samples
 
@@ -1559,7 +1559,7 @@ I URL'en angives `{collectionid}` i path, hvilken collection man ønsker at frem
 
 I dette tilfælde er det `skraafotos2019` collection. Dernæst angives query parameterne. Her er det parameteren `bbox` med værdierne `10.3285,55.3556,10.4536,55.4132`, som beskriver hvilket geografisk område, der ønskes metadata om billederne fra. I dette eksempel er `bbox` i projektion `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, hvilket bliver angivet i `bbox-crs` parameteren. Limit er sat til 3, så hvis der er et match mellem den koordinaterne for den angivne `bbox` og metadata for skåfotos, vil JSON response indeholde tre `Items` objekter. I `context` objektet er attributterne `Returned`, `Limit` og `Matched`, der kan læses mere om på [Context Extension](#context-extension), hvor det også er forklaret hvordan paging fungerer.
 
-### På tværs af årgange
+#### På tværs af årgange
 
 > Code samples
 
