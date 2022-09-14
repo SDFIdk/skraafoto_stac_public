@@ -315,8 +315,7 @@ Hvis token er autoriseret, men requesten har en ugyldig parameter, returneres en
 > Code samples
 
 ```http
-GET https://api.dataforsyningen.dk/skraafoto_api
-HTTP/1.1
+GET https://api.dataforsyningen.dk/skraafoto_api HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
@@ -338,8 +337,7 @@ STAC Catalog (JSON)
 > Code samples
 
 ```http
-GET https://api.dataforsyningen.dk/skraafoto_api/conformance
-HTTP/1.1
+GET https://api.dataforsyningen.dk/skraafoto_api/conformance HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
@@ -361,8 +359,7 @@ Array af conformance klasser (JSON)
 > Code samples
 
 ```http
-GET https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2019/items/2019_83_37_2_0046_00001113
-HTTP/1.1
+GET https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2019/items/2019_83_37_2_0046_00001113 HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
@@ -388,8 +385,7 @@ Feature (STAC Item) (GeoJSON)
 > Code samples
 
 ```http
-GET https://api.dataforsyningen.dk/skraafoto_api/search
-HTTP/1.1
+GET https://api.dataforsyningen.dk/skraafoto_api/search HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/geo+json
 ```
@@ -397,8 +393,7 @@ Accept: application/geo+json
 > Code samples
 
 ```http
-POST https://api.dataforsyningen.dk/skraafoto_api/search
-HTTP/1.1
+POST https://api.dataforsyningen.dk/skraafoto_api/search HTTP/1.1
 Host: api.dataforsyningen.dk
 Content-Type: application/json
 Accept: application/geo+json
@@ -435,8 +430,7 @@ FeatureCollection (Array af STAC Items) (GeoJSON)
 > Code samples
 
 ```http
-GET https://api.dataforsyningen.dk/skraafoto_api/collections
-HTTP/1.1
+GET https://api.dataforsyningen.dk/skraafoto_api/collections HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
@@ -458,8 +452,7 @@ Collections (Array af STAC Collections) (JSON)
 > Code samples
 
 ```http
-GET https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2019
-HTTP/1.1
+GET https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2019 HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
@@ -483,8 +476,7 @@ Collection (STAC Collection) (JSON)
 > Code samples
 
 ```http
-GET https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2019/items
-HTTP/1.1
+GET https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2019/items HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
@@ -518,8 +510,7 @@ FeatureCollection (Array af STAC Items) (GeoJSON)
 > Code samples
 
 ```http
-GET https://api.dataforsyningen.dk/skraafoto_api/queryables
-HTTP/1.1
+GET https://api.dataforsyningen.dk/skraafoto_api/queryables HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
@@ -541,8 +532,7 @@ Array af STAC Item properties, der kan bruges over alle collections i filter udt
 > Code samples
 
 ```http
-GET https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2019/queryables
-HTTP/1.1
+GET https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2019/queryables HTTP/1.1
 Host: api.dataforsyningen.dk
 Accept: application/json
 ```
@@ -609,11 +599,18 @@ Nærmere beskrivelse af [Context Extension](https://github.com/radiantearth/stac
 
 ### CRS Extension
 
+Tilføjer funktionalitet til håndtering af koordinatsystemer. [GeoJSON standarden](https://datatracker.ietf.org/doc/html/rfc7946#section-4) understøtter som sådan ikke andre koordinatsystemer end WGS84, men tillader at gøre brug af andre koordinatsystemer, hvor alle parter er informeret om formatet. Parameteren `crs` i `/search` og `/collections/{collectionid/items}` bruges hvis man ønsker retursvar i et andet koordinatsystem. `crs` angives med CRS's URI, så for `WGS84` er det `http://www.opengis.net/def/crs/OGC/1.3/CRS84` (default) og for `EPSG:25832` er det `http://www.opengis.net/def/crs/EPSG/0/25832`. Desuden kan parametrene `bbox-crs` og `filter-crs` bruges til at angive hvilket koordinatsystem geometrier i parametrene `bbox` og `filter` er angivet i, og følger samme fremgangsmåde som `crs`. Dette er for at følge standarden beskrevet i [OGC API - Features Part 2](https://docs.opengeospatial.org/is/18-058/18-058.html). Understøttede CRS-parametre kan ses på hver enkel _Collection_. Desuden angiver parameteren `storageCrs` på `collection`, hvilket koordinatsystem data er lagret i.
+
+Eksempler på brug af parametrene `crs`, `bbox-crs`, og `filter-crs`:
+
+1. `GET /search?crs=http://www.opengis.net/def/crs/EPSG/0/25832` - Returnerer geometrier i EPSG:25832.
+2. `GET /search?bbox=492283,6195600,493583,6196470&bbox-crs=http://www.opengis.net/def/crs/EPSG/0/25832` - Input `bbox` er angivet i EPSG:25832.
+3. `POST /search` - Hent features, der overlapper (intersects) med geometri angivet i EPSG:25832, resultater returneres i WGS84. Eksempel på request ses ude til højre.
+
 > Code samples
 
 ```http
-POST https://api.dataforsyningen.dk/skraafoto_api/search
-HTTP/1.1
+POST https://api.dataforsyningen.dk/skraafoto_api/search HTTP/1.1
 Host: api.dataforsyningen.dk
 Content-Type: application/json
 Accept: application/geo+json
@@ -638,14 +635,6 @@ Accept: application/geo+json
 }
 ```
 
-Tilføjer funktionalitet til håndtering af koordinatsystemer. [GeoJSON standarden](https://datatracker.ietf.org/doc/html/rfc7946#section-4) understøtter som sådan ikke andre koordinatsystemer end WGS84, men tillader at gøre brug af andre koordinatsystemer, hvor alle parter er informeret om formatet. Parameteren `crs` i `/search` og `/collections/{collectionid/items}` bruges hvis man ønsker retursvar i et andet koordinatsystem. `crs` angives med CRS's URI, så for `WGS84` er det `http://www.opengis.net/def/crs/OGC/1.3/CRS84` (default) og for `EPSG:25832` er det `http://www.opengis.net/def/crs/EPSG/0/25832`. Desuden kan parametrene `bbox-crs` og `filter-crs` bruges til at angive hvilket koordinatsystem geometrier i parametrene `bbox` og `filter` er angivet i, og følger samme fremgangsmåde som `crs`. Dette er for at følge standarden beskrevet i [OGC API - Features Part 2](https://docs.opengeospatial.org/is/18-058/18-058.html). Understøttede CRS-parametre kan ses på hver enkel _Collection_. Desuden angiver parameteren `storageCrs` på `collection`, hvilket koordinatsystem data er lagret i.
-
-Eksempler på brug af parametrene `crs`, `bbox-crs`, og `filter-crs`:
-
-1. `GET /search?crs=http://www.opengis.net/def/crs/EPSG/0/25832` - Returnerer geometrier i EPSG:25832.
-2. `GET /search?bbox=492283,6195600,493583,6196470&bbox-crs=http://www.opengis.net/def/crs/EPSG/0/25832` - Input `bbox` er angivet i EPSG:25832.
-3. `POST /search` - Hent features, der overlapper (intersects) med geometri angivet i EPSG:25832, resultater returneres i WGS84.
-
 ### Filter Extension
 
 Filter extension tilføjer særlig funktionalitet til at søge ved hjælp af forespørgsler i CQL (Common Query Language). Denne extension implementerer specifikationer beskrevet i [OGC Api Features - Part 3: Filtering and the Common Query Language (CQL)](https://portal.ogc.org/files/96288). Den tilføjer desuden to ekstra endpoints `/queryables` og `/collections/{collectionid}/queryables`.`/queryables` beskriver hvilke properties, der kan indgå i filter-forespørgsler. Alle filter-properties valideres mod `/queryables`, og der returneres en validation-fejl hvis der bruges en ugyldig property.
@@ -660,8 +649,7 @@ Eksempler på brug af filter parameter:
 > Code samples
 
 ```http
-POST https://api.dataforsyningen.dk/skraafoto_api/search
-HTTP/1.1
+POST https://api.dataforsyningen.dk/skraafoto_api/search HTTP/1.1
 Host: api.dataforsyningen.dk
 Content-Type: application/json
 Accept: application/geo+json
@@ -690,8 +678,7 @@ Accept: application/geo+json
 > Code samples
 
 ```http
-POST https://api.dataforsyningen.dk/skraafoto_api/search
-HTTP/1.1
+POST https://api.dataforsyningen.dk/skraafoto_api/search HTTP/1.1
 Host: api.dataforsyningen.dk
 Content-Type: application/json
 Accept: application/geo+json
@@ -722,8 +709,7 @@ Eksempler på brug af sortBy parameter:
 > Code samples
 
 ```http
-POST https://api.dataforsyningen.dk/skraafoto_api/search
-HTTP/1.1
+POST https://api.dataforsyningen.dk/skraafoto_api/search HTTP/1.1
 Host: api.dataforsyningen.dk
 Content-Type: application/json
 Accept: application/geo+json
