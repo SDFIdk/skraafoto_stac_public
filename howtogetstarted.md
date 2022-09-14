@@ -141,50 +141,22 @@ Hvis der kun ønskes billeder af det samme sted fra samme årgang, så anbefales
 Hvis der ønskes billeder af det samme sted, på tværs af collections skal der bruges `/search`.
 
 **STAC Item**
-Hvert skråfoto har et `Item` objekt tilknyttet, som indeholder metadata for det. Mere om STAC Item kan læses [her](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#stac-item).
+
+Hvert skråfoto har et `Item` objekt tilknyttet, som indeholder metadata for det. Mere om [STAC Item](#stac-item).
 
 ### Samme årgang
 
-I URL'en angives `{collectionid}` i path, hvilken collection man ønsker at fremsøge billeder fra.
-
-_URL_:
-
-`GET https://api.dataforsyningen.dk/skraafoto_api/collections/{collectionid}/items`
-
-`token: {DinToken}`
-
-_Parametre_:
-
-| **Parameter** | **Type**  | **Description** |
-| ------------- | --------- | --------------- |
-| collectionid  | string    | ID'et på en collection. |
-| crs           | string    | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832` <br>Angiver hvilket koordinatsystem geometrier i JSON response skal returneres i. Se [Crs Extension](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#crs-extension).</br> |
-| limit         | integer   | Default: 10, maks: 1000<br>Angiver maks antallet af `Item` objekter i JSON response som objektet indeholder (page size). Se [Context Extension](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#context-extension).<br/> |
-| pt            | string    | Angiver en bestemt side, der skal fremsøges i forhold til paging. Se [Context Extension](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#context-extension). |
-| ids           | \[string] | Array af `Item` ID'er. |
-| bbox          | \[number] | Array af fire tal |
-| bbox-crs      | string    | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`. <br>Angiver hvilket koordinatsystem geometrier i `bbox` er angivet i.</br> |
-| datetime      | string    | Dato og tid formateret efter [RFC 3339, sektion 5.6](https://tools.ietf.org/html/rfc3339#section-5.6). Kan være en enkelt dato og tid eller intervaller separeret med `/`. Der kan bruges to punktummer `..` for et åbent dato- og tidsinterval. |
-| filter        | string    | `CQL-JSON` udtryk til avanceret søgninger på specifikke `Item` properties. Se [Filter Extension](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#filter-extension). Denne parameter skal URL encodes. |
-| filter-lang   | string    | Default: `CQL-JSON` <br>Angiver hvilket query-sprog filteret er skrevet i. Se [Filter Extension](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#filter-extension).</br> |
-| filter-crs    | string    | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`. <br>Angiver hvilket koordinatsystem geometrier i `filter` er angivet i. Se [Filter Extension](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#filter-extension).</br> |
-
-_Output_:
-
-FeatureCollection (Array af STAC Items) (GeoJSON)
-
-_Eksempel_:
+> Code samples
 
 ```http
-GET https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2019/items?limit=3&bbox=10.3285,55.3556,10.4536,55.4132&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84
-token: {DinToken}
+GET https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2019/items?limit=3&bbox=10.3285,55.3556,10.4536,55.4132&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84 HTTP/1.1
+Host: api.dataforsyningen.dk
+Accept: application/json
 ```
 
-I dette tilfælde er det `skraafotos2019` collection. Dernæst angives query parameterne. Her er det parameteren `bbox` med værdierne `10.3285,55.3556,10.4536,55.4132`, som beskriver hvilket geografisk område, der ønskes metadata om billederne fra. I dette eksempel er `bbox` i projektion `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, hvilket bliver angivet i `bbox-crs` parameteren. Limit er sat til 3, så hvis der er et match mellem den koordinaterne for den angivne `bbox` og metadata for skåfotos, vil JSON response indeholde tre `Items` objekter. I `context` objektet er attributterne `Returned`, `Limit` og `Matched`, der kan læses mere om på [dokumentation](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#context-extension), hvor det også er forklaret hvordan paging fungerer.
+> Example responses
 
-_Response_:
-
-<details>
+> 200 Response
 
 ```json
 {
@@ -739,50 +711,24 @@ _Response_:
     }
 }
 ```
-</details>
+
+I URL'en angives `{collectionid}` i path, hvilken collection man ønsker at fremsøge billeder fra. Se `GET /collections/{collectionid}/items` under [Endpoints og outputs](#endpoints-og-outputs) for mulige parametre og output type.
+
+I dette tilfælde er det `skraafotos2019` collection. Dernæst angives query parameterne. Her er det parameteren `bbox` med værdierne `10.3285,55.3556,10.4536,55.4132`, som beskriver hvilket geografisk område, der ønskes metadata om billederne fra. I dette eksempel er `bbox` i projektion `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, hvilket bliver angivet i `bbox-crs` parameteren. Limit er sat til 3, så hvis der er et match mellem den koordinaterne for den angivne `bbox` og metadata for skåfotos, vil JSON response indeholde tre `Items` objekter. I `context` objektet er attributterne `Returned`, `Limit` og `Matched`, der kan læses mere om på [dokumentation](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#context-extension), hvor det også er forklaret hvordan paging fungerer.
 
 ### På tværs af årgange
 
-_URL_:
-
-`GET https://api.dataforsyningen.dk/skraafoto_api/search`
-
-`token: {DinToken}`
-
-_Parametre_:
-
-| **Parameter** | **Type**  | **Description** |
-| ------------- | --------- | --------------- |
-| crs           | string    | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832` <br>Angiver hvilket koordinatsystem geometrier i JSON response skal returneres i. Se [Crs Extension](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#crs-extension).</br> |
-| limit         | integer   | Default: 10, maks: 1000<br>Angiver maks antallet af `Item` objekter i JSON response som objektet indeholder (page size). Se [Context Extension](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#context-extension).<br/> |
-| pt            | string    | Angiver en bestemt side, der skal fremsøges i forhold til paging. Se [Context Extension](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#context-extension). |
-| ids           | \[string] | Array af `Item` ID'er. |
-| bbox          | \[number] | Array af fire tal. Returner kun items inden for denne box. Kan ikke angives samtidig med  `intersects` |
-| bbox-crs      | string    | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`. <br>Angiver hvilket koordinatsystem geometrier i `bbox` er angivet i.</br> |
-| intersects    | string    | GeoJSON geometri, se [Geometries](https://en.wikipedia.org/wiki/GeoJSON#Geometries) for typer. Returner kun items, der overlapper denne geometri. Kan ikke angives samtidig med `bbox`. |
-| datetime      | string    | Dato og tid formateret efter [RFC 3339, sektion 5.6](https://tools.ietf.org/html/rfc3339#section-5.6). Kan være en enkelt dato og tid eller intervaller separeret med `/`. Der kan bruges to punktummer `..` for et åbent dato- og tidsinterval. |
-| filter        | string    | `CQL-JSON` udtryk til avanceret søgninger på specifikke `Item` properties. Se [Filter Extension](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#filter-extension). Denne parameter skal URL encodes. |
-| filter-lang   | string    | Default: `CQL-JSON` <br>Angiver hvilket query-sprog filteret er skrevet i. Se [Filter Extension](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#filter-extension).</br> |
-| filter-crs    | string    | Default: `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, understøtter også `http://www.opengis.net/def/crs/EPSG/0/25832`. <br>Angiver hvilket koordinatsystem geometrier `filter` er angivet i. Se [Filter Extension](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#filter-extension).</br> |
-| collections   | \[string] | Default: Søgning over alle collections. |
-| sortby        | string    | Angiver en sorteringsorden som resultatet returneres i. Se [Sort Extension](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#sort-extension). |
-
-_Output_:
-
-FeatureCollection (Array af STAC Items) (GeoJSON)
-
-_Eksempel_:
+> Code samples
 
 ```http
-GET https://api.dataforsyningen.dk/skraafoto_api/search?limit=3&bbox=10.3285,55.3556,10.4536,55.4132&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84
-token: {DinToken}
+GET https://api.dataforsyningen.dk/skraafoto_api/search?limit=3&bbox=10.3285,55.3556,10.4536,55.4132&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84 HTTP/1.1
+Host: api.dataforsyningen.dk
+Accept: application/geo+json
 ```
 
-Angiver query parameterne. Her er det parameteren `bbox` med værdierne `10.3285,55.3556,10.4536,55.4132`, som beskriver hvilket geografisk område, man ønsker metadata om billederne fra. I dette eksempel er bbox i projektion `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, hvilket bliver angivet i `bbox-crs` parameteren. Limit er sat til 3, så hvis der er et match mellem den angivet `bboxs` koordinater og metadata for skåfotos, vil JSON response indeholde tre `items` objekter. I `context` objektet er attributterne `Returned`, `Limit` og `Matched`, der kan læses mere om på [dokumentation](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#context-extension), hvor det også er forklaret hvordan paging fungerer.
+> Example responses
 
-_Response_:
-
-<details>
+> 200 Response
 
 ```json
 {
@@ -1337,14 +1283,14 @@ _Response_:
     }
 }
 ```
-</details>
 
-_Eksempel_:
+> Code samples
 
 ```http
-POST https://api.dataforsyningen.dk/skraafoto_api/search
+POST https://api.dataforsyningen.dk/skraafoto_api/search HTTP/1.1
+Host: api.dataforsyningen.dk
 Content-Type: application/json
-token: {DinToken}
+Accept: application/geo+json
 
 {
     "filter-lang": "cql-json",
@@ -1369,9 +1315,9 @@ token: {DinToken}
 }
 ```
 
-_Response_:
+> Example responses
 
-<details>
+> 200 Response
 
 ```json
 {
@@ -2005,4 +1951,7 @@ _Response_:
     }
 }
 ```
-</details>
+
+Se `GET/POST /search` under [Endpoints og outputs](#endpoints-og-outputs) for mulige parametre og output type.
+
+Angiver query parameterne. Her er det parameteren `bbox` med værdierne `10.3285,55.3556,10.4536,55.4132`, som beskriver hvilket geografisk område, man ønsker metadata om billederne fra. I dette eksempel er bbox i projektion `http://www.opengis.net/def/crs/OGC/1.3/CRS84`, hvilket bliver angivet i `bbox-crs` parameteren. Limit er sat til 3, så hvis der er et match mellem den angivet `bboxs` koordinater og metadata for skåfotos, vil JSON response indeholde tre `items` objekter. I `context` objektet er attributterne `Returned`, `Limit` og `Matched`, der kan læses mere om på [Context Extension](#context-extension), hvor det også er forklaret hvordan paging fungerer.
