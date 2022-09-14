@@ -4,37 +4,6 @@
 
 Guiden er en hurtig gennemgang af, hvordan man får skråfotos for et bestemt geografisk område ved hjælp af koordinater. Dokumentationen til API'et kan findes [her](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md).
 
-## Authentication
-
-Authentication benyttes i webapplikationer og GIS-systemer når du kalder API’er og webservices. Dataforsyningen er stateless, derfor skal `token` altid sendes med hver forespørgsel til `Dataforsyningen`, undtagen alle DAWA og Inspire OGC-tjenester.
-
-Du skal være oprettet som bruger på `Dataforsyningen` samt være logget ind, for at oprette og administrere dine `tokens` på `Dataforsyningen` (direkte link til stedet):
-
-1. Klik på brugerikonet øverst i højre hjørne
-2. Gå til "Administrer token til webservices og API’er"
-3. Klik på ”Opret ny token”.
-   Der bliver generet en `token` bestående af tilfældige tal og bogstaver. Dine `tokens` kan navngives til noget, der giver mening for dig - hvilket anbefales hvis de skal bruges til noget specifikt. Man kan definere udløbsdata for `tokens`, og slette `tokens` der ikke længere er i brug, eller hvis der er mistanke om komprimering.
-
-`Token` benyttes til at identificere sig overfor `Dataforsyningen` uden risiko for at afsløre brugernavn og adgangskode. Det kan f.eks. være relevant, hvis `Dataforsyningens` webservices er implementeret i webapplikationer tilgængelige for alle på internettet.
-
-`Token` skal angives på én af følgende måder i requests:
-
-1. Som header parameteren `token` (dette er den anbefalet metode, da den yder den højeste sikkerhed.)
-
-`GET https://api.dataforsyningen.dk/{servicenavnet på tjenesten}`
-
-`token: {DinToken}`
-
-2. Som queryparameter `token` i URL'en
-
-`GET https://api.dataforsyningen.dk/{servicenavnet på tjenesten}?token={DinToken}`
-
-Nedstående eksempler bruger første metode, men hvis du bruger metode to, skal du tilføje queryparameteren `token` på eksemplerne.
-
-> Vær opmærksom på at ved et response med en genereret URL, hvor man har angivet `token` som query parameter, vil den genererede URL indeholde den pågældende token. Denne del af URLen skal fjernes, hvis response skal deles med andre.
-
-Alle kald til `Dataforsyningens` API'er og webservices skal bruge HTTPS, da HTTP ikke understøttes, og `token` skal være angivet (undtagen alle DAWA og Inspire OGC-tjenester). Kald med manglende eller ugyldig `token` vil fejle.
-
 ## Sammenspillet mellem de tre API'er
 
 - **Skåfoto STAC API** leverer metadata om skråfotos. Dens URL starter med `https://api.dataforsyningen.dk/skraafotoapi_test`, men for at bruge URL'en er det et krav, at der bliver specificeret paths og queryparameters.
@@ -277,8 +246,8 @@ _Response_:
                         ]
                     },
                     {
-                        "url": "https://sdfe.dk/",
-                        "name": "SDFE",
+                        "url": "https://sdfi.dk/",
+                        "name": "SDFI",
                         "roles": [
                             "licensor",
                             "host"
@@ -356,9 +325,9 @@ _Response_:
                 },
                 {
                     "rel": "license",
-                    "href": "https://sdfe.dk/om-os/vilkaar-og-priser",
+                    "href": "https://dataforsyningen.dk/Vilkaar",
                     "type": "text/html; charset=UTF-8",
-                    "title": "SDFE license terms"
+                    "title": "SDFI license terms"
                 },
                 {
                     "rel": "alternate",
@@ -452,8 +421,8 @@ _Response_:
                         ]
                     },
                     {
-                        "url": "https://sdfe.dk/",
-                        "name": "SDFE",
+                        "url": "https://sdfi.dk/",
+                        "name": "SDFI",
                         "roles": [
                             "licensor",
                             "host"
@@ -531,9 +500,9 @@ _Response_:
                 },
                 {
                     "rel": "license",
-                    "href": "https://sdfe.dk/om-os/vilkaar-og-priser",
+                    "href": "https://dataforsyningen.dk/Vilkaar",
                     "type": "text/html; charset=UTF-8",
-                    "title": "SDFE license terms"
+                    "title": "SDFI license terms"
                 },
                 {
                     "rel": "alternate",
@@ -627,8 +596,8 @@ _Response_:
                         ]
                     },
                     {
-                        "url": "https://sdfe.dk/",
-                        "name": "SDFE",
+                        "url": "https://sdfi.dk/",
+                        "name": "SDFI",
                         "roles": [
                             "licensor",
                             "host"
@@ -706,9 +675,9 @@ _Response_:
                 },
                 {
                     "rel": "license",
-                    "href": "https://sdfe.dk/om-os/vilkaar-og-priser",
+                    "href": "https://dataforsyningen.dk/Vilkaar",
                     "type": "text/html; charset=UTF-8",
-                    "title": "SDFE license terms"
+                    "title": "SDFI license terms"
                 },
                 {
                     "rel": "alternate",
@@ -875,8 +844,8 @@ _Response_:
                         ]
                     },
                     {
-                        "url": "https://sdfe.dk/",
-                        "name": "SDFE",
+                        "url": "https://sdfi.dk/",
+                        "name": "SDFI",
                         "roles": [
                             "licensor",
                             "host"
@@ -954,9 +923,9 @@ _Response_:
                 },
                 {
                     "rel": "license",
-                    "href": "https://sdfe.dk/om-os/vilkaar-og-priser",
+                    "href": "https://dataforsyningen.dk/Vilkaar",
                     "type": "text/html; charset=UTF-8",
-                    "title": "SDFE license terms"
+                    "title": "SDFI license terms"
                 },
                 {
                     "rel": "alternate",
@@ -1050,8 +1019,8 @@ _Response_:
                         ]
                     },
                     {
-                        "url": "https://sdfe.dk/",
-                        "name": "SDFE",
+                        "url": "https://sdfi.dk/",
+                        "name": "SDFI",
                         "roles": [
                             "licensor",
                             "host"
@@ -1129,9 +1098,9 @@ _Response_:
                 },
                 {
                     "rel": "license",
-                    "href": "https://sdfe.dk/om-os/vilkaar-og-priser",
+                    "href": "https://dataforsyningen.dk/Vilkaar",
                     "type": "text/html; charset=UTF-8",
-                    "title": "SDFE license terms"
+                    "title": "SDFI license terms"
                 },
                 {
                     "rel": "alternate",
@@ -1225,8 +1194,8 @@ _Response_:
                         ]
                     },
                     {
-                        "url": "https://sdfe.dk/",
-                        "name": "SDFE",
+                        "url": "https://sdfi.dk/",
+                        "name": "SDFI",
                         "roles": [
                             "licensor",
                             "host"
@@ -1304,9 +1273,9 @@ _Response_:
                 },
                 {
                     "rel": "license",
-                    "href": "https://sdfe.dk/om-os/vilkaar-og-priser",
+                    "href": "https://dataforsyningen.dk/Vilkaar",
                     "type": "text/html; charset=UTF-8",
-                    "title": "SDFE license terms"
+                    "title": "SDFI license terms"
                 },
                 {
                     "rel": "alternate",
@@ -1464,8 +1433,8 @@ _Response_:
                         ]
                     },
                     {
-                        "url": "https://sdfe.dk/",
-                        "name": "SDFE",
+                        "url": "https://sdfi.dk/",
+                        "name": "SDFI",
                         "roles": [
                             "licensor",
                             "host"
@@ -1543,9 +1512,9 @@ _Response_:
                 },
                 {
                     "rel": "license",
-                    "href": "https://sdfe.dk/om-os/vilkaar-og-priser",
+                    "href": "https://dataforsyningen.dk/Vilkaar",
                     "type": "text/html; charset=UTF-8",
-                    "title": "SDFE license terms"
+                    "title": "SDFI license terms"
                 },
                 {
                     "rel": "alternate",
@@ -1639,8 +1608,8 @@ _Response_:
                         ]
                     },
                     {
-                        "url": "https://sdfe.dk/",
-                        "name": "SDFE",
+                        "url": "https://sdfi.dk/",
+                        "name": "SDFI",
                         "roles": [
                             "licensor",
                             "host"
@@ -1718,9 +1687,9 @@ _Response_:
                 },
                 {
                     "rel": "license",
-                    "href": "https://sdfe.dk/om-os/vilkaar-og-priser",
+                    "href": "https://dataforsyningen.dk/Vilkaar",
                     "type": "text/html; charset=UTF-8",
-                    "title": "SDFE license terms"
+                    "title": "SDFI license terms"
                 },
                 {
                     "rel": "alternate",
@@ -1814,8 +1783,8 @@ _Response_:
                         ]
                     },
                     {
-                        "url": "https://sdfe.dk/",
-                        "name": "SDFE",
+                        "url": "https://sdfi.dk/",
+                        "name": "SDFI",
                         "roles": [
                             "licensor",
                             "host"
@@ -1893,9 +1862,9 @@ _Response_:
                 },
                 {
                     "rel": "license",
-                    "href": "https://sdfe.dk/om-os/vilkaar-og-priser",
+                    "href": "https://dataforsyningen.dk/Vilkaar",
                     "type": "text/html; charset=UTF-8",
-                    "title": "SDFE license terms"
+                    "title": "SDFI license terms"
                 },
                 {
                     "rel": "alternate",
