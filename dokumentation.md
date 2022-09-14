@@ -337,6 +337,15 @@ STAC Catalog (JSON)
 
 `GET /conformance`
 
+> Code samples
+
+```http
+GET https://api.dataforsyningen.dk/skraafoto_api/conformance
+HTTP/1.1
+Host: api.dataforsyningen.dk
+Accept: application/json
+```
+
 _Get Conformance Classes_
 
 Denne ressource returnerer et array af links til conformance klasser. Selve links bruges ikke, men fungerer som et "universelt" ID til STAC klienter, som fortæller hvilke krav STAC og OGC-API-Features servicen understøtter og overholder.
@@ -348,15 +357,6 @@ Ingen
 _Output_
 
 Array af conformance klasser (JSON)
-
-> Code samples
-
-```http
-GET https://api.dataforsyningen.dk/skraafoto_api/conformance
-HTTP/1.1
-Host: api.dataforsyningen.dk
-Accept: application/json
-```
 
 `GET /collections/{collectionid}/items/{itemid}`
 
