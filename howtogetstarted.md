@@ -2,13 +2,13 @@
 
 ## Introduktion
 
-Guiden er en hurtig gennemgang af, hvordan man får skråfotos for et bestemt geografisk område ved hjælp af koordinater. Dokumentationen til API'et kan findes [her](https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md).
+Guiden er en hurtig gennemgang af, hvordan man får skråfotos for et bestemt geografisk område ved hjælp af koordinater.
 
 ## Sammenspillet mellem de tre API'er
 
-- **Skåfoto STAC API** leverer metadata om skråfotos. Dens URL starter med `https://api.dataforsyningen.dk/skraafotoapi_test`, men for at bruge URL'en er det et krav, at der bliver specificeret paths og queryparameters.
-- **Skåfoto Server** leverer skråfotos som [Cloud Optimized Geotiff](https://www.cogeo.org) (`COG`), hvor der kan bruges range request. Dens URL starter med `https://api.dataforsyningen.dk/skraafoto_server_test`, men for at bruge URL'en er det et krav, at der bliver specificeret paths og queryparameters.
-- **Skråfoto Cogtiler** oversætter COG-formatet til JPG, der ikke understøtter COG, se mere på dokumentation: `https://github.com/Dataforsyningen/skraafoto_stac_public/blob/main/dokumentation.md#download-og-visning-af-billeder`. Dens URL starter med `https://api.dataforsyningen.dk/skraafoto_cogtiler_test`, men for at bruge URL'en er det et krav, at der bliver specificeret paths og queryparameters. Man kan se cogtilers openapi dokumentation her: `https://docs.dataforsyningen.dk/#skraafoto_cogtiler`.
+- **Skåfoto STAC API** leverer metadata om skråfotos. Dens URL starter med `https://api.dataforsyningen.dk/skraafoto_api`, men for at bruge URL'en er det et krav, at der bliver specificeret paths og query parameters.
+- **Skåfoto Server** leverer skråfotos som [Cloud Optimized Geotiff](https://www.cogeo.org) (`COG`), hvor der kan bruges range request. Dens URL starter med `https://api.dataforsyningen.dk/skraafoto_server`, men for at bruge URL'en er det et krav, at der bliver specificeret paths og query parameters.
+- **Skråfoto Cogtiler** oversætter COG-formatet til JPG, der ikke understøtter COG, se mere i afsnittet [Download og visning af billeder](#download-og-visning-af-billeder). Dens URL starter med `https://api.dataforsyningen.dk/skraafoto_cogtiler`, men for at bruge URL'en er det et krav, at der bliver specificeret paths og query parameters. Cogtilers openapi dokumentation findes [her](#skraafoto_cogtiler).
 
 <table class="center" style="width:100%">
   <tr>
@@ -16,8 +16,8 @@ Guiden er en hurtig gennemgang af, hvordan man får skråfotos for et bestemt ge
      <th>Klienter UDEN COG support</th>
   </tr>
   <tr>
-    <td><img src="media/Skråfotodistribution-HTTPServer.svg" alt="For klienter med understøttelse af COGs" style="max-width: 70%; max-height: 70%;"></td>
-    <td><img src="media/Skråfotodistribution-TileServer.svg" alt="Klienter UDEN COG support" style="max-width: 100%; max-height: 100%;"></td>
+    <td><img src="https://github.com/SDFIdk/skraafoto_stac_public/blob/main/media/Skr%C3%A5fotodistribution-HTTPServer.svg" alt="For klienter med understøttelse af COGs" style="max-width: 70%; max-height: 70%;"></td>
+    <td><img src="https://raw.githubusercontent.com/SDFIdk/skraafoto_stac_public/main/media/Skr%C3%A5fotodistribution-TileServer.svg" alt="Klienter UDEN COG support" style="max-width: 100%; max-height: 100%;"></td>
   </tr>
  </table>
 
@@ -41,7 +41,7 @@ Guiden er en hurtig gennemgang af, hvordan man får skråfotos for et bestemt ge
 
     <div id="map" class="map"></div>
     <script>
-        var cogUrl = "https://api.dataforsyningen.dk/skraafoto_server_test/COG_oblique_2021/10km_613_58/1km_6132_583/2021_83_37_2_0025_00001961.tif";
+        var cogUrl = "https://api.dataforsyningen.dk/skraafoto_server/COG_oblique_2021/10km_613_58/1km_6132_583/2021_83_37_2_0025_00001961.tif";
 
         // HACK to avoid bug looking up meters per unit for 'pixels' (https://github.com/openlayers/openlayers/issues/13564)
         const projection = new ol.proj.Projection({
@@ -81,7 +81,7 @@ Guiden er en hurtig gennemgang af, hvordan man får skråfotos for et bestemt ge
     <script>
       const fetchMetadaPromise = new Promise((resolve, reject) => {
         // Get metadata about a specific item using Skråfoto STAC API
-        fetch('https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021/items/2021_83_36_4_0008_00004522', {
+        fetch('https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2021/items/2021_83_36_4_0008_00004522', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -145,7 +145,7 @@ I URL'en angives `{collectionid}` i path, hvilken collection man ønsker at frem
 
 _URL_:
 
-`GET https://api.dataforsyningen.dk/skraafotoapi_test/collections/{collectionid}/items`
+`GET https://api.dataforsyningen.dk/skraafoto_api/collections/{collectionid}/items`
 
 `token: {DinToken}`
 
@@ -172,7 +172,7 @@ FeatureCollection (Array af STAC Items) (GeoJSON)
 _Eksempel_:
 
 ```http
-GET https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/items?limit=3&bbox=10.3285,55.3556,10.4536,55.4132&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84
+GET https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2019/items?limit=3&bbox=10.3285,55.3556,10.4536,55.4132&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84
 token: {DinToken}
 ```
 
@@ -299,29 +299,29 @@ _Response_:
                         8578.0
                     ]
                 },
-                "asset:data": "https://api.dataforsyningen.dk/skraafoto_server_test/COG_oblique_2019/10km_614_59/1km_6140_591/2019_83_36_5_0028_00000842.tif",
-                "asset:thumbnail": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2019%2F10km_614_59%2F1km_6140_591%2F2019_83_36_5_0028_00000842.tif"
+                "asset:data": "https://api.dataforsyningen.dk/skraafoto_server/COG_oblique_2019/10km_614_59/1km_6140_591/2019_83_36_5_0028_00000842.tif",
+                "asset:thumbnail": "https://api.dataforsyningen.dk/skraafoto_cogtiler/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2019%2F10km_614_59%2F1km_6140_591%2F2019_83_36_5_0028_00000842.tif"
             },
             "links": [
                 {
                     "rel": "self",
                     "type": "application/geo+json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/items/2019_83_36_5_0028_00000842"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2019/items/2019_83_36_5_0028_00000842"
                 },
                 {
                     "rel": "parent",
                     "type": "application/json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2019"
                 },
                 {
                     "rel": "collection",
                     "type": "application/json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2019"
                 },
                 {
                     "rel": "root",
                     "type": "application/json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/"
                 },
                 {
                     "rel": "license",
@@ -331,14 +331,14 @@ _Response_:
                 },
                 {
                     "rel": "alternate",
-                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/viewer.html?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2019%2F10km_614_59%2F1km_6140_591%2F2019_83_36_5_0028_00000842.tif",
+                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler/viewer.html?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2019%2F10km_614_59%2F1km_6140_591%2F2019_83_36_5_0028_00000842.tif",
                     "type": "text/html; charset=UTF-8",
                     "title": "Interactive image viewer"
                 }
             ],
             "assets": {
                 "data": {
-                    "href": "https://api.dataforsyningen.dk/skraafoto_server_test/COG_oblique_2019/10km_614_59/1km_6140_591/2019_83_36_5_0028_00000842.tif",
+                    "href": "https://api.dataforsyningen.dk/skraafoto_server/COG_oblique_2019/10km_614_59/1km_6140_591/2019_83_36_5_0028_00000842.tif",
                     "type": "image/tiff; application=geotiff; profile=cloud-optimized",
                     "roles": [
                         "data"
@@ -346,7 +346,7 @@ _Response_:
                     "title": "Raw tiff file"
                 },
                 "thumbnail": {
-                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2019%2F10km_614_59%2F1km_6140_591%2F2019_83_36_5_0028_00000842.tif",
+                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2019%2F10km_614_59%2F1km_6140_591%2F2019_83_36_5_0028_00000842.tif",
                     "type": "image/jpeg",
                     "roles": [
                         "thumbnail"
@@ -474,29 +474,29 @@ _Response_:
                         8578.0
                     ]
                 },
-                "asset:data": "https://api.dataforsyningen.dk/skraafoto_server_test/COG_oblique_2019/10km_614_59/1km_6140_591/2019_83_36_5_0028_00000841.tif",
-                "asset:thumbnail": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2019%2F10km_614_59%2F1km_6140_591%2F2019_83_36_5_0028_00000841.tif"
+                "asset:data": "https://api.dataforsyningen.dk/skraafoto_server/COG_oblique_2019/10km_614_59/1km_6140_591/2019_83_36_5_0028_00000841.tif",
+                "asset:thumbnail": "https://api.dataforsyningen.dk/skraafoto_cogtiler/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2019%2F10km_614_59%2F1km_6140_591%2F2019_83_36_5_0028_00000841.tif"
             },
             "links": [
                 {
                     "rel": "self",
                     "type": "application/geo+json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/items/2019_83_36_5_0028_00000841"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2019/items/2019_83_36_5_0028_00000841"
                 },
                 {
                     "rel": "parent",
                     "type": "application/json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2019"
                 },
                 {
                     "rel": "collection",
                     "type": "application/json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2019"
                 },
                 {
                     "rel": "root",
                     "type": "application/json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/"
                 },
                 {
                     "rel": "license",
@@ -506,14 +506,14 @@ _Response_:
                 },
                 {
                     "rel": "alternate",
-                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/viewer.html?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2019%2F10km_614_59%2F1km_6140_591%2F2019_83_36_5_0028_00000841.tif",
+                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler/viewer.html?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2019%2F10km_614_59%2F1km_6140_591%2F2019_83_36_5_0028_00000841.tif",
                     "type": "text/html; charset=UTF-8",
                     "title": "Interactive image viewer"
                 }
             ],
             "assets": {
                 "data": {
-                    "href": "https://api.dataforsyningen.dk/skraafoto_server_test/COG_oblique_2019/10km_614_59/1km_6140_591/2019_83_36_5_0028_00000841.tif",
+                    "href": "https://api.dataforsyningen.dk/skraafoto_server/COG_oblique_2019/10km_614_59/1km_6140_591/2019_83_36_5_0028_00000841.tif",
                     "type": "image/tiff; application=geotiff; profile=cloud-optimized",
                     "roles": [
                         "data"
@@ -521,7 +521,7 @@ _Response_:
                     "title": "Raw tiff file"
                 },
                 "thumbnail": {
-                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2019%2F10km_614_59%2F1km_6140_591%2F2019_83_36_5_0028_00000841.tif",
+                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2019%2F10km_614_59%2F1km_6140_591%2F2019_83_36_5_0028_00000841.tif",
                     "type": "image/jpeg",
                     "roles": [
                         "thumbnail"
@@ -649,29 +649,29 @@ _Response_:
                         8578.0
                     ]
                 },
-                "asset:data": "https://api.dataforsyningen.dk/skraafoto_server_test/COG_oblique_2019/10km_614_59/1km_6140_591/2019_83_36_5_0028_00000840.tif",
-                "asset:thumbnail": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2019%2F10km_614_59%2F1km_6140_591%2F2019_83_36_5_0028_00000840.tif"
+                "asset:data": "https://api.dataforsyningen.dk/skraafoto_server/COG_oblique_2019/10km_614_59/1km_6140_591/2019_83_36_5_0028_00000840.tif",
+                "asset:thumbnail": "https://api.dataforsyningen.dk/skraafoto_cogtiler/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2019%2F10km_614_59%2F1km_6140_591%2F2019_83_36_5_0028_00000840.tif"
             },
             "links": [
                 {
                     "rel": "self",
                     "type": "application/geo+json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/items/2019_83_36_5_0028_00000840"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2019/items/2019_83_36_5_0028_00000840"
                 },
                 {
                     "rel": "parent",
                     "type": "application/json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2019"
                 },
                 {
                     "rel": "collection",
                     "type": "application/json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2019"
                 },
                 {
                     "rel": "root",
                     "type": "application/json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/"
                 },
                 {
                     "rel": "license",
@@ -681,14 +681,14 @@ _Response_:
                 },
                 {
                     "rel": "alternate",
-                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/viewer.html?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2019%2F10km_614_59%2F1km_6140_591%2F2019_83_36_5_0028_00000840.tif",
+                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler/viewer.html?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2019%2F10km_614_59%2F1km_6140_591%2F2019_83_36_5_0028_00000840.tif",
                     "type": "text/html; charset=UTF-8",
                     "title": "Interactive image viewer"
                 }
             ],
             "assets": {
                 "data": {
-                    "href": "https://api.dataforsyningen.dk/skraafoto_server_test/COG_oblique_2019/10km_614_59/1km_6140_591/2019_83_36_5_0028_00000840.tif",
+                    "href": "https://api.dataforsyningen.dk/skraafoto_server/COG_oblique_2019/10km_614_59/1km_6140_591/2019_83_36_5_0028_00000840.tif",
                     "type": "image/tiff; application=geotiff; profile=cloud-optimized",
                     "roles": [
                         "data"
@@ -696,7 +696,7 @@ _Response_:
                     "title": "Raw tiff file"
                 },
                 "thumbnail": {
-                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2019%2F10km_614_59%2F1km_6140_591%2F2019_83_36_5_0028_00000840.tif",
+                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2019%2F10km_614_59%2F1km_6140_591%2F2019_83_36_5_0028_00000840.tif",
                     "type": "image/jpeg",
                     "roles": [
                         "thumbnail"
@@ -716,14 +716,14 @@ _Response_:
         {
             "rel": "self",
             "type": "application/geo+json",
-            "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/items?limit=3&bbox=10.3285%2C55.3556%2C10.4536%2C55.4132&bbox-crs=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FOGC%2F1.3%2FCRS84&servicename=skraafotoapi_test&service=rest",
+            "href": "https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2019/items?limit=3&bbox=10.3285%2C55.3556%2C10.4536%2C55.4132&bbox-crs=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FOGC%2F1.3%2FCRS84&servicename=skraafoto_api&service=rest",
             "method": "GET",
             "body": false
         },
         {
             "rel": "next",
             "type": "application/geo+json",
-            "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2019/items?limit=3&bbox=10.3285%2C55.3556%2C10.4536%2C55.4132&bbox-crs=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FOGC%2F1.3%2FCRS84&servicename=skraafotoapi_test&service=rest&pt=PmR0OjIwMTktMDYtMDcgMTI6NTE6MDErMDI6MDB-czoyMDE5XzgzXzM2XzVfMDAyOF8wMDAwMDg0MA%3D%3D",
+            "href": "https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2019/items?limit=3&bbox=10.3285%2C55.3556%2C10.4536%2C55.4132&bbox-crs=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FOGC%2F1.3%2FCRS84&servicename=skraafoto_api&service=rest&pt=PmR0OjIwMTktMDYtMDcgMTI6NTE6MDErMDI6MDB-czoyMDE5XzgzXzM2XzVfMDAyOF8wMDAwMDg0MA%3D%3D",
             "method": "GET",
             "body": false
         }
@@ -741,7 +741,7 @@ _Response_:
 
 _URL_:
 
-`GET https://api.dataforsyningen.dk/skraafotoapi_test/search`
+`GET https://api.dataforsyningen.dk/skraafoto_api/search`
 
 `token: {DinToken}`
 
@@ -770,7 +770,7 @@ FeatureCollection (Array af STAC Items) (GeoJSON)
 _Eksempel_:
 
 ```http
-GET https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=3&bbox=10.3285,55.3556,10.4536,55.4132&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84
+GET https://api.dataforsyningen.dk/skraafoto_api/search?limit=3&bbox=10.3285,55.3556,10.4536,55.4132&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84
 token: {DinToken}
 ```
 
@@ -897,29 +897,29 @@ _Response_:
                         10300.0
                     ]
                 },
-                "asset:data": "https://api.dataforsyningen.dk/skraafoto_server_test/COG_oblique_2021/10km_613_58/1km_6134_583/2021_83_36_4_0008_00004522.tif",
-                "asset:thumbnail": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_58%2F1km_6134_583%2F2021_83_36_4_0008_00004522.tif"
+                "asset:data": "https://api.dataforsyningen.dk/skraafoto_server/COG_oblique_2021/10km_613_58/1km_6134_583/2021_83_36_4_0008_00004522.tif",
+                "asset:thumbnail": "https://api.dataforsyningen.dk/skraafoto_cogtiler/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_58%2F1km_6134_583%2F2021_83_36_4_0008_00004522.tif"
             },
             "links": [
                 {
                     "rel": "self",
                     "type": "application/geo+json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021/items/2021_83_36_4_0008_00004522"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2021/items/2021_83_36_4_0008_00004522"
                 },
                 {
                     "rel": "parent",
                     "type": "application/json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2021"
                 },
                 {
                     "rel": "collection",
                     "type": "application/json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2021"
                 },
                 {
                     "rel": "root",
                     "type": "application/json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/"
                 },
                 {
                     "rel": "license",
@@ -929,14 +929,14 @@ _Response_:
                 },
                 {
                     "rel": "alternate",
-                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/viewer.html?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_58%2F1km_6134_583%2F2021_83_36_4_0008_00004522.tif",
+                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler/viewer.html?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_58%2F1km_6134_583%2F2021_83_36_4_0008_00004522.tif",
                     "type": "text/html; charset=UTF-8",
                     "title": "Interactive image viewer"
                 }
             ],
             "assets": {
                 "data": {
-                    "href": "https://api.dataforsyningen.dk/skraafoto_server_test/COG_oblique_2021/10km_613_58/1km_6134_583/2021_83_36_4_0008_00004522.tif",
+                    "href": "https://api.dataforsyningen.dk/skraafoto_server/COG_oblique_2021/10km_613_58/1km_6134_583/2021_83_36_4_0008_00004522.tif",
                     "type": "image/tiff; application=geotiff; profile=cloud-optimized",
                     "roles": [
                         "data"
@@ -944,7 +944,7 @@ _Response_:
                     "title": "Raw tiff file"
                 },
                 "thumbnail": {
-                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_58%2F1km_6134_583%2F2021_83_36_4_0008_00004522.tif",
+                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_58%2F1km_6134_583%2F2021_83_36_4_0008_00004522.tif",
                     "type": "image/jpeg",
                     "roles": [
                         "thumbnail"
@@ -1072,29 +1072,29 @@ _Response_:
                         10300.0
                     ]
                 },
-                "asset:data": "https://api.dataforsyningen.dk/skraafoto_server_test/COG_oblique_2021/10km_613_58/1km_6135_583/2021_83_36_4_0008_00004521.tif",
-                "asset:thumbnail": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_58%2F1km_6135_583%2F2021_83_36_4_0008_00004521.tif"
+                "asset:data": "https://api.dataforsyningen.dk/skraafoto_server/COG_oblique_2021/10km_613_58/1km_6135_583/2021_83_36_4_0008_00004521.tif",
+                "asset:thumbnail": "https://api.dataforsyningen.dk/skraafoto_cogtiler/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_58%2F1km_6135_583%2F2021_83_36_4_0008_00004521.tif"
             },
             "links": [
                 {
                     "rel": "self",
                     "type": "application/geo+json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021/items/2021_83_36_4_0008_00004521"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2021/items/2021_83_36_4_0008_00004521"
                 },
                 {
                     "rel": "parent",
                     "type": "application/json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2021"
                 },
                 {
                     "rel": "collection",
                     "type": "application/json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2021"
                 },
                 {
                     "rel": "root",
                     "type": "application/json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/"
                 },
                 {
                     "rel": "license",
@@ -1104,14 +1104,14 @@ _Response_:
                 },
                 {
                     "rel": "alternate",
-                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/viewer.html?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_58%2F1km_6135_583%2F2021_83_36_4_0008_00004521.tif",
+                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler/viewer.html?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_58%2F1km_6135_583%2F2021_83_36_4_0008_00004521.tif",
                     "type": "text/html; charset=UTF-8",
                     "title": "Interactive image viewer"
                 }
             ],
             "assets": {
                 "data": {
-                    "href": "https://api.dataforsyningen.dk/skraafoto_server_test/COG_oblique_2021/10km_613_58/1km_6135_583/2021_83_36_4_0008_00004521.tif",
+                    "href": "https://api.dataforsyningen.dk/skraafoto_server/COG_oblique_2021/10km_613_58/1km_6135_583/2021_83_36_4_0008_00004521.tif",
                     "type": "image/tiff; application=geotiff; profile=cloud-optimized",
                     "roles": [
                         "data"
@@ -1119,7 +1119,7 @@ _Response_:
                     "title": "Raw tiff file"
                 },
                 "thumbnail": {
-                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_58%2F1km_6135_583%2F2021_83_36_4_0008_00004521.tif",
+                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_58%2F1km_6135_583%2F2021_83_36_4_0008_00004521.tif",
                     "type": "image/jpeg",
                     "roles": [
                         "thumbnail"
@@ -1247,29 +1247,29 @@ _Response_:
                         10300.0
                     ]
                 },
-                "asset:data": "https://api.dataforsyningen.dk/skraafoto_server_test/COG_oblique_2021/10km_613_58/1km_6135_583/2021_83_36_4_0008_00004520.tif",
-                "asset:thumbnail": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_58%2F1km_6135_583%2F2021_83_36_4_0008_00004520.tif"
+                "asset:data": "https://api.dataforsyningen.dk/skraafoto_server/COG_oblique_2021/10km_613_58/1km_6135_583/2021_83_36_4_0008_00004520.tif",
+                "asset:thumbnail": "https://api.dataforsyningen.dk/skraafoto_cogtiler/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_58%2F1km_6135_583%2F2021_83_36_4_0008_00004520.tif"
             },
             "links": [
                 {
                     "rel": "self",
                     "type": "application/geo+json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021/items/2021_83_36_4_0008_00004520"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2021/items/2021_83_36_4_0008_00004520"
                 },
                 {
                     "rel": "parent",
                     "type": "application/json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2021"
                 },
                 {
                     "rel": "collection",
                     "type": "application/json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2021"
                 },
                 {
                     "rel": "root",
                     "type": "application/json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/"
                 },
                 {
                     "rel": "license",
@@ -1279,14 +1279,14 @@ _Response_:
                 },
                 {
                     "rel": "alternate",
-                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/viewer.html?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_58%2F1km_6135_583%2F2021_83_36_4_0008_00004520.tif",
+                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler/viewer.html?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_58%2F1km_6135_583%2F2021_83_36_4_0008_00004520.tif",
                     "type": "text/html; charset=UTF-8",
                     "title": "Interactive image viewer"
                 }
             ],
             "assets": {
                 "data": {
-                    "href": "https://api.dataforsyningen.dk/skraafoto_server_test/COG_oblique_2021/10km_613_58/1km_6135_583/2021_83_36_4_0008_00004520.tif",
+                    "href": "https://api.dataforsyningen.dk/skraafoto_server/COG_oblique_2021/10km_613_58/1km_6135_583/2021_83_36_4_0008_00004520.tif",
                     "type": "image/tiff; application=geotiff; profile=cloud-optimized",
                     "roles": [
                         "data"
@@ -1294,7 +1294,7 @@ _Response_:
                     "title": "Raw tiff file"
                 },
                 "thumbnail": {
-                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_58%2F1km_6135_583%2F2021_83_36_4_0008_00004520.tif",
+                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_58%2F1km_6135_583%2F2021_83_36_4_0008_00004520.tif",
                     "type": "image/jpeg",
                     "roles": [
                         "thumbnail"
@@ -1314,14 +1314,14 @@ _Response_:
         {
             "rel": "self",
             "type": "application/geo+json",
-            "href": "https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=3&bbox=10.3285%2C55.3556%2C10.4536%2C55.4132&bbox-crs=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FOGC%2F1.3%2FCRS84&servicename=skraafotoapi_test&service=rest",
+            "href": "https://api.dataforsyningen.dk/skraafoto_api/search?limit=3&bbox=10.3285%2C55.3556%2C10.4536%2C55.4132&bbox-crs=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FOGC%2F1.3%2FCRS84&servicename=skraafoto_api&service=rest",
             "method": "GET",
             "body": null
         },
         {
             "rel": "next",
             "type": "application/geo+json",
-            "href": "https://api.dataforsyningen.dk/skraafotoapi_test/search?limit=3&bbox=10.3285%2C55.3556%2C10.4536%2C55.4132&bbox-crs=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FOGC%2F1.3%2FCRS84&servicename=skraafotoapi_test&service=rest&pt=PmR0OjIwMjEtMDMtMzEgMTU6MzY6MjgrMDI6MDB-czoyMDIxXzgzXzM2XzRfMDAwOF8wMDAwNDUyMA%3D%3D",
+            "href": "https://api.dataforsyningen.dk/skraafoto_api/search?limit=3&bbox=10.3285%2C55.3556%2C10.4536%2C55.4132&bbox-crs=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FOGC%2F1.3%2FCRS84&servicename=skraafoto_api&service=rest&pt=PmR0OjIwMjEtMDMtMzEgMTU6MzY6MjgrMDI6MDB-czoyMDIxXzgzXzM2XzRfMDAwOF8wMDAwNDUyMA%3D%3D",
             "method": "GET",
             "body": null
         }
@@ -1338,7 +1338,7 @@ _Response_:
 _Eksempel_:
 
 ```http
-POST https://api.dataforsyningen.dk/skraafotoapi_test/search
+POST https://api.dataforsyningen.dk/skraafoto_api/search
 Content-Type: application/json
 token: {DinToken}
 
@@ -1486,29 +1486,29 @@ _Response_:
                         10560.0
                     ]
                 },
-                "asset:data": "https://api.dataforsyningen.dk/skraafoto_server_test/COG_oblique_2021/10km_613_59/1km_6130_593/2021_83_38_2_0032_00003342.tif",
-                "asset:thumbnail": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_59%2F1km_6130_593%2F2021_83_38_2_0032_00003342.tif"
+                "asset:data": "https://api.dataforsyningen.dk/skraafoto_server/COG_oblique_2021/10km_613_59/1km_6130_593/2021_83_38_2_0032_00003342.tif",
+                "asset:thumbnail": "https://api.dataforsyningen.dk/skraafoto_cogtiler/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_59%2F1km_6130_593%2F2021_83_38_2_0032_00003342.tif"
             },
             "links": [
                 {
                     "rel": "self",
                     "type": "application/geo+json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021/items/2021_83_38_2_0032_00003342"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2021/items/2021_83_38_2_0032_00003342"
                 },
                 {
                     "rel": "parent",
                     "type": "application/json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2021"
                 },
                 {
                     "rel": "collection",
                     "type": "application/json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2021"
                 },
                 {
                     "rel": "root",
                     "type": "application/json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/"
                 },
                 {
                     "rel": "license",
@@ -1518,14 +1518,14 @@ _Response_:
                 },
                 {
                     "rel": "alternate",
-                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/viewer.html?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_59%2F1km_6130_593%2F2021_83_38_2_0032_00003342.tif",
+                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler/viewer.html?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_59%2F1km_6130_593%2F2021_83_38_2_0032_00003342.tif",
                     "type": "text/html; charset=UTF-8",
                     "title": "Interactive image viewer"
                 }
             ],
             "assets": {
                 "data": {
-                    "href": "https://api.dataforsyningen.dk/skraafoto_server_test/COG_oblique_2021/10km_613_59/1km_6130_593/2021_83_38_2_0032_00003342.tif",
+                    "href": "https://api.dataforsyningen.dk/skraafoto_server/COG_oblique_2021/10km_613_59/1km_6130_593/2021_83_38_2_0032_00003342.tif",
                     "type": "image/tiff; application=geotiff; profile=cloud-optimized",
                     "roles": [
                         "data"
@@ -1533,7 +1533,7 @@ _Response_:
                     "title": "Raw tiff file"
                 },
                 "thumbnail": {
-                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_59%2F1km_6130_593%2F2021_83_38_2_0032_00003342.tif",
+                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_59%2F1km_6130_593%2F2021_83_38_2_0032_00003342.tif",
                     "type": "image/jpeg",
                     "roles": [
                         "thumbnail"
@@ -1661,29 +1661,29 @@ _Response_:
                         14144.0
                     ]
                 },
-                "asset:data": "https://api.dataforsyningen.dk/skraafoto_server_test/COG_oblique_2021/10km_612_59/1km_6128_590/2021_83_38_5_0032_00003342.tif",
-                "asset:thumbnail": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_612_59%2F1km_6128_590%2F2021_83_38_5_0032_00003342.tif"
+                "asset:data": "https://api.dataforsyningen.dk/skraafoto_server/COG_oblique_2021/10km_612_59/1km_6128_590/2021_83_38_5_0032_00003342.tif",
+                "asset:thumbnail": "https://api.dataforsyningen.dk/skraafoto_cogtiler/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_612_59%2F1km_6128_590%2F2021_83_38_5_0032_00003342.tif"
             },
             "links": [
                 {
                     "rel": "self",
                     "type": "application/geo+json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021/items/2021_83_38_5_0032_00003342"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2021/items/2021_83_38_5_0032_00003342"
                 },
                 {
                     "rel": "parent",
                     "type": "application/json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2021"
                 },
                 {
                     "rel": "collection",
                     "type": "application/json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2021"
                 },
                 {
                     "rel": "root",
                     "type": "application/json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/"
                 },
                 {
                     "rel": "license",
@@ -1693,14 +1693,14 @@ _Response_:
                 },
                 {
                     "rel": "alternate",
-                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/viewer.html?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_612_59%2F1km_6128_590%2F2021_83_38_5_0032_00003342.tif",
+                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler/viewer.html?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_612_59%2F1km_6128_590%2F2021_83_38_5_0032_00003342.tif",
                     "type": "text/html; charset=UTF-8",
                     "title": "Interactive image viewer"
                 }
             ],
             "assets": {
                 "data": {
-                    "href": "https://api.dataforsyningen.dk/skraafoto_server_test/COG_oblique_2021/10km_612_59/1km_6128_590/2021_83_38_5_0032_00003342.tif",
+                    "href": "https://api.dataforsyningen.dk/skraafoto_server/COG_oblique_2021/10km_612_59/1km_6128_590/2021_83_38_5_0032_00003342.tif",
                     "type": "image/tiff; application=geotiff; profile=cloud-optimized",
                     "roles": [
                         "data"
@@ -1708,7 +1708,7 @@ _Response_:
                     "title": "Raw tiff file"
                 },
                 "thumbnail": {
-                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_612_59%2F1km_6128_590%2F2021_83_38_5_0032_00003342.tif",
+                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_612_59%2F1km_6128_590%2F2021_83_38_5_0032_00003342.tif",
                     "type": "image/jpeg",
                     "roles": [
                         "thumbnail"
@@ -1836,29 +1836,29 @@ _Response_:
                         10560.0
                     ]
                 },
-                "asset:data": "https://api.dataforsyningen.dk/skraafoto_server_test/COG_oblique_2021/10km_613_59/1km_6130_592/2021_83_38_2_0032_00003341.tif",
-                "asset:thumbnail": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_59%2F1km_6130_592%2F2021_83_38_2_0032_00003341.tif"
+                "asset:data": "https://api.dataforsyningen.dk/skraafoto_server/COG_oblique_2021/10km_613_59/1km_6130_592/2021_83_38_2_0032_00003341.tif",
+                "asset:thumbnail": "https://api.dataforsyningen.dk/skraafoto_cogtiler/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_59%2F1km_6130_592%2F2021_83_38_2_0032_00003341.tif"
             },
             "links": [
                 {
                     "rel": "self",
                     "type": "application/geo+json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021/items/2021_83_38_2_0032_00003341"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2021/items/2021_83_38_2_0032_00003341"
                 },
                 {
                     "rel": "parent",
                     "type": "application/json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2021"
                 },
                 {
                     "rel": "collection",
                     "type": "application/json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/collections/skraafotos2021"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/collections/skraafotos2021"
                 },
                 {
                     "rel": "root",
                     "type": "application/json",
-                    "href": "https://api.dataforsyningen.dk/skraafotoapi_test/"
+                    "href": "https://api.dataforsyningen.dk/skraafoto_api/"
                 },
                 {
                     "rel": "license",
@@ -1868,14 +1868,14 @@ _Response_:
                 },
                 {
                     "rel": "alternate",
-                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/viewer.html?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_59%2F1km_6130_592%2F2021_83_38_2_0032_00003341.tif",
+                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler/viewer.html?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_59%2F1km_6130_592%2F2021_83_38_2_0032_00003341.tif",
                     "type": "text/html; charset=UTF-8",
                     "title": "Interactive image viewer"
                 }
             ],
             "assets": {
                 "data": {
-                    "href": "https://api.dataforsyningen.dk/skraafoto_server_test/COG_oblique_2021/10km_613_59/1km_6130_592/2021_83_38_2_0032_00003341.tif",
+                    "href": "https://api.dataforsyningen.dk/skraafoto_server/COG_oblique_2021/10km_613_59/1km_6130_592/2021_83_38_2_0032_00003341.tif",
                     "type": "image/tiff; application=geotiff; profile=cloud-optimized",
                     "roles": [
                         "data"
@@ -1883,7 +1883,7 @@ _Response_:
                     "title": "Raw tiff file"
                 },
                 "thumbnail": {
-                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler_test/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_59%2F1km_6130_592%2F2021_83_38_2_0032_00003341.tif",
+                    "href": "https://api.dataforsyningen.dk/skraafoto_cogtiler/thumbnail.jpg?url=https%3A%2F%2Fapi.dataforsyningen.dk%2Fskraafoto_server_test%2FCOG_oblique_2021%2F10km_613_59%2F1km_6130_592%2F2021_83_38_2_0032_00003341.tif",
                     "type": "image/jpeg",
                     "roles": [
                         "thumbnail"
@@ -1903,7 +1903,7 @@ _Response_:
         {
             "rel": "self",
             "type": "application/geo+json",
-            "href": "https://api.dataforsyningen.dk/skraafotoapi_test/search",
+            "href": "https://api.dataforsyningen.dk/skraafoto_api/search",
             "method": "POST",
             "body": {
                 "filter-lang": "cql-json",
@@ -1949,7 +1949,7 @@ _Response_:
         {
             "rel": "next",
             "type": "application/geo+json",
-            "href": "https://api.dataforsyningen.dk/skraafotoapi_test/search",
+            "href": "https://api.dataforsyningen.dk/skraafoto_api/search",
             "method": "POST",
             "body": {
                 "filter-lang": "cql-json",
