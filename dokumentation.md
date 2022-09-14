@@ -314,6 +314,15 @@ Hvis token er autoriseret, men requesten har en ugyldig parameter, returneres en
 
 `GET /`
 
+> Code samples
+
+```http
+GET https://api.dataforsyningen.dk/skraafoto_api
+HTTP/1.1
+Host: api.dataforsyningen.dk
+Accept: application/json
+```
+
 _Landing Page_
 
 Denne ressource er roden af API'et, som beskriver de funktionaliteter, der er udstillet, via et `ConformsTo` array samt URIs af andre ressourcer via link relationer.
@@ -325,15 +334,6 @@ Ingen
 _Output_
 
 STAC Catalog (JSON)
-
-> Code samples
-
-```http
-GET https://api.dataforsyningen.dk/skraafoto_api
-HTTP/1.1
-Host: api.dataforsyningen.dk
-Accept: application/json
-```
 
 `GET /conformance`
 
