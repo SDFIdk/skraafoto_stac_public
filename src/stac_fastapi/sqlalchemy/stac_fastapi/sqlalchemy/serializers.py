@@ -121,7 +121,7 @@ class ItemSerializer(Serializer):
         add_links = [
             {
                 "rel": "license",
-                "href": "https://sdfe.dk/om-os/vilkaar-og-priser",
+                "href": "https://dataforsyningen.dk/Vilkaar",
                 "type": "text/html; charset=UTF-8",
                 "title": "SDFE license terms",
             },
@@ -175,7 +175,7 @@ class ItemSerializer(Serializer):
         cls._add_if_not_none(properties, "instruments", [instrument_id])
         properties["providers"] = [
             {"name": db_model.producer, "roles": ["producer"]},
-            {"url": "https://sdfe.dk/", "name": "SDFE", "roles": ["licensor", "host"]},
+            {"url": "https://sdfi.dk/", "name": "SDFI", "roles": ["licensor", "host"]},
         ]
 
         # Proj: https://github.com/stac-extensions/projection
