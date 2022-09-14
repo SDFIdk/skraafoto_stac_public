@@ -572,14 +572,6 @@ Ud over de nævnte fire core-komponenter, indeholder servicen også en række ex
 
 ### Context Extension
 
-Context extension tilføjer ekstra information omkring en returneret `FeatureCollection` hentet via `/search` eller `/collections/{collectionid}/items`. Den returnerer følgende tre attributter sammen med `FeatureCollection`:
-
-- Returned: Antallet af features returneret af resultatet
-- Limit: Det maksimale antal resultater returneret
-- Matched: Det totale antal resultater, der matcher søgeforespørgslen
-
-Hvis `matched` er større end `limit` kan linkrelationerne `next`/`previous` bruges til at navigere frem og tilbage i det totale antal matchede søgeresultater ved hjælp af paging. Parameteren `limit` bestemmer hvor mange `Item` objekter, der fremgår i det returneret JSON response. `limit`har et max på 10.000 resultater ad gangen. Paging fungerer ved hjælp af en "paging token" `pt`. Denne token er autogenereret, og skal altid følge paging-resultatet. Ved ændring af denne kan resultatet ikke fremfindes. Et eksempel på paged resultat:
-
 ```json
 ...
 "links": [
@@ -604,6 +596,14 @@ Hvis `matched` er større end `limit` kan linkrelationerne `next`/`previous` bru
     "matched": 13347
 }
 ```
+
+Context extension tilføjer ekstra information omkring en returneret `FeatureCollection` hentet via `/search` eller `/collections/{collectionid}/items`. Den returnerer følgende tre attributter sammen med `FeatureCollection`:
+
+- Returned: Antallet af features returneret af resultatet
+- Limit: Det maksimale antal resultater returneret
+- Matched: Det totale antal resultater, der matcher søgeforespørgslen
+
+Hvis `matched` er større end `limit` kan linkrelationerne `next`/`previous` bruges til at navigere frem og tilbage i det totale antal matchede søgeresultater ved hjælp af paging. Parameteren `limit` bestemmer hvor mange `Item` objekter, der fremgår i det returneret JSON response. `limit`har et max på 10.000 resultater ad gangen. Paging fungerer ved hjælp af en "paging token" `pt`. Denne token er autogenereret, og skal altid følge paging-resultatet. Ved ændring af denne kan resultatet ikke fremfindes. Et eksempel på paged resultat kan ses til højre.
 
 Nærmere beskrivelse af [Context Extension](https://github.com/radiantearth/stac-api-spec/tree/master/fragments/context).
 
@@ -654,7 +654,8 @@ Filter extension tilføjer særlig funktionalitet til at søge ved hjælp af for
 **Bemærk** at det SQL statement, som API'et udfører, maks må tage 10 sekunder. Hvis din forespørgsel er så kompliceret at den timer ud, så kan det i nogle tilfælde afhælpes ved at begrænse forespørgslen med `bbox` og/eller `datetime` parameteren (se ovenfor).
 
 Eksempler på brug af filter parameter:
-1. `POST /search` - Hent features hvis geometri overlapper (intersects) med input geometri.
+
+1. `POST /search` - Hent features hvis geometri overlapper (intersects) med input geometri. Første eksempel ude til højre viser sådan en request.
 
 > Code samples
 
@@ -684,7 +685,7 @@ Accept: application/geo+json
 }
 ```
 
-2. `POST /search` - Hent features hvor `property.direction` er sat til øst og gsd er større end 0.101.
+2. `POST /search` - Hent features hvor `property.direction` er sat til øst og gsd er større end 0.101. Andet eksempel ude til højre viser sådan en request.
 
 > Code samples
 
@@ -716,7 +717,7 @@ Eksempler på brug af sortBy parameter:
 
 1. `GET /search?sortby=+properties.datetime` - Sortér på properties.datetime ascending.
 2. `GET /search?sortby=properties.datetime,-id` - Sortér på properties.datetime ascending og id descending.
-3. `POST /search` - Sortér på collection descending.
+3. `POST /search` - Sortér på collection descending. Eksempel på request ses ude til højre.
 
 > Code samples
 
@@ -740,10 +741,6 @@ Accept: application/geo+json
 Nærmere beskrivelse af [Sort Extension](https://github.com/radiantearth/stac-api-spec/tree/master/fragments/sort).
 
 ## Download og visning af billeder
-
-Der er flere muligheder for at gå fra de returnerede metadata (se [STAC Item](#stac-item)) til det beskrevne billede.
-
-Relevante links findes i sektionen `links` hhv `assets`, som ses ude til venstre af en del af et JSON response eksempel.
 
 ```json
 ...
@@ -776,6 +773,10 @@ Relevante links findes i sektionen `links` hhv `assets`, som ses ude til venstre
 }
 ...
 ```
+
+Der er flere muligheder for at gå fra de returnerede metadata (se [STAC Item](#stac-item)) til det beskrevne billede.
+
+Relevante links findes i sektionen `links` hhv `assets`, kan ses ude til højre i et JSON response eksempel.
 
 **Bemærk** at alle links til dataforsyningen kræver angivelsen af `token` enten i header eller query parameter.
 
@@ -834,7 +835,7 @@ x0 = sensor_cols * 0.5 + ppo_x / pixel_size
 y0 = sensor_rows * 0.5 + ppo_y / pixel_size
 ```
 
-Først etableres en række variable ud fra flyfotoets metadata (Se [STAC Item](#stac-item)), som man kan se ude til venstre.
+Først etableres en række variable ud fra flyfotoets metadata (Se [STAC Item](#stac-item)), som kan ses ude til højre.
 
 Dernæst kan `(xa, ya)` beregnes på en af to måder. Bemærk i øvrigt, at pixelkoordinaterne `(xa, ya)` har origo i billedets nederste venstre hjørne med x-aksen positiv mod højre og y-aksen positiv op.
 
