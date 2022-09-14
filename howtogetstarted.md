@@ -21,9 +21,9 @@ Guiden er en hurtig gennemgang af, hvordan man får skråfotos for et bestemt ge
   </tr>
  </table>
 
-### Eksempler 
+### Eksempel 1
 
-#### Hente en COG fra Skåfoto Server, og vise billedet med Open Layer
+Hente en COG fra Skåfoto Server, og vise billedet med Open Layer
 
 ```html
 <!DOCTYPE html>
@@ -73,7 +73,9 @@ Guiden er en hurtig gennemgang af, hvordan man får skråfotos for et bestemt ge
 </html>
 ```
 
-#### Hente metadata om et bestemt skråfoto, for så at få vist selve billedet ved brug af Skråfoto STAC API og Skråfoto Cogtiler
+### Eksempel 2
+
+Hente metadata om et bestemt skråfoto, for så at få vist selve billedet ved brug af Skråfoto STAC API og Skråfoto Cogtiler
 
 ```html
 <!DOCTYPE html>
