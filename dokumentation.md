@@ -21,8 +21,6 @@ Selve APIet, der udstiller metadata i form af [STAC Items](#stac-item) organiser
 
 ### STAC Collection
 
-`Items` er inddelt i `Collections`, således at en `Collection` består af logisk beslægtede `Items`. For eksempel er skråfotos inddelt i en `Collection` per årgang.
-
 ```json
 {
     "type": "Collection",
@@ -100,15 +98,13 @@ Selve APIet, der udstiller metadata i form af [STAC Items](#stac-item) organiser
 }
 ```
 
+`Items` er inddelt i `Collections`, således at en `Collection` består af logisk beslægtede `Items`. For eksempel er skråfotos inddelt i en `Collection` per årgang.
+
 **Bemærk** at en `Collection` består af aggregeret spatiel og tidslig udstrækning for `Items` hørende til denne `Collection`, som man kan se et eksempel af i ovenstående `details`.
 
 Dataelementerne returneret i en `Collection` er beskrevet i [STAC Collection Specificationen](https://github.com/radiantearth/stac-spec/blob/master/collection-spec/collection-spec.md).
 
 ### STAC Item
-
-Grundstenen, der udgør et enkelt aktiv i API'et. Hvert item beskriver således egenskaberne for ét flyfoto, altså metadata om det billede.
-
-_Eksempel_:
 
 ```json
 {
@@ -288,6 +284,8 @@ _Eksempel_:
 }
 ```
 
+Grundstenen, der udgør et enkelt aktiv i API'et. Hvert item beskriver således egenskaberne for ét flyfoto, altså metadata om det billede.
+
 De enkelte dataelementer i et STAC Item returneret fra dette API er beskrevet i [STAC Item Specification](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md).
 
 Samt i de benyttede udvidelser til STAC:
@@ -307,7 +305,7 @@ Se afsnittet [Download og visning af billeder](#download-og-visning-af-billeder)
 
 ## Endpoints og outputs
 
-**Bemærk** at Dataforsyningens service kræver gyldig token, som kan erhverves på https://dataforsyningen.dk/.
+**Bemærk** at Dataforsyningens service kræver gyldig token, som kan erhverves på [https://dataforsyningen.dk](https://dataforsyningen.dk).
 
 Servicen returnerer GeoJSON/JSON, medmindre en forespørgsel er ugyldig pga. uautoriseret token, i så fald returneres text.
 Hvis token er autoriseret, men requesten har en ugyldig parameter, returneres en JSON fejlmeddelelse.
@@ -779,7 +777,7 @@ Relevante links findes i sektionen `links` hhv `assets`, som ses ude til venstre
 ...
 ```
 
-**Bemærk** at alle links til dataforsyningen kræver angivelsen af `token` enten som query parameter eller som header.
+**Bemærk** at alle links til dataforsyningen kræver angivelsen af `token` enten i header eller query parameter.
 
 **Download**
 
@@ -793,7 +791,7 @@ Der gives ingen garantier vedrørende dimensionerne af thumbnails. Pt er alle th
 
 **Cloud Optimized Geotiff**
 
-Det originale flyfoto, hvis URL findes under  `/assets/data/href`, er i "Cloud Optimized GeoTIFF" format og kan dermed tilgås meget effektivt direkte på http-serveren.
+Det originale flyfoto, hvis URL findes under `/assets/data/href`, er i "Cloud Optimized GeoTIFF" format og kan dermed tilgås meget effektivt direkte på http-serveren.
 
 Læs mere på [www.cogeo.org](https://www.cogeo.org/).
 
@@ -805,12 +803,14 @@ Dataforsyningen udstiller en online-viewer til meget enkel visning af et flyfoto
 
 Dataforsyningen udstiller en service, der kan udstille et flyfoto som en pyramide af jpeg-tiles. Disse kan anvendes, såfremt klienten ikke er i stand til at anvende den "Cloud Optimized GeoTIFF" direkte, som beskrevet ovenfor.
 
-URL til denne service er ikke inkluderet i metadata, men må i stedet konstrueres. URL'en skal konstrueres som: 
+URL til denne service er ikke inkluderet i metadata, men må i stedet konstrueres. URL'en skal konstrueres som:
+
 `https://api.dataforsyningen.dk/skraafoto_cogtiler_test/tiles/{z}/{x}/{y}.jpg?url={DOWNLOAD_URL}`
 
 Tile-koordinaterne z, x, og y er i en lokal tile-pyramide.
 
 Basal info om tile-pyramiden kan fås på endpointet:
+
 `https://api.dataforsyningen.dk/skraafoto_cogtiler_test/info?url={DOWNLOAD_URL}`
 
 ## Georeferering
@@ -818,8 +818,6 @@ Basal info om tile-pyramiden kan fås på endpointet:
 Hvis man har et 3D koordinat `(X, Y, Z)` på et punkt i landskabet, er det muligt at beregne, hvilken pixel `(xa, ya)` i flyfotoet dette punkt vil blive afbilledet i.
 
 **Det forudsættes**, at koordinaten er i samme koordinatreferencesystem, som billedet er georefereret i. Dette er beskrevet i egenskaberne `pers:crs` og `pers:vertical_crs`. Det kan således være nødvendigt først at konvertere koordinaten til det rette koordinatreferencesystem.
-
-Først etableres en række variable ud fra flyfotoets metadata (Se [STAC Item](#stac-item)):
 
 ```python
 props = item["properties"]
@@ -835,6 +833,8 @@ f = f_mm / pixel_size
 x0 = sensor_cols * 0.5 + ppo_x / pixel_size
 y0 = sensor_rows * 0.5 + ppo_y / pixel_size
 ```
+
+Først etableres en række variable ud fra flyfotoets metadata (Se [STAC Item](#stac-item)), som man kan se ude til venstre.
 
 Dernæst kan `(xa, ya)` beregnes på en af to måder. Bemærk i øvrigt, at pixelkoordinaterne `(xa, ya)` har origo i billedets nederste venstre hjørne med x-aksen positiv mod højre og y-aksen positiv op.
 
