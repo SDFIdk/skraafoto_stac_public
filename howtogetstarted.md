@@ -16,12 +16,14 @@ Guiden er en hurtig gennemgang af, hvordan man får skråfotos for et bestemt ge
      <th>Klienter UDEN COG support</th>
   </tr>
   <tr>
-    <td><img src="https://github.com/SDFIdk/skraafoto_stac_public/blob/main/media/Skr%C3%A5fotodistribution-HTTPServer.svg" alt="For klienter med understøttelse af COGs" style="max-width: 70%; max-height: 70%;"></td>
+    <td><img src="https://raw.githubusercontent.com/SDFIdk/skraafoto_stac_public/main/media/Skr%C3%A5fotodistribution-HTTPServer.svg" alt="For klienter med understøttelse af COGs" style="max-width: 70%; max-height: 70%;"></td>
     <td><img src="https://raw.githubusercontent.com/SDFIdk/skraafoto_stac_public/main/media/Skr%C3%A5fotodistribution-TileServer.svg" alt="Klienter UDEN COG support" style="max-width: 100%; max-height: 100%;"></td>
   </tr>
  </table>
 
-### Eksempel på at hente en COG fra Skåfoto Server, og vise billedet med Open Layer
+### Eksempler 
+
+#### Hente en COG fra Skåfoto Server, og vise billedet med Open Layer
 
 ```html
 <!DOCTYPE html>
@@ -71,7 +73,7 @@ Guiden er en hurtig gennemgang af, hvordan man får skråfotos for et bestemt ge
 </html>
 ```
 
-### Eksempel på at hente metadata om et bestemt skråfoto, for så at få vist selve billedet ved brug af Skråfoto STAC API og Skråfoto Cogtiler
+#### Hente metadata om et bestemt skråfoto, for så at få vist selve billedet ved brug af Skråfoto STAC API og Skråfoto Cogtiler
 
 ```html
 <!DOCTYPE html>
