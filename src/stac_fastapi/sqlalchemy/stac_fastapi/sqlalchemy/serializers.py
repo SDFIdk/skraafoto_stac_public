@@ -123,7 +123,7 @@ class ItemSerializer(Serializer):
                 "rel": "license",
                 "href": "https://dataforsyningen.dk/Vilkaar",
                 "type": "text/html; charset=UTF-8",
-                "title": "SDFE license terms",
+                "title": "SDFI license terms",
             },
             {
                 "rel": "alternate",
@@ -189,7 +189,7 @@ class ItemSerializer(Serializer):
         cls._add_if_not_none(properties, "view:azimuth", db_model.azimuth)
         cls._add_if_not_none(properties, "view:off_nadir", db_model.offnadir)
 
-        # Homegrown sdfe
+        # Homegrown sdfi
         properties["direction"] = db_model.direction
         properties["estimated_accuracy"] = db_model.estacc
 
