@@ -23,7 +23,7 @@ Selve APIet, der udstiller metadata i form af [STAC Items](#stac-item) organiser
 
 `Items` er inddelt i `Collections`, således at en `Collection` består af logisk beslægtede `Items`. For eksempel er skråfotos inddelt i en `Collection` per årgang.
 
-_Eksempel_:
+_Eksempel_
 
 ```json
 {
@@ -708,7 +708,7 @@ Eksempler på brug af filter parameter:
         }
     }
     ```
-    
+
 Nærmere beskrivelse af [Filter extension](https://github.com/radiantearth/stac-api-spec/tree/master/fragments/filter).
 
 ### Sort Extension
@@ -720,22 +720,26 @@ Eksempler på brug af sortBy parameter:
 1. `GET /search?sortby=+properties.datetime` - Sortér på properties.datetime ascending
 2. `GET /search?sortby=properties.datetime,-id` - Sortér på properties.datetime ascending og id descending
 3. `POST /search` - Sortér på collection descending
+    > Code samples
 
-```json
-POST https://api.dataforsyningen.dk/skraafoto_api/search
-Content-Type: application/json
-token: {DinToken}
+    ```http
+    POST https://api.dataforsyningen.dk/skraafoto_api/search
+    HTTP/1.1
+    Host: api.dataforsyningen.dk
+    Content-Type: application/json
+    Accept: application/geo+json
 
-{
-    "sortby": [
-        {
-            "field": "collection",
-            "direction": "desc"
-        }
-    ]
-}
-```
-Nærmere beskrivelse af Sort Extension: https://github.com/radiantearth/stac-api-spec/tree/master/fragments/sort.
+    {
+        "sortby": [
+            {
+                "field": "collection",
+                "direction": "desc"
+            }
+        ]
+    }
+    ```
+
+Nærmere beskrivelse af [Sort Extension](https://github.com/radiantearth/stac-api-spec/tree/master/fragments/sort).
 
 
 ## Download og visning af billeder
@@ -743,6 +747,7 @@ Nærmere beskrivelse af Sort Extension: https://github.com/radiantearth/stac-api
 Der er flere muligheder for at gå fra de returnerede metadata (se [STAC Item](#stac-item)) til det beskrevne billede.
 
 Relevante links findes i sektionen `links` hhv `assets`:
+
 ```json
 [...]
 "links": [
@@ -801,18 +806,13 @@ Dataforsyningen udstiller en online-viewer til meget enkel visning af et flyfoto
 
 Dataforsyningen udstiller en service, der kan udstille et flyfoto som en pyramide af jpeg-tiles. Disse kan anvendes, såfremt klienten ikke er i stand til at anvende den "Cloud Optimized GeoTIFF" direkte, som beskrevet ovenfor.
 
-URL til denne service er ikke inkluderet i metadata, men må i stedet konstrueres. URL'en skal konstrueres som
-
-```
-https://api.dataforsyningen.dk/skraafoto_cogtiler_test/tiles/{z}/{x}/{y}.jpg?url={DOWNLOAD_URL}
-```
+URL til denne service er ikke inkluderet i metadata, men må i stedet konstrueres. URL'en skal konstrueres som: 
+`https://api.dataforsyningen.dk/skraafoto_cogtiler_test/tiles/{z}/{x}/{y}.jpg?url={DOWNLOAD_URL}`
 
 Tile-koordinaterne z, x, og y er i en lokal tile-pyramide.
 
-Basal info om tile-pyramiden kan fås på endpointet
-```
-https://api.dataforsyningen.dk/skraafoto_cogtiler_test/info?url={DOWNLOAD_URL}
-```
+Basal info om tile-pyramiden kan fås på endpointet:
+`https://api.dataforsyningen.dk/skraafoto_cogtiler_test/info?url={DOWNLOAD_URL}`
 
 ## Georeferering
 
@@ -875,4 +875,3 @@ $$
 $$
 (xa, ya) = (xc / zc, yc / zc)
 $$
-
