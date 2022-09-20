@@ -11,7 +11,7 @@ Copyright (c) 2020 Arturo AI
 ```
 
 # Dokumentation
-En lynintroduktion findes i [./howtogetstarted.md](./howtogetstarted.md). Mere uddybende dokumentation findes i [./dokumentation.md](./dokumentation.md)
+En lynintroduktion findes under [./dokumentation.md/#how-to-get-started](./howtogetstarted.md). Mere uddybende dokumentation findes i [./dokumentation.md](./dokumentation.md)
 
 ---
 
