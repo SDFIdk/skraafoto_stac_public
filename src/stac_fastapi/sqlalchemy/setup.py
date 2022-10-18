@@ -21,7 +21,8 @@ install_requires = [
     "fastapi-utils",
     "pygeofilter==0.1.*",
     "pygeofilter[backend-sqlalchemy]==0.1.*",
-    "pygeoif==1.0.*",
+    "pygeoif==0.7",
+    "pygeoif[backend-sqlalchemy]==0.7",
 ]
 
 extra_reqs = {
