@@ -510,23 +510,6 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                 )
                 query = query.filter(collection_id_filter)
 
-            # Sort
-            if search_request.sortby:
-                sort_fields = [
-                    getattr(
-                        self.item_table.get_field(sort.field),
-                        sort.direction.value,
-                    )()
-                    for sort in search_request.sortby
-                ]
-                sort_fields.append(self.item_table.id)
-                query = query.order_by(*sort_fields)
-            else:
-                # Default sort is date
-                query = query.order_by(
-                    self.item_table.datetime.desc(), self.item_table.id
-                )
-
             # Ignore other parameters if ID is present
             if search_request.ids:
                 id_filter = sa.or_(
@@ -612,7 +595,47 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                 if search_request.filter:
                     pygeofilter.backends.sqlalchemy.filters.parse_geometry = monkeypatch_parse_geometry  # monkey patch parse_geometry from pygeofilter
                     sa_expr = to_filter(search_request.filter, self.FIELD_MAPPING)
-                    query = query.filter(sa_expr)
+                    # TODO: CHeck if type is Point or not
+                    
+                    filter_geom = get_geometry_filter(search_request.filter)
+                    if filter_geom:
+                        # Get the geometry type from filter
+                        geom_type = filter_geom.geometry['type']
+                        # Find the center point in the geometry
+                        if geom_type != 'Point':
+                            client_filter = str(ShapelyPolygon(filter_geom.geometry['coordinates']).centroid)
+                        else:
+                            # Get the coordinates 
+                            geom_coord = ' '.join(str(f) for f in filter_geom.geometry['coordinates'])
+                        
+                            client_filter = f"POINT ({geom_coord})"
+                    
+                        distance = ga.func.ST_Distance(
+                            ga.func.ST_Centroid(
+                                    ga.func.ST_Envelope(self.item_table.footprint)
+                                ),
+                                ga.func.ST_Transform(ga.func.ST_GeomFromText(client_filter, 25832),4326)
+                            )
+
+                        query = query.filter(sa_expr).order_by(distance)
+                    else:
+                        query = query.filter(sa_expr)
+                # Sort
+                if search_request.sortby:
+                    sort_fields = [
+                        getattr(
+                            self.item_table.get_field(sort.field),
+                            sort.direction.value,
+                        )()
+                        for sort in search_request.sortby
+                    ]
+                    sort_fields.append(self.item_table.id)
+                    query = query.order_by(*sort_fields)
+                else:
+                    # Default sort is date
+                    query = query.order_by(
+                        self.item_table.datetime.desc(), self.item_table.id
+                    )
 
                 if self.extension_is_enabled("ContextExtension"):
                     count_query = query.statement.with_only_columns(
@@ -818,3 +841,21 @@ class CoreFiltersClient(BaseFiltersClient):
             "title": f"{collection_id.capitalize() if collection_id else 'Dataforsyningen FlyfotoAPI - Shared queryables'}",
             "properties": res,
         }
+
+def get_geometry_filter(filter):
+    """
+    Get geometry from filter 
+    """
+    if hasattr(filter, 'geometry'):
+        return filter
+    
+    lhs, rhs = None, None
+    if hasattr(filter, 'lhs'):
+        lhs = get_geometry_filter(filter.lhs)
+    if hasattr(filter, 'rhs'):
+        rhs = get_geometry_filter(filter.rhs)
+    
+    if lhs is not None:
+        return lhs
+    
+    return rhs
