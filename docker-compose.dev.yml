@@ -49,7 +49,7 @@ services:
     networks:
       - dev-stac-fastapi-network  
     command:  [
-          "pyton -m uvicorn stac_fastapi.sqlalchemy.app:app --reload
+          "python -m uvicorn stac_fastapi.sqlalchemy.app:app --reload
           --host 0.0.0.0 --port 8081"          
       ]
 
