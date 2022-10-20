@@ -610,11 +610,13 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                         
                             client_filter = f"POINT ({geom_coord})"
                     
+                        # Finds and sorts by the input geometry centroid and calculates the distance to the footprint centroid.
                         distance = ga.func.ST_Distance(
                             ga.func.ST_Centroid(
                                     ga.func.ST_Envelope(self.item_table.footprint)
                                 ),
-                                ga.func.ST_Transform(ga.func.ST_GeomFromText(client_filter, 25832),4326)
+                                # Footprint in the database are in srid 4326
+                                ga.func.ST_Transform(ga.func.ST_GeomFromText(client_filter, search_request.filter_crs),4326)
                             )
 
                         query = query.filter(sa_expr).order_by(distance)
