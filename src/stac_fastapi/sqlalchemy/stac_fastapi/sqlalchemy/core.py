@@ -595,14 +595,17 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                 if search_request.filter:
                     pygeofilter.backends.sqlalchemy.filters.parse_geometry = monkeypatch_parse_geometry  # monkey patch parse_geometry from pygeofilter
                     sa_expr = to_filter(search_request.filter, self.FIELD_MAPPING)
-                    # TODO: CHeck if type is Point or not
                     
                     filter_geom = get_geometry_filter(search_request.filter)
                     if filter_geom:
-                        # Get the geometry type from filter
+                        # Get the geometry type from filter     
                         geom_type = filter_geom.geometry['type']
                         # Find the center point in the geometry
-                        if geom_type != 'Point':
+                        # Need to check if it nested list
+                        if len(filter_geom.geometry['coordinates']) == 1:
+                            client_filter = str(ShapelyPolygon(filter_geom.geometry['coordinates'][0]).centroid)                        
+                        elif geom_type != 'Point':
+                            print(f"Polygon: {filter_geom.geometry['coordinates']}")
                             client_filter = str(ShapelyPolygon(filter_geom.geometry['coordinates']).centroid)
                         else:
                             # Get the coordinates 
