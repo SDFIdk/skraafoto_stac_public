@@ -595,24 +595,24 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                 if search_request.filter:
                     pygeofilter.backends.sqlalchemy.filters.parse_geometry = monkeypatch_parse_geometry  # monkey patch parse_geometry from pygeofilter
                     sa_expr = to_filter(search_request.filter, self.FIELD_MAPPING)
-                    
+
                     filter_geom = get_geometry_filter(search_request.filter)
-                    if filter_geom:
-                        # Get the geometry type from filter     
-                        geom_type = filter_geom.geometry['type']
+                    # Get the geometry type from filter
+                    geom_type = filter_geom.geometry['type']
+                    if filter_geom and (geom_type  == 'Point' or geom_type == 'Polygon'):
                         # Find the center point in the geometry
                         # Need to check if it nested list
-                        if len(filter_geom.geometry['coordinates']) == 1:
-                            client_filter = str(ShapelyPolygon(filter_geom.geometry['coordinates'][0]).centroid)                        
-                        elif geom_type != 'Point':
-                            print(f"Polygon: {filter_geom.geometry['coordinates']}")
-                            client_filter = str(ShapelyPolygon(filter_geom.geometry['coordinates']).centroid)
-                        else:
-                            # Get the coordinates 
+                        if geom_type == 'Polygon':
+                            if len(filter_geom.geometry['coordinates']) == 1:
+                                client_filter = str(ShapelyPolygon(filter_geom.geometry['coordinates'][0]).centroid)
+                            else:
+                                client_filter = str(ShapelyPolygon(filter_geom.geometry['coordinates']).centroid)
+                        elif geom_type == 'Point':
+                            # Get the coordinates
                             geom_coord = ' '.join(str(f) for f in filter_geom.geometry['coordinates'])
-                        
-                            client_filter = f"POINT ({geom_coord})"
-                    
+
+                            client_filter = f"Point ({geom_coord})"
+
                         # Finds and sorts by the input geometry centroid and calculates the distance to the footprint centroid.
                         distance = ga.func.ST_Distance(
                             ga.func.ST_Centroid(
@@ -722,16 +722,16 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                         },
                     }
                 )
-            response_features = []  
+            response_features = []
             filter_kwargs = {}
-            
+
             # rewritten as a list-comprehension to speedup creation of the list
             # Enumerations should be faster than looping and appending
             crs_obj =  {"type": "name",
                 "properties": {"name": f"{output_crs}"},
-            }  
+            }
             response_features = [self.item_serializer.db_to_stac(item,hrefbuilder) for i,item in enumerate(page)]
-                    
+
             # Use pydantic includes/excludes syntax to implement fields extension
             if (
                 self.extension_is_enabled("FieldsExtension")
@@ -758,10 +758,10 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                     json.loads(stac_pydantic.Item(**feat).json(**filter_kwargs))
                     for feat,_ in enumerate(response_features)
                 ]
-                
+
         for _,feat in enumerate(response_features):
             feat["crs"] = crs_obj
-            
+
         context_obj = None
         if self.extension_is_enabled("ContextExtension"):
             context_obj = {
@@ -770,8 +770,8 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                 "matched": count,
             }
 
-     
-        
+
+
         return ItemCollection(
             type="FeatureCollection",
             features=response_features,
@@ -849,18 +849,18 @@ class CoreFiltersClient(BaseFiltersClient):
 
 def get_geometry_filter(filter):
     """
-    Get geometry from filter 
+    Get geometry from filter
     """
     if hasattr(filter, 'geometry'):
         return filter
-    
+
     lhs, rhs = None, None
     if hasattr(filter, 'lhs'):
         lhs = get_geometry_filter(filter.lhs)
     if hasattr(filter, 'rhs'):
         rhs = get_geometry_filter(filter.rhs)
-    
+
     if lhs is not None:
         return lhs
-    
+
     return rhs
