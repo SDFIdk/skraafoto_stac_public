@@ -558,6 +558,7 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                             search_request.bbox_crs
                         )
                     filter_geom = ga.shape.from_shape(geom, srid=bbox_srid)
+
                     if bbox_srid == self.storage_srid:
                         query = query.filter(
                             ga.func.ST_Intersects(
@@ -571,6 +572,15 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                                 self.item_table.footprint,
                             ),
                         )
+                    # Finds and sorts by the input geometry centroid and calculates the distance to the footprint centroid.
+                    distance = ga.func.ST_Distance(
+                        ga.func.ST_Centroid(
+                                ga.func.ST_Envelope(self.item_table.footprint)
+                            ),
+                            # Footprint in the database are in srid 4326
+                            ga.func.ST_Transform(ga.func.ST_GeomFromText(str(geom.centroid),self.storage_srid),self.storage_srid)
+                        )
+                    query = query.order_by(distance)
 
                 # Temporal query
                 if search_request.datetime:
@@ -595,7 +605,7 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                 if search_request.filter:
                     pygeofilter.backends.sqlalchemy.filters.parse_geometry = monkeypatch_parse_geometry  # monkey patch parse_geometry from pygeofilter
                     sa_expr = to_filter(search_request.filter, self.FIELD_MAPPING)
-
+                    
                     filter_geom = get_geometry_filter(search_request.filter)
                     if filter_geom:
                         # Get the geometry type from filter
