@@ -597,32 +597,33 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                     sa_expr = to_filter(search_request.filter, self.FIELD_MAPPING)
 
                     filter_geom = get_geometry_filter(search_request.filter)
-                    # Get the geometry type from filter
-                    geom_type = filter_geom.geometry['type']
-                    if filter_geom and (geom_type  == 'Point' or geom_type == 'Polygon'):
-                        # Find the center point in the geometry
-                        # Need to check if it nested list
-                        if geom_type == 'Polygon':
-                            if len(filter_geom.geometry['coordinates']) == 1:
-                                client_filter = str(ShapelyPolygon(filter_geom.geometry['coordinates'][0]).centroid)
-                            else:
-                                client_filter = str(ShapelyPolygon(filter_geom.geometry['coordinates']).centroid)
-                        elif geom_type == 'Point':
-                            # Get the coordinates
-                            geom_coord = ' '.join(str(f) for f in filter_geom.geometry['coordinates'])
+                    if filter_geom:
+                        # Get the geometry type from filter
+                        geom_type = filter_geom.geometry['type']
+                        if geom_type  == 'Point' or geom_type == 'Polygon':
+                            # Find the center point in the geometry
+                            # Need to check if it nested list
+                            if geom_type == 'Polygon':
+                                if len(filter_geom.geometry['coordinates']) == 1:
+                                    client_filter = str(ShapelyPolygon(filter_geom.geometry['coordinates'][0]).centroid)
+                                else:
+                                    client_filter = str(ShapelyPolygon(filter_geom.geometry['coordinates']).centroid)
+                            elif geom_type == 'Point':
+                                # Get the coordinates
+                                geom_coord = ' '.join(str(f) for f in filter_geom.geometry['coordinates'])
 
-                            client_filter = f"Point ({geom_coord})"
+                                client_filter = f"Point ({geom_coord})"
 
-                        # Finds and sorts by the input geometry centroid and calculates the distance to the footprint centroid.
-                        distance = ga.func.ST_Distance(
-                            ga.func.ST_Centroid(
-                                    ga.func.ST_Envelope(self.item_table.footprint)
-                                ),
-                                # Footprint in the database are in srid 4326
-                                ga.func.ST_Transform(ga.func.ST_GeomFromText(client_filter, search_request.filter_crs),4326)
-                            )
+                            # Finds and sorts by the input geometry centroid and calculates the distance to the footprint centroid.
+                            distance = ga.func.ST_Distance(
+                                ga.func.ST_Centroid(
+                                        ga.func.ST_Envelope(self.item_table.footprint)
+                                    ),
+                                    # Footprint in the database are in srid 4326
+                                    ga.func.ST_Transform(ga.func.ST_GeomFromText(client_filter, search_request.filter_crs),4326)
+                                )
 
-                        query = query.filter(sa_expr).order_by(distance)
+                            query = query.filter(sa_expr).order_by(distance)
                     else:
                         query = query.filter(sa_expr)
                 # Sort
