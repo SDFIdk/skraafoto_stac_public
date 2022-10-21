@@ -606,36 +606,23 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                     pygeofilter.backends.sqlalchemy.filters.parse_geometry = monkeypatch_parse_geometry  # monkey patch parse_geometry from pygeofilter
                     sa_expr = to_filter(search_request.filter, self.FIELD_MAPPING)
                     
-                    filter_geom = get_geometry_filter(search_request.filter)
-                    if filter_geom:
-                        # Get the geometry type from filter
-                        geom_type = filter_geom.geometry['type']
-                        if geom_type  == 'Point' or geom_type == 'Polygon':
-                            # Find the center point in the geometry
-                            # Need to check if it nested list
-                            if geom_type == 'Polygon':
-                                if len(filter_geom.geometry['coordinates']) == 1:
-                                    client_filter = str(ShapelyPolygon(filter_geom.geometry['coordinates'][0]).centroid)
-                                else:
-                                    client_filter = str(ShapelyPolygon(filter_geom.geometry['coordinates']).centroid)
-                            elif geom_type == 'Point':
-                                # Get the coordinates
-                                geom_coord = ' '.join(str(f) for f in filter_geom.geometry['coordinates'])
+                    geometry = get_geometry_filter(search_request.filter)
+                    if geometry is not None:
+                        geom = shape(geometry)
+                    if geom:
+                        # Finds and sorts by the input geometry centroid and calculates the distance to the footprint centroid.
+                        distance = ga.func.ST_Distance(
+                            ga.func.ST_Centroid(
+                                    ga.func.ST_Envelope(self.item_table.footprint)
+                                ),
+                                # Footprint in the database are in srid 4326
+                                ga.func.ST_Transform(ga.func.ST_GeomFromText(str(geom.centroid), search_request.filter_crs),self.storage_srid)
+                            )
 
-                                client_filter = f"Point ({geom_coord})"
-
-                            # Finds and sorts by the input geometry centroid and calculates the distance to the footprint centroid.
-                            distance = ga.func.ST_Distance(
-                                ga.func.ST_Centroid(
-                                        ga.func.ST_Envelope(self.item_table.footprint)
-                                    ),
-                                    # Footprint in the database are in srid 4326
-                                    ga.func.ST_Transform(ga.func.ST_GeomFromText(client_filter, search_request.filter_crs),self.storage_srid)
-                                )
-
-                            query = query.filter(sa_expr).order_by(distance)
+                        query = query.filter(sa_expr).order_by(distance)
                     else:
                         query = query.filter(sa_expr)
+                    
                 # Sort
                 if search_request.sortby:
                     sort_fields = [
@@ -861,6 +848,7 @@ class CoreFiltersClient(BaseFiltersClient):
 def get_geometry_filter(filter):
     """
     Get geometry from filter
+    Returns None if no geometry was found
     """
     if hasattr(filter, 'geometry'):
         return filter
