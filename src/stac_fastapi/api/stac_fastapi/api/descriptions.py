@@ -15,7 +15,7 @@ PAGING_TOKEN="Token used for paging functionality. Only use tokens as returned b
 
 IDS = "Array of Item ids to return. All other filter parameters that further restrict the number of search results are ignored"
 
-BBOX="""Only return items intersecting this bounding box. Mutually exclusive with `intersects`.
+BBOX="""Only return items intersecting this bounding box. Mutually exclusive with `intersects`. The default sort is the shortest distance between specifed geometry centroid and the footprint centroid of skraafotos. 
 
 Example: `10.312385559082033,55.33392904334293,10.36388397216797,55.353452174893285`
 
@@ -26,7 +26,7 @@ BBOX_CRS="""The coordinate reference system (CRS) used by `bbox` param. The spec
 
 Default is `http://www.opengis.net/def/crs/OGC/1.3/CRS84`."""
 
-INTERSECTS="""Only return items intersecting this GeoJSON Geometry. Mutually exclusive with `bbox`."""
+INTERSECTS="""Only return items intersecting this GeoJSON Geometry. Mutually exclusive with `bbox`. The default sort is the shortest distance between specifed geometry centroid and the footprint centroid of skraafotos. """
 
 DATETIME="""Only return items that have a temporal property that intersects this value.
 
@@ -47,6 +47,7 @@ Example:
 { "gt": [ { "property": "gsd" }, "0.1" ] }
 ```
 
+If filter input has a geometry, the default sort is the shortest distance between specifed geometry centroid and the footprint centroid of skraafotos. 
 Remember to URL encode the CQL-JSON if using GET `/search` or `/collections/{collectionid}/items`.
 """
 
