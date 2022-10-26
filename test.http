@@ -166,4 +166,4 @@ Content-Type: application/json
 GET http://localhost:8000/ HTTP/1.1
 x-forwarded-proto: http
 x-forwarded-host: www.test.dk
-x-forwarded-prefix: /skraafotoapi_xxx
+x-forwarded-prefix: /skraafoto_api/v1.0
