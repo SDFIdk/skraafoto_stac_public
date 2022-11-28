@@ -1,73 +1,74 @@
 version: "3"
 
 services:
-    test-database:
-        container_name: test-database
-        image: kartoza/postgis:12.4 # Feel free to change version to match production environment
-        environment:
-            - POSTGRES_USER=test_user
-            - POSTGRES_PASS=test_password
-            - POSTGRES_DBNAME=udv_skraafotodistribution
-            - POSTGRES_MULTIPLE_EXTENSIONS=postgis
-            #- SCHEMA_NAME=data # default stac-api thing i think
-        #ports:
-            #- "5439:5432"
+  test-database:
+    container_name: test-database
+    image: kartoza/postgis:12.4 # Feel free to change version to match production environment
+    environment:
+      - TZ=Europe/Copenhagen
+      - POSTGRES_USER=test_user
+      - POSTGRES_PASS=test_password
+      - POSTGRES_DBNAME=udv_skraafotodistribution
+      - POSTGRES_MULTIPLE_EXTENSIONS=postgis
+      #- SCHEMA_NAME=data # default stac-api thing i think
+    #ports:
+      #- "5439:5432"
 
+  pytest-app-sqlalchemy:
+    container_name: pytest-stac-fastapi-sqlalchemy
+    image: stac-utils/stac-fastapi
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - TZ=Europe/Copenhagen
+      - APP_HOST=0.0.0.0
+      - DB_MIN_CONN_SIZE=1
+      - DB_MAX_CONN_SIZE=1
+      - APP_PORT=8081
+      - WEB_CONCURRENCY=${WEB_CONCURRENCY}
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - DEBUG=FALSE
+      - POSTGRES_USER=test_user
+      - POSTGRES_PASS=test_password
+      - POSTGRES_DBNAME=udv_skraafotodistribution
+      - POSTGRES_HOST=test-database
+      - POSTGRES_PORT=5432
+      - POSTGRES_APPLICATION_NAME=${POSTGRES_APPLICATION_NAME:-stac_fastapi_dockercompose}
+      - COGTILER_BASEPATH=$COGTILER_BASEPATH
+    platform: linux/amd64
+    volumes:
+      - ./src/stac_fastapi:/app/stac_fastapi
+      - ./src/scripts:/app/scripts
+      - ./docker/reports:/app/report
+    command: bash -c "sleep 7s && 
+        pip install -e /app/stac_fastapi/api[dev] && 
+        pip install -e /app/stac_fastapi/types[dev] && 
+        pip install -e /app/stac_fastapi/extensions[dev] && 
+        pytest /app/stac_fastapi --junitxml=/app/report/report.xml &&
+        PGPASSWORD=test_password psql -h test-database -U test_user postgres -c \"COPY (SELECT 1) TO PROGRAM '/usr/lib/postgresql/12/bin/pg_ctl -D /var/lib/postgresql/12/main stop'\""
+          
 
-    pytest-app-sqlalchemy:
-        container_name: pytest-stac-fastapi-sqlalchemy
-        image: stac-utils/stac-fastapi
-        build:
-            context: .
-            dockerfile: Dockerfile
-        environment:
-            - APP_HOST=0.0.0.0
-            - DB_MIN_CONN_SIZE=1
-            - DB_MAX_CONN_SIZE=1
-            - APP_PORT=8081
-            - WEB_CONCURRENCY=${WEB_CONCURRENCY}
-            - ENVIRONMENT=${ENVIRONMENT:-production}
-            - DEBUG=FALSE
-            - POSTGRES_USER=test_user
-            - POSTGRES_PASS=test_password
-            - POSTGRES_DBNAME=udv_skraafotodistribution
-            - POSTGRES_HOST=test-database
-            - POSTGRES_PORT=5432
-            - POSTGRES_APPLICATION_NAME=${POSTGRES_APPLICATION_NAME:-stac_fastapi_dockercompose}
-            - COGTILER_BASEPATH=$COGTILER_BASEPATH
-        platform: linux/amd64
-        volumes:
-            - ./src/stac_fastapi:/app/stac_fastapi
-            - ./src/scripts:/app/scripts
-            - ./docker/reports:/app/report
-        command: bash -c "sleep 7s && 
-            pip install -e /app/stac_fastapi/api[dev] && 
-            pip install -e /app/stac_fastapi/types[dev] && 
-            pip install -e /app/stac_fastapi/extensions[dev] && 
-            pytest /app/stac_fastapi --junitxml=/app/report/report.xml &&
-            PGPASSWORD=test_password psql -h test-database -U test_user postgres -c \"COPY (SELECT 1) TO PROGRAM '/usr/lib/postgresql/12/bin/pg_ctl -D /var/lib/postgresql/12/main stop'\""
-            
-
-    test-alembic-run-migration:
-        image: stac-utils/stac-fastapi
-        build:
-            context: .
-            dockerfile: Dockerfile
-        environment:
-            - ENVIRONMENT=development
-            - POSTGRES_USER=test_user
-            - POSTGRES_PASS=test_password
-            - POSTGRES_DBNAME=udv_skraafotodistribution
-            - POSTGRES_HOST=test-database
-            - POSTGRES_PORT=5432
-        volumes:
-            - ./src/stac_fastapi:/app/stac_fastapi
-            - ./src/scripts:/app/scripts
-
-        # Wait for the LOCAL DEV application - load S3 data
-        command: >
-            bash -c    "./scripts/wait-for-it.sh test-database:5432 && cd ./stac_fastapi/sqlalchemy && alembic upgrade head"
+  test-alembic-run-migration:
+    image: stac-utils/stac-fastapi
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - TZ=Europe/Copenhagen
+      - ENVIRONMENT=development
+      - POSTGRES_USER=test_user
+      - POSTGRES_PASS=test_password
+      - POSTGRES_DBNAME=udv_skraafotodistribution
+      - POSTGRES_HOST=test-database
+      - POSTGRES_PORT=5432
+    volumes:
+      - ./src/stac_fastapi:/app/stac_fastapi
+      - ./src/scripts:/app/scripts
+    # Wait for the LOCAL DEV application - load S3 data
+    command: >
+        bash -c    "./scripts/wait-for-it.sh test-database:5432 && cd ./stac_fastapi/sqlalchemy && alembic upgrade head"
 
 networks:
-    default:
-        name: test-stac-fastapi-network
+  default:
+    name: test-stac-fastapi-network

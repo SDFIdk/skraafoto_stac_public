@@ -5,6 +5,7 @@ services:
     container_name: test-database
     image: kartoza/postgis:12.4 # Feel free to change version to match production environment
     environment:
+      - TZ=Europe/Copenhagen
       - POSTGRES_USER=test_user
       - POSTGRES_PASS=test_password
       - POSTGRES_DBNAME=udv_skraafotodistribution
@@ -23,9 +24,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile_dev
-
     platform: linux/amd64
     environment:
+      - TZ=Europe/Copenhagen
       - APP_HOST=0.0.0.0
       - DB_MIN_CONN_SIZE=1
       - DB_MAX_CONN_SIZE=1
@@ -54,25 +55,26 @@ services:
       ]
 
   test-alembic-run-migration:
-      image: stac-utils/stac-fastapi
-      build:
-        context: .
-        dockerfile: Dockerfile_dev
-      environment:
-        - ENVIRONMENT=development
-        - POSTGRES_USER=test_user
-        - POSTGRES_PASS=test_password
-        - POSTGRES_DBNAME=udv_skraafotodistribution
-        - POSTGRES_HOST=test-database
-        - POSTGRES_PORT=5432
-      volumes:
-        - ./src/stac_fastapi:/app/stac_fastapi
-        - ./src/scripts:/app/scripts
-      networks:
-        - dev-stac-fastapi-network
-      # Wait for the LOCAL DEV application - load S3 data
-      command: >
-        bash -c  "./scripts/wait-for-it.sh test-database:5432 && cd ./stac_fastapi/sqlalchemy && alembic upgrade head"
+    image: stac-utils/stac-fastapi
+    build:
+      context: .
+      dockerfile: Dockerfile_dev
+    environment:
+      - TZ=Europe/Copenhagen
+      - ENVIRONMENT=development
+      - POSTGRES_USER=test_user
+      - POSTGRES_PASS=test_password
+      - POSTGRES_DBNAME=udv_skraafotodistribution
+      - POSTGRES_HOST=test-database
+      - POSTGRES_PORT=5432
+    volumes:
+      - ./src/stac_fastapi:/app/stac_fastapi
+      - ./src/scripts:/app/scripts
+    networks:
+      - dev-stac-fastapi-network
+    # Wait for the LOCAL DEV application - load S3 data
+    command: >
+      bash -c  "./scripts/wait-for-it.sh test-database:5432 && cd ./stac_fastapi/sqlalchemy && alembic upgrade head"
 
 networks:
   dev-stac-fastapi-network:

@@ -7,9 +7,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-
     platform: linux/amd64
     environment:
+      - TZ=Europe/Copenhagen
       - APP_HOST=0.0.0.0
       - DB_MIN_CONN_SIZE=1
       - DB_MAX_CONN_SIZE=1
