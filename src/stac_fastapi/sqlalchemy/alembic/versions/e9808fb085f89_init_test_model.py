@@ -101,44 +101,28 @@ def upgrade():
     )
     op.execute(
         f"""
-        create view {SCHEMA}.images_mvw as 
-        select 
-            i.id,
-            i.collection_id,
-            i.instrument_id,
-            i.datetime,
-            i.end_datetime,
-            i.footprint,
-            i.easting,
-            i.northing,
-            i.height,
-            i.vertical_crs,
-            i.horisontal_crs,
-            i.compound_crs,
-            i.omega,
-            i.phi,
-            i.kappa,
-            i.rotmatrix,
-            i.direction,
-            i.azimuth,
-            i.offnadir,
-            i.estacc,
-            i.producer,
-            i.gsd,
-            i.data_path,
-            i.properties,
-            c.camera_id,
-            c.focal_length,
-            c.principal_point_x,
-            c.principal_point_y,
-            c.sensor_pixel_size,
-            c.sensor_physical_width,
-            c.sensor_physical_height,
-            c.sensor_columns,
-            c.sensor_rows,
-            c.calibration_date,
-            c.owner
-        from {SCHEMA}.images i left join {SCHEMA}.instruments c on (i.instrument_id = c.id);
+        create materialized view {SCHEMA}.images_mvw as 
+            select 
+                i.*,
+                camera_id,
+                focal_length, -- mm
+                principal_point_x, -- mm
+                principal_point_y, -- mm
+                sensor_pixel_size, -- mm	
+                sensor_physical_width, -- mm
+                sensor_physical_height, -- mm
+                sensor_columns, -- pixels
+                sensor_rows, -- pixels
+                calibration_date,
+                "owner"
+        from stac_api.images i left join stac_api.instruments c on (i.instrument_id = c.id);	
+
+        CREATE UNIQUE INDEX images_mvw_id ON stac_api.images_mvw USING btree (id);
+        CREATE UNIQUE INDEX images_mvw_datetime_id_desc_idx ON stac_api.images_mvw USING btree (datetime, id DESC);
+        CREATE UNIQUE INDEX images_mvw_collectionid_datetime_id_desc_idx ON stac_api.images_mvw USING btree (collection_id, datetime, id DESC);
+        CREATE INDEX images_mvw_geometry_idx ON stac_api.images_mvw USING gist (footprint);
+        CREATE INDEX images_mvw_collection_idx ON stac_api.images_mvw USING btree (collection_id);
+        CREATE INDEX images_mvw_datetime_idx ON stac_api.images_mvw USING btree (datetime);
         """
     )
 
