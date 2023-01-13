@@ -77,7 +77,7 @@ class Collection(BaseModel):  # type:ignore
 class ImageView(BaseModel):
     """Image orm model."""
 
-    __tablename__ = "images_mvw"
+    __tablename__ = "images_vw"
     __table_args__ = {"schema": "stac_api"}
 
     id = sa.Column(sa.TEXT, nullable=False, primary_key=True)
