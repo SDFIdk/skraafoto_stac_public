@@ -99,33 +99,6 @@ def upgrade():
         CREATE INDEX images_datetime_idx ON {SCHEMA}.images USING btree (datetime);  
     """
     )
-    # It is not a materialized view but the name should match what the api is looking after. Else the unittest fails.
-    op.execute(
-        f"""
-        create materialized view {SCHEMA}.images_mvw as 
-        select 
-            i.*,
-            camera_id,
-            focal_length, -- mm
-            principal_point_x, -- mm
-            principal_point_y, -- mm
-            sensor_pixel_size, -- mm	
-            sensor_physical_width, -- mm
-            sensor_physical_height, -- mm
-            sensor_columns, -- pixels
-            sensor_rows, -- pixels
-            calibration_date,
-            "owner"
-        from {SCHEMA}.images i left join {SCHEMA}.instruments c on (i.instrument_id = c.id);	
-
-        CREATE UNIQUE INDEX images_mvw_id ON {SCHEMA}.images_mvw USING btree (id);
-        CREATE UNIQUE INDEX images_mvw_datetime_id_desc_idx ON {SCHEMA}.images_mvw USING btree (datetime, id DESC);
-        CREATE UNIQUE INDEX images_mvw_collectionid_datetime_id_desc_idx ON {SCHEMA}.images_mvw USING btree (collection_id, datetime, id DESC);
-        CREATE INDEX images_mvw_geometry_idx ON {SCHEMA}.images_mvw USING gist (footprint);
-        CREATE INDEX images_mvw_collection_idx ON {SCHEMA}.images_mvw USING btree (collection_id);
-        CREATE INDEX images_mvw_datetime_idx ON {SCHEMA}.images_mvw USING btree (datetime);
-        """
-    )
 
     # # # # # # #
     # Test Data
@@ -307,6 +280,33 @@ def upgrade():
         INSERT INTO {SCHEMA}.images (id, collection_id, instrument_id, datetime, end_datetime, footprint, easting, northing, height, vertical_crs, horisontal_crs, compound_crs, omega, phi, kappa, rotmatrix, direction, azimuth, offnadir, estacc, producer, gsd, data_path, properties) VALUES ('2017_81_08_5_0826_00010384', 'skraafotos2017', 43, '2017-05-01 06:45:12+00', '2017-05-01 06:45:12+00', '0103000020E61000000100000005000000DECC121001092440365C7C7780BD4C401FAFF3A40A1424401479007F51BD4C409AB339F7FB132440C5766FBCA9BC4C4090593A68E2082440D75DAA6D80BC4C40DECC121001092440365C7C7780BD4C40', 563182.575, 6370904.559, 1572.56, 5799, 25832, 7416, 0.09475, 45.0609, 90.5918, '{{-0.007296232147353553,0.9999331913828124,0.008965364880237458,-0.706316854345564,-0.011499926910398377,0.7078024109512788,0.7078582246918088,-0.0011680976155124447,0.7063535724296448}}', 'west', 270, 45, 0.15, 'Aerodata', 0.095, 'https://test15.dataforsyningen.dk/skraafoto_server/2017_cog/2017_81_08_5_0826_00010384.jpg.cog.tif', '{{}}');
         INSERT INTO {SCHEMA}.images (id, collection_id, instrument_id, datetime, end_datetime, footprint, easting, northing, height, vertical_crs, horisontal_crs, compound_crs, omega, phi, kappa, rotmatrix, direction, azimuth, offnadir, estacc, producer, gsd, data_path, properties) VALUES ('2017_83_27_1_0002_00000253', 'skraafotos2017', 34, '2017-04-09 09:17:36+00', '2017-04-09 09:17:36+00', '0103000020E6100000010000000500000037044D676B9921408F1B1420BFC14B40509D52C67E992140A8E36AA2D0C04B408A7BCBEA418F21406C2F059FC9C04B4097032AFF2D8F2140313A380EBBC14B4037044D676B9921408F1B1420BFC14B40', 486724.43, 6151554.8, 1500.5, 5799, 25832, 7416, 0.0653, 0.1413, 0.5072, '{{0.9999577777321,0.0088549992056844,-0.002455960534576977,-0.0088521674779487,0.9999601442464239,0.0011614859506206084,0.002466147607589277,-0.0011396963360783316,0.9999963095973101}}', 'nadir', NULL, 0, 1.5, 'Vermessung AVT', 0.1, 'https://test15.dataforsyningen.dk/skraafoto_server/2017_cog/2017_83_27_1_0002_00000253.jpg.cog.tif', '{{}}');
         INSERT INTO {SCHEMA}.images (id, collection_id, instrument_id, datetime, end_datetime, footprint, easting, northing, height, vertical_crs, horisontal_crs, compound_crs, omega, phi, kappa, rotmatrix, direction, azimuth, offnadir, estacc, producer, gsd, data_path, properties) VALUES ('2017_82_15_2_1502_00046656', 'skraafotos2017', 31, '2017-05-06 08:44:22+00', '2017-05-06 08:44:22+00', '0103000020E61000000100000005000000E5481D8FF0382340456FBABE6A414C403B7E4CEFAB3723400A508F18A9424C4008FFEAF95E4123402F4F523B9A424C4057EB4AEBD33F2340D860748D68414C40E5481D8FF0382340456FBABE6A414C40', 538015.42015, 6262036.55006, 1574.04, 5799, 25832, 7416, 44.98, -0.28236, 359.781, '{{0.999980548421615,-0.006187816516478594,0.0007833933652156692,0.0038231783209493105,0.7073350827603654,0.7068680669006863,-0.004928091510158109,-0.7068513221485444,0.7073449811025184}}', 'north', 0, 45, 0.15, 'Aerodata', 0.094, 'https://test15.dataforsyningen.dk/skraafoto_server/2017_cog/2017_82_15_2_1502_00046656.jpg.cog.tif', '{{}}');
+        """
+    )
+    # It is not a materialized view but the name should match what the api is looking after. Else the unittest fails.
+    op.execute(
+        f"""
+        create materialized view {SCHEMA}.images_mvw as 
+        select 
+            i.*,
+            camera_id,
+            focal_length, -- mm
+            principal_point_x, -- mm
+            principal_point_y, -- mm
+            sensor_pixel_size, -- mm	
+            sensor_physical_width, -- mm
+            sensor_physical_height, -- mm
+            sensor_columns, -- pixels
+            sensor_rows, -- pixels
+            calibration_date,
+            "owner"
+        from {SCHEMA}.images i left join {SCHEMA}.instruments c on (i.instrument_id = c.id);	
+
+        CREATE UNIQUE INDEX images_mvw_id ON {SCHEMA}.images_mvw USING btree (id);
+        CREATE UNIQUE INDEX images_mvw_datetime_id_desc_idx ON {SCHEMA}.images_mvw USING btree (datetime, id DESC);
+        CREATE UNIQUE INDEX images_mvw_collectionid_datetime_id_desc_idx ON {SCHEMA}.images_mvw USING btree (collection_id, datetime, id DESC);
+        CREATE INDEX images_mvw_geometry_idx ON {SCHEMA}.images_mvw USING gist (footprint);
+        CREATE INDEX images_mvw_collection_idx ON {SCHEMA}.images_mvw USING btree (collection_id);
+        CREATE INDEX images_mvw_datetime_idx ON {SCHEMA}.images_mvw USING btree (datetime);
         """
     )
 
