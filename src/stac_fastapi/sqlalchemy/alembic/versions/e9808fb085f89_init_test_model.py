@@ -101,7 +101,7 @@ def upgrade():
     )
     op.execute(
         f"""
-        create view {SCHEMA}.images_mvw as 
+        create view {SCHEMA}.images_vw as 
         select 
             i.id,
             i.collection_id,
@@ -327,7 +327,7 @@ def upgrade():
 
 
 def downgrade():
-    op.execute(f"DROP VIEW {SCHEMA}.images_mvw;")
+    op.execute(f"DROP VIEW {SCHEMA}.images_vw;")
     op.execute(f"DROP TABLE {SCHEMA}.images;")
     op.execute(f"DROP TABLE {SCHEMA}.instruments;")
     op.execute(f"DROP TABLE {SCHEMA}.collections;")
