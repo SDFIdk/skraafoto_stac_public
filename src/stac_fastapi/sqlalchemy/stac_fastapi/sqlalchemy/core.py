@@ -42,7 +42,7 @@ from stac_fastapi.types.links import BaseHrefBuilder
 from stac_fastapi.types.stac import Collection, Collections, Item, ItemCollection
 from pygeofilter.backends.sqlalchemy import to_filter
 import pygeofilter
-from pygeoif.geometry import shape
+from pygeoif.geometry import shape as as_shape
 
 NumType = Union[float, int]
 
@@ -65,7 +65,7 @@ def profiled():
     print(s.getvalue())
 
 def monkeypatch_parse_geometry(geom):
-    wkt = shape(geom).to_wkt()
+    wkt = as_shape(geom).to_wkt()
     crs = geom["crs"] if "crs" in geom.keys() else 4326
     if crs == 4326:
         return func.ST_GeomFromText(wkt, 4326)
