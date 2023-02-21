@@ -136,4 +136,5 @@ data
 
 # junitxml report
 docker/report
-docker/reports/report.xml
+
+docker/reports

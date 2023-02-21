@@ -15,14 +15,12 @@ install_requires = [
     "sqlakeyset",
     "geoalchemy2<0.8.0",
     "sqlalchemy==1.3.23",
-    "shapely==1.8.*",
+    "shapely==2.0.*",
     "psycopg2-binary",
     "alembic",
     "fastapi-utils",
-    "pygeofilter==0.1.*",
-    "pygeofilter[backend-sqlalchemy]==0.1.*",
-    "pygeoif==0.7",
-    "pygeoif[backend-sqlalchemy]==0.7",
+    "pygeofilter==0.2.*",
+    "pygeofilter[backend-sqlalchemy]==0.2.*",
 ]
 
 extra_reqs = {
