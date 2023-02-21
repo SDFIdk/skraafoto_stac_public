@@ -15,7 +15,7 @@ install_requires = [
     "sqlakeyset",
     "geoalchemy2<0.8.0",
     "sqlalchemy==1.3.23",
-    "shapely==1.8.*",
+    "shapely==2.0.*",
     "psycopg2-binary",
     "alembic",
     "fastapi-utils",
