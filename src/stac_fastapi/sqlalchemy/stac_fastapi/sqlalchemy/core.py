@@ -42,7 +42,8 @@ from stac_fastapi.types.links import BaseHrefBuilder
 from stac_fastapi.types.stac import Collection, Collections, Item, ItemCollection
 from pygeofilter.backends.sqlalchemy import to_filter
 import pygeofilter
-from pygeoif.geometry import shape as as_shape
+from pygeoif.factories import shape as as_shape
+
 
 NumType = Union[float, int]
 
