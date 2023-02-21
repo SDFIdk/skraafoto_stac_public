@@ -4,6 +4,7 @@ FROM python:3.8-slim as production
 # need the following packages in order to build
 RUN apt-get update \
     && apt-get install -y build-essential postgresql-client \
+    && apt-get upgrade -y \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 WORKDIR /app
