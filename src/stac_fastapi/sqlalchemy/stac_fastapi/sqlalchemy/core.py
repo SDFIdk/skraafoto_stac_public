@@ -16,7 +16,7 @@ from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 from shapely.geometry import Polygon as ShapelyPolygon
-from shapely.geometry import shape
+from shapely.geometry import to_wkt
 from sqlakeyset import get_page
 from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import array
@@ -42,8 +42,7 @@ from stac_fastapi.types.links import BaseHrefBuilder
 from stac_fastapi.types.stac import Collection, Collections, Item, ItemCollection
 from pygeofilter.backends.sqlalchemy import to_filter
 import pygeofilter
-from pygeoif.factories import shape as as_shape
-
+# from pygeoif.factories import shape as as_shape
 
 NumType = Union[float, int]
 
@@ -65,8 +64,9 @@ def profiled():
     # ps.print_callers()
     print(s.getvalue())
 
+
 def monkeypatch_parse_geometry(geom):
-    wkt = as_shape(geom).to_wkt()
+    wkt = to_wkt(geom)
     crs = geom["crs"] if "crs" in geom.keys() else 4326
     if crs == 4326:
         return func.ST_GeomFromText(wkt, 4326)
