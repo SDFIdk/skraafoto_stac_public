@@ -1,15 +1,17 @@
 """Item crud client."""
 import json
-import logging
-import operator
+import cProfile
+import io
+import pstats
+import contextlib
 from datetime import datetime
 from typing import List, Optional, Set, Type, Union, Dict, Any
-from urllib.parse import urlencode, urljoin
+from urllib.parse import urljoin
 
 import attr
 import geoalchemy2 as ga
 import sqlalchemy as sa
-from sqlalchemy.sql.expression import true, tuple_
+from sqlalchemy.sql.expression import true
 from sqlalchemy import and_
 import stac_pydantic
 from fastapi import HTTPException
@@ -17,13 +19,12 @@ from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 from shapely.geometry import Polygon as ShapelyPolygon
 from shapely.geometry import shape
-from shapely import to_wkt
 from sqlakeyset import get_page
 from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import array
 from sqlalchemy.orm import Session as SqlSession, with_expression
 from stac_pydantic.links import Relations
-from stac_pydantic.shared import MimeTypes, BBox
+from stac_pydantic.shared import MimeTypes
 
 from stac_fastapi.sqlalchemy import serializers
 from stac_fastapi.sqlalchemy.models import database
@@ -46,10 +47,6 @@ import pygeofilter
 
 NumType = Union[float, int]
 
-import cProfile
-import io
-import pstats
-import contextlib
 
 @contextlib.contextmanager
 def profiled():
@@ -296,7 +293,7 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                 link["href"] = hrefbuilder.build(
                     f"collections/{id}/items", query_params
                 )
-                link.pop("body", None) # body only relevant for POST
+                link.pop("body", None)  # body only relevant for POST
                 page_links.append(link)
             else:
                 page_links.append(link)
@@ -452,7 +449,7 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                 query_params = dict(kwargs["request"].query_params)
                 if link["body"]:
                     query_params.update(link["body"])
-                link["href"] = hrefbuilder.build(f"search", query_params)
+                link["href"] = hrefbuilder.build(f"search {query_params}", query_params)
                 link["method"] = "GET"
                 link.pop("body", None) # Body only used for POST
                 page_links.append(link)
@@ -578,8 +575,8 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                         ga.func.ST_Centroid(
                                 ga.func.ST_Envelope(self.item_table.footprint)
                             ),
-                            # Footprint in the database are in srid 4326
-                            ga.func.ST_Transform(ga.func.ST_GeomFromText(str(geom.centroid),self.storage_srid),self.storage_srid)
+                        # Footprint in the database are in srid 4326
+                        ga.func.ST_Transform(ga.func.ST_GeomFromText(str(geom.centroid),self.storage_srid),self.storage_srid)
                         )
                     query = query.order_by(distance)
 
@@ -604,7 +601,8 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                         query = query.filter(self.item_table.datetime <= dts[1])
 
                 if search_request.filter:
-                    pygeofilter.backends.sqlalchemy.filters.parse_geometry = monkeypatch_parse_geometry  # monkey patch parse_geometry from pygeofilter
+                    # monkey patch parse_geometry from pygeofilter
+                    pygeofilter.backends.sqlalchemy.filters.parse_geometry = monkeypatch_parse_geometry
                     sa_expr = to_filter(search_request.filter, self.FIELD_MAPPING)
                     
                     geometry = get_geometry_filter(search_request.filter)
@@ -616,8 +614,8 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                             ga.func.ST_Centroid(
                                     ga.func.ST_Envelope(self.item_table.footprint)
                                 ),
-                                # Footprint in the database are in srid 4326
-                                ga.func.ST_Transform(ga.func.ST_GeomFromText(str(geom.centroid), search_request.filter_crs),self.storage_srid)
+                            # Footprint in the database are in srid 4326
+                            ga.func.ST_Transform(ga.func.ST_GeomFromText(str(geom.centroid), search_request.filter_crs),self.storage_srid)
                             )
 
                         query = query.filter(sa_expr).order_by(distance)
@@ -726,7 +724,8 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
 
             # rewritten as a list-comprehension to speedup creation of the list
             # Enumerations should be faster than looping and appending
-            crs_obj =  {"type": "name",
+            crs_obj = {
+                "type": "name",
                 "properties": {"name": f"{output_crs}"},
             }
             response_features = [self.item_serializer.db_to_stac(item,hrefbuilder) for i,item in enumerate(page)]
@@ -755,7 +754,7 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                 # of datetime
                 response_features = [
                     json.loads(stac_pydantic.Item(**feat).json(**filter_kwargs))
-                    for feat,_ in enumerate(response_features)
+                    for feat, in enumerate(response_features)
                 ]
 
         for _,feat in enumerate(response_features):
@@ -768,8 +767,6 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                 "limit": search_request.limit,
                 "matched": count,
             }
-
-
 
         return ItemCollection(
             type="FeatureCollection",
@@ -845,6 +842,7 @@ class CoreFiltersClient(BaseFiltersClient):
             "title": f"{collection_id.capitalize() if collection_id else 'Dataforsyningen FlyfotoAPI - Shared queryables'}",
             "properties": res,
         }
+
 
 def get_geometry_filter(filter):
     """
