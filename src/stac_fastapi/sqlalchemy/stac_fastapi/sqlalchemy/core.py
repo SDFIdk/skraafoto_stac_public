@@ -67,7 +67,7 @@ def profiled():
 
 
 def monkeypatch_parse_geometry(geom):
-    wkt = shapely.to_wkt(geom)
+    wkt = to_wkt(geom)
     crs = geom["crs"] if "crs" in geom.keys() else 4326
     if crs == 4326:
         return func.ST_GeomFromText(wkt, 4326)
