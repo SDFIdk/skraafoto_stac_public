@@ -19,10 +19,10 @@ install_requires = [
     "psycopg2-binary",
     "alembic",
     "fastapi-utils",
-    "pygeofilter==0.1.*",
-    "pygeofilter[backend-sqlalchemy]==0.1.*",
-    "pygeoif==0.7",
-    "pygeoif[backend-sqlalchemy]==0.7",
+    "pygeofilter==0.2.*",
+    "pygeofilter[backend-sqlalchemy]==0.2.*",
+    "pygeoif==1.*",
+    "pygeoif[backend-sqlalchemy]==1.*",
 ]
 
 extra_reqs = {
