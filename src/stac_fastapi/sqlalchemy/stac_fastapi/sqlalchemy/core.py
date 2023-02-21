@@ -16,6 +16,7 @@ from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 from shapely.geometry import Polygon as ShapelyPolygon
+from shapely.geometry import shape
 from shapely import to_wkt
 from sqlakeyset import get_page
 from sqlalchemy import func
