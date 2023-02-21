@@ -15,6 +15,7 @@ COPY src /app
 ENV PATH=$PATH:/install/bin
 
 RUN mkdir -p /install && \
+    pip install -U pip \
     pip install -e ./stac_fastapi/types && \
     pip install -e ./stac_fastapi/api && \
     pip install -e ./stac_fastapi/extensions && \
