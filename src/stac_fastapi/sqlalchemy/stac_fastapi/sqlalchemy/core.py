@@ -449,7 +449,7 @@ class CoreCrudClient(PaginationTokenClient, BaseCoreClient):
                 query_params = dict(kwargs["request"].query_params)
                 if link["body"]:
                     query_params.update(link["body"])
-                link["href"] = hrefbuilder.build(f"search {query_params}", query_params)
+                link["href"] = hrefbuilder.build("search", query_params)
                 link["method"] = "GET"
                 link.pop("body", None) # Body only used for POST
                 page_links.append(link)
