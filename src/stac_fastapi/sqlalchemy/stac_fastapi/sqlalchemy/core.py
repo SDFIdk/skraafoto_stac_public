@@ -16,7 +16,7 @@ from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 from shapely.geometry import Polygon as ShapelyPolygon
-from shapely.io import to_wkt
+from shapely import to_wkt
 from sqlakeyset import get_page
 from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import array
@@ -66,7 +66,7 @@ def profiled():
 
 
 def monkeypatch_parse_geometry(geom):
-    wkt = to_wkt(geom)
+    wkt = shapely.to_wkt(geom)
     crs = geom["crs"] if "crs" in geom.keys() else 4326
     if crs == 4326:
         return func.ST_GeomFromText(wkt, 4326)
