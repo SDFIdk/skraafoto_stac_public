@@ -824,6 +824,8 @@ y0 = sensor_rows * 0.5 + ppo_y / pixel_size
 Først etableres en række variable ud fra flyfotoets metadata (Se [STAC Item](#stac-item)), som kan ses ude til højre.
 
 Dernæst kan `(xa, ya)` beregnes på en af to måder. Bemærk i øvrigt, at pixelkoordinaterne `(xa, ya)` har origo i billedets nederste venstre hjørne med x-aksen positiv mod højre og y-aksen positiv op.
+For at finde `Z` koordinaten skal man finde den tilsvarende pixel på jorden, hvor man kan bruge højdemodellen, [her som REST](https://datafordeler.dk/dataoversigt/danmarks-hoejdemodel-dhm/koter/).
+Hvis man bare hurtigt vil se om ens beregninger er korrekte, kan man angive `Z` værdien værende fra 10-30 (tættere på jorden).
 
 Den klassiske fotogrammetriske form:
 
