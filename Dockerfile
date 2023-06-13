@@ -1,4 +1,4 @@
-FROM python:3.8.5-slim as production
+FROM python:3.8.1-slim as production
 
 # Any python libraries that require system libraries to be installed will likely
 # need the following packages in order to build
@@ -15,7 +15,7 @@ COPY src /app
 ENV PATH=$PATH:/install/bin
 
 RUN mkdir -p /install && \
-    pip install -U pip \
+    #    pip install -U pip \
     pip install -e ./stac_fastapi/types && \
     pip install -e ./stac_fastapi/api && \
     pip install -e ./stac_fastapi/extensions && \
