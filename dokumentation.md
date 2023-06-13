@@ -593,7 +593,7 @@ Context extension tilføjer ekstra information omkring en returneret `FeatureCol
 - Limit: Det maksimale antal resultater returneret
 - Matched: Det totale antal resultater, der matcher søgeforespørgslen
 
-Hvis `matched` er større end `limit` kan linkrelationerne `next`/`previous` bruges til at navigere frem og tilbage i det totale antal matchede søgeresultater ved hjælp af paging. Parameteren `limit` bestemmer hvor mange `Item` objekter, der fremgår i det returneret JSON response. `limit`har et max på 10.000 resultater ad gangen. Paging fungerer ved hjælp af en "paging token" `pt`. Denne token er autogenereret, og skal altid følge paging-resultatet. Ved ændring af denne kan resultatet ikke fremfindes. Et eksempel på paged resultat kan ses til højre.
+Hvis `matched` er større end `limit` kan linkrelationerne `next`/`previous` bruges til at navigere frem og tilbage i det totale antal matchede søgeresultater ved hjælp af paging. Parameteren `limit` bestemmer hvor mange `Item` objekter, der fremgår i det returneret JSON response. `limit`har et max på 1000 resultater ad gangen. Paging fungerer ved hjælp af en "paging token" `pt`. Denne token er autogenereret, og skal altid følge paging-resultatet. Ved ændring af denne kan resultatet ikke fremfindes. Et eksempel på paged resultat kan ses til højre.
 
 Nærmere beskrivelse af [Context Extension](https://github.com/radiantearth/stac-api-spec/tree/master/fragments/context).
 
@@ -824,6 +824,8 @@ y0 = sensor_rows * 0.5 + ppo_y / pixel_size
 Først etableres en række variable ud fra flyfotoets metadata (Se [STAC Item](#stac-item)), som kan ses ude til højre.
 
 Dernæst kan `(xa, ya)` beregnes på en af to måder. Bemærk i øvrigt, at pixelkoordinaterne `(xa, ya)` har origo i billedets nederste venstre hjørne med x-aksen positiv mod højre og y-aksen positiv op.
+For at finde `Z` koordinaten skal man finde den tilsvarende pixel på jorden, hvor man kan bruge højdemodellen, [her som REST](https://datafordeler.dk/dataoversigt/danmarks-hoejdemodel-dhm/koter/).
+Hvis man bare hurtigt vil se om ens beregninger er korrekte, kan man angive `Z` værdien værende fra 10-30 (tættere på jorden).
 
 Den klassiske fotogrammetriske form:
 
