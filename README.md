@@ -17,7 +17,7 @@ En lynintroduktion findes under [How To Get Started](./dokumentation.md/#how-to-
 
 
 ### Update 2023.06.13
-Python image locked to version 3.8.5 as higher versionen introduces a bug with pip where egg files isn't created linking to stac_fastapi dev install
+Python image locked to version 3.8.5 as higher versionen introduces a bug with pip where egg files isn't created linking to stac_fastapi dev install. Most likely newer version of pip is the issue.
 
 ## Configuration
 
