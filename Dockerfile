@@ -1,4 +1,4 @@
-FROM python:3.8-slim as production
+FROM python:3.8.5-slim as production
 
 # Any python libraries that require system libraries to be installed will likely
 # need the following packages in order to build
