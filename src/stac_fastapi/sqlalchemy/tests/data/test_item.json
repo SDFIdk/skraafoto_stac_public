@@ -64,7 +64,7 @@
       "principal_point_offset": [6.75, 0],
       "sensor_array_dimensions": [53.56, 40.04]
     },
-    "asset:data": "https://api.dataforsyningen.dk/skraafoto_server_test/2017_cog/2017_82_20_4_2031_00030536.jpg.cog.tif?token=9e90ecd2082cbf6fd906b6fafa215b52",
+    "asset:data": "https://cdn.dataforsyningen.dk/skraafoto_server/2017_cog/2017_82_20_4_2031_00030536.jpg.cog.tif?token=9e90ecd2082cbf6fd906b6fafa215b52",
     "asset:thumbnail": "https://skraafotodistribution-tile-api.k8s-test-121.septima.dk/images/skraafotos2017/2017_82_20_4_2031_00030536/thumbnail.jpg"
   },
   "links": [
@@ -103,7 +103,7 @@
   ],
   "assets": {
     "data": {
-      "href": "https://api.dataforsyningen.dk/skraafoto_server_test/2017_cog/2017_82_20_4_2031_00030536.jpg.cog.tif?token=9e90ecd2082cbf6fd906b6fafa215b52",
+      "href": "https://cdn.dataforsyningen.dk/skraafoto_server/2017_cog/2017_82_20_4_2031_00030536.jpg.cog.tif?token=9e90ecd2082cbf6fd906b6fafa215b52",
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "roles": ["data"],
       "title": "Raw tiff file"
