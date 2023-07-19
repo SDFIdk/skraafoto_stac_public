@@ -1534,10 +1534,12 @@ Content-Type: application/geo+json
 
 > Example responses
 
-<details>
-<summary>> 200 Response</summary>
+> 200 Response
 
 ```json
+<details>
+<summary></summary>
+
 {
     "type": "FeatureCollection",
     "features": [
@@ -1759,9 +1761,9 @@ Content-Type: application/geo+json
         "matched": 4276
     }
 }
-```
 </details>
 
+```
 
 Se `GET/POST /search` under [Endpoints og outputs](#endpoints-og-outputs) for mulige parametre og output type.
 
