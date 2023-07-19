@@ -610,7 +610,7 @@ token: {{token}}
 Content-Type: application/geo+json
 ```
 
-1. `GET /collections/skraafotos2019/items?crs=http://www.opengis.net/def/crs/EPSG/0/25832` - Returnerer geometrier i EPSG:25832.
+- `GET /collections/skraafotos2019/items?crs=http://www.opengis.net/def/crs/EPSG/0/25832` - Returnerer geometrier i EPSG:25832.
 
 > Code samples
 
@@ -620,7 +620,7 @@ token: {{token}}
 Content-Type: application/geo+json
 ```
 
-2. `GET /collections/skraafotos2021/items?bbox=492283,6195600,493583,6196470&bbox-crs=http://www.opengis.net/def/crs/EPSG/0/25832` - Input `bbox` er angivet i EPSG:25832.
+- `GET /collections/skraafotos2021/items?bbox=492283,6195600,493583,6196470&bbox-crs=http://www.opengis.net/def/crs/EPSG/0/25832` - Input `bbox` er angivet i EPSG:25832.
 
 > Code samples
 
@@ -628,7 +628,6 @@ Content-Type: application/geo+json
 POST https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/search HTTP/1.1
 token: {{token}}
 Content-Type: application/geo+json
-
 
 {
     "collections": ["skraafotos2023"],
@@ -651,7 +650,7 @@ Content-Type: application/geo+json
 }
 ```
 
-3. `POST /search` - Hent features, der overlapper (intersects) med geometri angivet i EPSG:25832, resultater returneres i WGS84.
+- `POST /search` - Hent features, der overlapper (intersects) med geometri angivet i EPSG:25832, resultater returneres i WGS84.
 
 ### Filter Extension
 
@@ -673,7 +672,7 @@ token: {{token}}
 Content-Type: application/geo+json
 ```
 
-1. `GET /collections/skraafotos2021/items` - Hent features hvis geometri indeholder (contains) med input geometri.
+- `GET /collections/skraafotos2021/items` - Hent features hvis geometri indeholder (contains) med input geometri.
 
 > Code samples
 
@@ -683,7 +682,7 @@ token: {{token}}
 Content-Type: application/geo+json
 ```
 
-2. `GET /search` - Hent features hvis geometri indeholder (contains) med input geometri.
+- `GET /search?filter={%22contains%22:[{%22property%22:%22geometry%22},{%22type%22:%22Point%22,%22coordinates%22:[10.3285,55.3556]}]}&filter-lang=cql-json&filter-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84&crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84` - Hent features hvis geometri indeholder (contains) med input geometri.
 
 > Code samples
 
@@ -691,7 +690,6 @@ Content-Type: application/geo+json
 POST https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/search HTTP/1.1
 token: {{token}}
 Content-Type: application/geo+json
-
 
 {
     "filter-lang": "cql-json",
@@ -713,7 +711,7 @@ Content-Type: application/geo+json
 }
 ```
 
-3. `POST /search` - Hent features hvis geometri indeholder (contains) med input geometri.
+- `POST /search` - Hent features hvis geometri indeholder (contains) med input geometri.
 
 > Code samples
 
@@ -721,7 +719,6 @@ Content-Type: application/geo+json
 POST https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/search HTTP/1.1
 token: {{token}}
 Content-Type: application/geo+json
-
 
 {
     "filter-lang":"cql-json",
@@ -747,7 +744,6 @@ Content-Type: application/geo+json
 POST https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/search HTTP/1.1
 token: {{token}}
 Content-Type: application/geo+json
-
 
 {
     "filter-lang": "cql-json",
@@ -779,7 +775,7 @@ token: {{token}}
 Content-Type: application/geo+json
 ```
 
-1. `GET /search?sortby=+properties.datetime` - Sortér på properties.datetime ascending.
+- `GET /search?sortby=+properties.datetime` - Sortér på properties.datetime ascending.
 
 > Code samples
 
@@ -789,7 +785,7 @@ token: {{token}}
 Content-Type: application/geo+json
 ```
 
-2. `GET /search?sortby=properties.datetime,-id` - Sortér på properties.datetime ascending og id descending.
+- `GET /search?sortby=properties.datetime,-id` - Sortér på properties.datetime ascending og id descending.
 
 > Code samples
 
@@ -797,7 +793,6 @@ Content-Type: application/geo+json
 POST https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/search HTTP/1.1
 token: {{token}}
 Content-Type: application/geo+json
-
 
 {
     "sortby": [
@@ -809,7 +804,7 @@ Content-Type: application/geo+json
 }
 ```
 
-3. `POST /search` - Sortér på collection descending.
+- `POST /search` - Sortér på collection descending.
 
 Nærmere beskrivelse af [Sort Extension](https://github.com/radiantearth/stac-api-spec/tree/master/fragments/sort).
 
@@ -955,7 +950,10 @@ Guiden er en hurtig gennemgang af, hvordan man får skråfotos for et bestemt ge
 
 #### Eksempel 1
 
-Hente en COG fra Skåfoto Server, og vise billedet med Open Layer
+Hent en COG fra Skåfoto Server og vis billedet med Open Layer
+
+<details>
+<summary>Eksempel 1</summary>
 
 ```html
 <!DOCTYPE html>
@@ -1004,10 +1002,14 @@ Hente en COG fra Skåfoto Server, og vise billedet med Open Layer
   </body>
 </html>
 ```
+</details>
 
 #### Eksempel 2
 
 Hente metadata om et bestemt skråfoto, for så at få vist selve billedet ved brug af Skråfoto STAC API og Skråfoto Cogtiler
+
+<details>
+<summary>Eksempel 2</summary>
 
 ```html
 <!DOCTYPE html>
@@ -1064,6 +1066,7 @@ Hente metadata om et bestemt skråfoto, for så at få vist selve billedet ved b
   </body>
 </html>
 ```
+</details>
 
 ### Håndtering af collections
 
@@ -1088,7 +1091,8 @@ Content-Type: application/geo+json
 
 > Example responses
 
-> 200 Response
+<details>
+<summary>> 200 Response</summary>
 
 ```json
 {
@@ -1290,6 +1294,7 @@ Content-Type: application/geo+json
     }
 }
 ```
+</details>
 
 I URL'en angives `{collectionid}` i path, hvilken collection man ønsker at fremsøge billeder fra. Se `GET /collections/{collectionid}/items` under [Endpoints og outputs](#endpoints-og-outputs) for mulige parametre og output type.
 
@@ -1307,7 +1312,8 @@ Content-Type: application/geo+json
 
 > Example responses
 
-> 200 Response
+<details>
+<summary>> 200 Response</summary>
 
 ```json
 {
@@ -1509,6 +1515,7 @@ Content-Type: application/geo+json
     }
 }
 ```
+</details>
 
 > Code samples
 
@@ -1527,7 +1534,8 @@ Content-Type: application/geo+json
 
 > Example responses
 
-> 200 Response
+<details>
+<summary>> 200 Response</summary>
 
 ```json
 {
@@ -1752,6 +1760,8 @@ Content-Type: application/geo+json
     }
 }
 ```
+</details>
+
 
 Se `GET/POST /search` under [Endpoints og outputs](#endpoints-og-outputs) for mulige parametre og output type.
 
