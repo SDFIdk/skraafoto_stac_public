@@ -952,9 +952,6 @@ Guiden er en hurtig gennemgang af, hvordan man får skråfotos for et bestemt ge
 
 Hent en COG fra Skåfoto Server og vis billedet med Open Layer
 
-<details>
-<summary>Eksempel 1</summary>
-
 ```html
 <!DOCTYPE html>
 <html>
@@ -1002,14 +999,10 @@ Hent en COG fra Skåfoto Server og vis billedet med Open Layer
   </body>
 </html>
 ```
-</details>
 
 #### Eksempel 2
 
 Hente metadata om et bestemt skråfoto, for så at få vist selve billedet ved brug af Skråfoto STAC API og Skråfoto Cogtiler
-
-<details>
-<summary>Eksempel 2</summary>
 
 ```html
 <!DOCTYPE html>
@@ -1066,7 +1059,6 @@ Hente metadata om et bestemt skråfoto, for så at få vist selve billedet ved b
   </body>
 </html>
 ```
-</details>
 
 ### Håndtering af collections
 
@@ -1091,8 +1083,7 @@ Content-Type: application/geo+json
 
 > Example responses
 
-<details>
-<summary>> 200 Response</summary>
+> 200 Response
 
 ```json
 {
@@ -1294,7 +1285,6 @@ Content-Type: application/geo+json
     }
 }
 ```
-</details>
 
 I URL'en angives `{collectionid}` i path, hvilken collection man ønsker at fremsøge billeder fra. Se `GET /collections/{collectionid}/items` under [Endpoints og outputs](#endpoints-og-outputs) for mulige parametre og output type.
 
@@ -1312,8 +1302,7 @@ Content-Type: application/geo+json
 
 > Example responses
 
-<details>
-<summary>> 200 Response</summary>
+> 200 Response
 
 ```json
 {
@@ -1515,7 +1504,6 @@ Content-Type: application/geo+json
     }
 }
 ```
-</details>
 
 > Code samples
 
@@ -1537,9 +1525,6 @@ Content-Type: application/geo+json
 > 200 Response
 
 ```json
-<details>
-<summary></summary>
-
 {
     "type": "FeatureCollection",
     "features": [
@@ -1761,8 +1746,6 @@ Content-Type: application/geo+json
         "matched": 4276
     }
 }
-</details>
-
 ```
 
 Se `GET/POST /search` under [Endpoints og outputs](#endpoints-og-outputs) for mulige parametre og output type.
