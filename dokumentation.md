@@ -316,8 +316,8 @@ Hvis token er autoriseret, men requesten har en ugyldig parameter, returneres en
 
 ```http
 GET https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0 HTTP/1.1
-Host: api.dataforsyningen.dk
-Accept: application/json
+token: {{token}}
+Content-Type: application/geo+json
 ```
 
 _Landing Page_
@@ -338,8 +338,8 @@ STAC Catalog (JSON)
 
 ```http
 GET https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/conformance HTTP/1.1
-Host: api.dataforsyningen.dk
-Accept: application/json
+token: {{token}}
+Content-Type: application/geo+json
 ```
 
 _Get Conformance Classes_
@@ -360,8 +360,8 @@ Array af conformance klasser (JSON)
 
 ```http
 GET https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/collections/skraafotos2019/items/2019_83_37_2_0046_00001113 HTTP/1.1
-Host: api.dataforsyningen.dk
-Accept: application/json
+token: {{token}}
+Content-Type: application/geo+json
 ```
 
 _Get Item_
@@ -386,17 +386,16 @@ Feature (STAC Item) (GeoJSON)
 
 ```http
 GET https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/search HTTP/1.1
-Host: api.dataforsyningen.dk
-Accept: application/geo+json
+token: {{token}}
+Content-Type: application/geo+json
 ```
 
 > Code samples
 
 ```http
 POST https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/search HTTP/1.1
-Host: api.dataforsyningen.dk
-Content-Type: application/json
-Accept: application/geo+json
+token: {{token}}
+Content-Type: application/geo+json
 ```
 
 _Get/Post Search_
@@ -431,8 +430,8 @@ FeatureCollection (Array af STAC Items) (GeoJSON)
 
 ```http
 GET https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/collections HTTP/1.1
-Host: api.dataforsyningen.dk
-Accept: application/json
+token: {{token}}
+Content-Type: application/geo+json
 ```
 
 _Get Collections_
@@ -453,8 +452,8 @@ Collections (Array af STAC Collections) (JSON)
 
 ```http
 GET https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/collections/skraafotos2019 HTTP/1.1
-Host: api.dataforsyningen.dk
-Accept: application/json
+token: {{token}}
+Content-Type: application/geo+json
 ```
 
 _Get Collection_
@@ -477,8 +476,8 @@ Collection (STAC Collection) (JSON)
 
 ```http
 GET https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/collections/skraafotos2019/items HTTP/1.1
-Host: api.dataforsyningen.dk
-Accept: application/json
+token: {{token}}
+Content-Type: application/geo+json
 ```
 
 _Get Item Collection_
@@ -511,8 +510,8 @@ FeatureCollection (Array af STAC Items) (GeoJSON)
 
 ```http
 GET https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/queryables HTTP/1.1
-Host: api.dataforsyningen.dk
-Accept: application/json
+token: {{token}}
+Content-Type: application/geo+json
 ```
 
 _Get Queryables_
@@ -533,8 +532,8 @@ Array af STAC Item properties, der kan bruges over alle collections i filter udt
 
 ```http
 GET https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/collections/skraafotos2019/queryables HTTP/1.1
-Host: api.dataforsyningen.dk
-Accept: application/json
+token: {{token}}
+Content-Type: application/geo+json
 ```
 
 _Get Collection Queryables_
@@ -607,6 +606,8 @@ Eksempler på brug af parametrene `crs`, `bbox-crs`, og `filter-crs`:
 
 ```http
 GET https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/collections/skraafotos2019/items?crs=http://www.opengis.net/def/crs/EPSG/0/25832 HTTP/1.1
+token: {{token}}
+Content-Type: application/geo+json
 ```
 
 1. `GET /collections/skraafotos2019/items?crs=http://www.opengis.net/def/crs/EPSG/0/25832` - Returnerer geometrier i EPSG:25832.
@@ -615,6 +616,8 @@ GET https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/collections/skraafoto
 
 ```http
 GET https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/collections/skraafotos2021/items?bbox=492283,6195600,493583,6196470&bbox-crs=http://www.opengis.net/def/crs/EPSG/0/25832 HTTP/1.1
+token: {{token}}
+Content-Type: application/geo+json
 ```
 
 2. `GET /collections/skraafotos2021/items?bbox=492283,6195600,493583,6196470&bbox-crs=http://www.opengis.net/def/crs/EPSG/0/25832` - Input `bbox` er angivet i EPSG:25832.
@@ -623,9 +626,9 @@ GET https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/collections/skraafoto
 
 ```http
 POST https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/search HTTP/1.1
-Host: api.dataforsyningen.dk
-Content-Type: application/json
-Accept: application/geo+json
+token: {{token}}
+Content-Type: application/geo+json
+
 
 {
     "collections": ["skraafotos2023"],
@@ -666,6 +669,8 @@ Eksempler på brug af filter parameter:
 
 ```http
 GET https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/collections/skraafotos2021/items?filter={%22contains%22:[{%22property%22:%22geometry%22},{%22type%22:%22Point%22,%22coordinates%22:[10.3285,55.3556]}]}&filter-lang=cql-json&filter-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84&crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84 HTTP/1.1
+token: {{token}}
+Content-Type: application/geo+json
 ```
 
 1. `GET /collections/skraafotos2021/items` - Hent features hvis geometri indeholder (contains) med input geometri.
@@ -674,6 +679,8 @@ GET https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/collections/skraafoto
 
 ```http
 GET https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/search?filter={%22contains%22:[{%22property%22:%22geometry%22},{%22type%22:%22Point%22,%22coordinates%22:[10.3285,55.3556]}]}&filter-lang=cql-json&filter-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84&crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84 HTTP/1.1
+token: {{token}}
+Content-Type: application/geo+json
 ```
 
 2. `GET /search` - Hent features hvis geometri indeholder (contains) med input geometri.
@@ -682,9 +689,9 @@ GET https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/search?filter={%22con
 
 ```http
 POST https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/search HTTP/1.1
-Host: api.dataforsyningen.dk
-Content-Type: application/json
-Accept: application/geo+json
+token: {{token}}
+Content-Type: application/geo+json
+
 
 {
     "filter-lang": "cql-json",
@@ -712,9 +719,9 @@ Accept: application/geo+json
 
 ```http
 POST https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/search HTTP/1.1
-Host: api.dataforsyningen.dk
-Content-Type: application/json
-Accept: application/geo+json
+token: {{token}}
+Content-Type: application/geo+json
+
 
 {
     "filter-lang":"cql-json",
@@ -738,9 +745,9 @@ Accept: application/geo+json
 
 ```http
 POST https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/search HTTP/1.1
-Host: api.dataforsyningen.dk
-Content-Type: application/json
-Accept: application/geo+json
+token: {{token}}
+Content-Type: application/geo+json
+
 
 {
     "filter-lang": "cql-json",
@@ -768,6 +775,8 @@ Eksempler på brug af sortBy parameter:
 
 ```http
 GET https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/search?sortby=+properties.datetime HTTP/1.1
+token: {{token}}
+Content-Type: application/geo+json
 ```
 
 1. `GET /search?sortby=+properties.datetime` - Sortér på properties.datetime ascending.
@@ -776,6 +785,8 @@ GET https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/search?sortby=+proper
 
 ```http
 GET https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/search?sortby=properties.datetime,-id HTTP/1.1
+token: {{token}}
+Content-Type: application/geo+json
 ```
 
 2. `GET /search?sortby=properties.datetime,-id` - Sortér på properties.datetime ascending og id descending.
@@ -784,9 +795,9 @@ GET https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/search?sortby=propert
 
 ```http
 POST https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/search HTTP/1.1
-Host: api.dataforsyningen.dk
-Content-Type: application/json
-Accept: application/geo+json
+token: {{token}}
+Content-Type: application/geo+json
+
 
 {
     "sortby": [
@@ -1009,7 +1020,7 @@ Hente metadata om et bestemt skråfoto, for så at få vist selve billedet ved b
         fetch('https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/collections/skraafotos2021/items/2021_83_36_4_0008_00004522', {
           method: 'GET',
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/geo+json',
             'token': '{}'
           }
         })
@@ -1071,8 +1082,8 @@ Hvert skråfoto har et `Item` objekt tilknyttet, som indeholder metadata for det
 
 ```http
 GET https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/collections/skraafotos2019/items?limit=1&bbox=10.3285,55.3556,10.4536,55.4132&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84&crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84 HTTP/1.1
-Host: api.dataforsyningen.dk
-Accept: application/json
+token: {{token}}
+Content-Type: application/geo+json
 ```
 
 > Example responses
@@ -1290,8 +1301,8 @@ I dette tilfælde er det `skraafotos2019` collection. Dernæst angives query par
 
 ```http
 GET https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/search?limit=3&bbox=10.3285,55.3556,10.4536,55.4132&bbox-crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84&crs=http://www.opengis.net/def/crs/OGC/1.3/CRS84 HTTP/1.1
-Host: api.dataforsyningen.dk
-Accept: application/geo+json
+token: {{token}}
+Content-Type: application/geo+json
 ```
 
 > Example responses
@@ -1503,9 +1514,8 @@ Accept: application/geo+json
 
 ```http
 POST https://api.dataforsyningen.dk/rest/skraafoto_api/v1.0/search HTTP/1.1
-Host: api.dataforsyningen.dk
-Content-Type: application/json
-Accept: application/geo+json
+token: {{token}}
+Content-Type: application/geo+json
 
 {
     "bbox": [10.3285,55.3556,10.4536,55.4132],
