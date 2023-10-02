@@ -3,7 +3,6 @@ version: "3"
 services:
   app-sqlalchemy:
     container_name: stac-fastapi-sqlalchemy
-    image: stac-utils/stac-fastapi
     build:
       context: .
       dockerfile: Dockerfile
