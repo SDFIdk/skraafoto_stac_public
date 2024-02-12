@@ -27,6 +27,7 @@ class ProxyHeadersMiddleware:
             self.trusted_hosts = set(trusted_hosts)
         self.always_trust = "*" in self.trusted_hosts
 
+    # Taken from here: https://gist.github.com/attakei/6b308a2a7949746a8027fc0258f1de1c
     def remap_headers(self, src: Headers, before: bytes, after: bytes) -> Headers:
         remapped = []
         before_value = None
